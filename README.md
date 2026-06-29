@@ -29,6 +29,8 @@ CAIM standalone website
 
 ## CAIM Test Home
 
-- `caim.doxaxsolutions.com` is deployed as a host-specific test landing page owned by CAIM.
-- The root page is intentionally separate from the theology host and does not link to `www.doxaxsolutions.com`.
-- Current CAIM test pages must stay self-contained and use CAIM-local routes only.
+- `caim.doxaxsolutions.com` is deployed as a host-specific CAIM-owned site.
+- The CAIM home page is self-contained and uses CAIM-local content only.
+- The current CAIM tabs are `Home`, `DX Sermon`, `AI Courses`, `Practical workshop`, `How to contribute`, and an `EN / 中文` language switch.
+- Legacy CAIM routes now land on the same CAIM home content and section anchors.
+- CAIM routes are intentionally separate from the theology host and do not link to `www.doxaxsolutions.com`.
