@@ -398,6 +398,153 @@ h1 {
   border-left: 4px solid var(--green);
   background: #fafcf9;
 }
+
+.workshop-source-hero {
+  min-height: 311px;
+  display: flex;
+  align-items: center;
+  background-image: url("assets/img/workshop-banner-default-it.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #fff;
+}
+.workshop-source-hero__content {
+  padding: 68px 0 46px 96px;
+}
+.workshop-source-hero__kicker {
+  margin: 0 0 4px;
+  color: #fff;
+  font-size: clamp(30px, 4vw, 45px);
+  font-weight: 600;
+  line-height: 1.18;
+}
+.workshop-source-hero h1 {
+  max-width: none;
+  margin: 0 0 18px;
+  color: #fff;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: clamp(30px, 4vw, 45px);
+  font-weight: 600;
+  line-height: 1.18;
+}
+.workshop-source-hero__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 18px;
+  background: #a3cf6d;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+.workshop-spacer {
+  height: 50px;
+  background: #9a69af;
+}
+.workshop-stats {
+  background: linear-gradient(180deg, #6d2a87 0%, #8c5ca1 100%);
+  color: #fff;
+}
+.workshop-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  min-height: 96px;
+  gap: 0;
+}
+.workshop-stat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 18px 20px;
+  text-align: center;
+}
+.workshop-stat__icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255, 255, 255, 0.96);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+}
+.workshop-stat h2 {
+  margin: 0 0 2px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+.workshop-stat p {
+  margin: 0;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.35;
+}
+.workshop-intro {
+  padding: 52px 0 12px;
+  background: #fff;
+}
+.workshop-intro__panel {
+  width: min(900px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 124px minmax(0, 1fr);
+  align-items: center;
+  gap: 26px;
+  padding: 28px 34px;
+  background: #6d2a87;
+  color: #fff;
+}
+.workshop-intro__panel img {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  background: #fff;
+}
+.workshop-intro__panel h2 {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: 24px;
+  line-height: 1.25;
+}
+.workshop-intro__panel p {
+  margin: 0;
+  color: #fff;
+  font-size: 17px;
+}
+.workshop-posters {
+  padding: 34px 0 72px;
+  background: #fff;
+}
+.workshop-posters__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+  align-items: start;
+}
+.workshop-posters h2 {
+  margin: 0 0 20px;
+  color: #111;
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.workshop-posters img {
+  width: 100%;
+  max-width: 658px;
+  height: auto;
+}
+.workshop-posters__action {
+  margin-top: 30px;
+  text-align: center;
+}
 .footer {
   padding: 30px 0 44px;
   border-top: 1px solid var(--line);
@@ -412,8 +559,16 @@ h1 {
   .page-grid-2,
   .blocks,
   .course-grid,
-  .grid-3 {
+  .grid-3,
+  .workshop-stats__grid,
+  .workshop-posters__grid {
     grid-template-columns: 1fr;
+  }
+  .workshop-source-hero__content {
+    padding-left: 0;
+  }
+  .workshop-stat {
+    min-height: 86px;
   }
   .hero__panel img,
   .split__media img {
@@ -448,4 +603,18 @@ h1 {
   .section { padding: 58px 0; }
   .split__copy,
   .block { padding: 22px; }
+  .workshop-source-hero {
+    min-height: 250px;
+  }
+  .workshop-intro__panel {
+    grid-template-columns: 1fr;
+    padding: 24px;
+    text-align: center;
+  }
+  .workshop-intro__panel img {
+    margin: 0 auto;
+  }
+  .workshop-posters h2 {
+    font-size: 26px;
+  }
 }
