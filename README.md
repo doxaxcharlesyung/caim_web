@@ -17,20 +17,22 @@ CAIM standalone website
 
 - Apache vhost templates for `caim.doxaxsolutions.com` live in [`deploy/apache/`](deploy/apache/).
 - The CAIM vhost uses the same name-based vhost pattern as `theology.doxaxsolutions.com`.
-- Both HTTP and HTTPS proxy to `127.0.0.1:18000`, which serves the CAIM app on the host.
-- The CAIM app itself serves a host-specific test home page at `/`, and the current CAIM test pages are self-contained.
+- Both HTTP and HTTPS proxy to `127.0.0.1:18003`, which serves the dedicated CAIM app from `/opt/caim_web`.
+- `test.doxaxsolutions.com` remains separate and is served from `/opt/test.doxaxsolutions.com` on `127.0.0.1:18000`.
+- The CAIM app itself serves a host-specific home page at `/`, and the current CAIM pages are self-contained.
 - The SSL vhost expects a Let's Encrypt certificate at `/etc/letsencrypt/live/caim.doxaxsolutions.com/`.
 
 ## Deployment
 
 - GitHub Actions deploys on pushes to `main` through [.github/workflows/deploy-prod.yml](.github/workflows/deploy-prod.yml).
 - The workflow is written for a self-hosted runner labeled `prod` running inside the PROD intranet or on the PROD host itself.
-- It installs the CAIM site files into `/opt/test.doxaxsolutions.com/`, installs the CAIM Apache vhost files into `/etc/httpd/conf.d/`, restarts `doxax-testhtml.service`, runs `apachectl configtest`, and reloads `httpd`.
+- It installs the CAIM site files into `/opt/caim_web/`, installs the CAIM Apache vhost files into `/etc/httpd/conf.d/`, installs `doxax-caim-web.service`, restarts the CAIM service, runs `apachectl configtest`, and reloads `httpd`.
+- The test site service and content remain separate under `/opt/test.doxaxsolutions.com`.
 
 ## CAIM Site
 
 - `caim.doxaxsolutions.com` is deployed as a host-specific CAIM-owned site.
-- The CAIM home page mirrors the source CAIM tab from `D:\workspace\doxaxsolutions.com` in layout, hero treatment, and color scheme, while keeping the CAIM header, menu, and logo separate.
+- The CAIM home page mirrors the source home page content from `D:\workspace\doxaxsolutions.com`, including the hero, Our Services, AI Opportunities, challenges, process, latest articles, and FAQ sections.
 - The homepage is self-contained and uses CAIM-local content only.
 - The current homepage keeps the `EN / 中文` language switch; the remaining CAIM tabs will be worked on later.
 - Legacy CAIM routes now redirect back to the CAIM home page.

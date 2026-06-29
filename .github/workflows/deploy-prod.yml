@@ -24,30 +24,37 @@ jobs:
         run: |
           test -f deploy/apache/caim.doxaxsolutions.com.conf
           test -f deploy/apache/caim.doxaxsolutions.com-le-ssl.conf
+          test -f deploy/systemd/doxax-caim-web.service
 
       - name: Install CAIM site files
         run: |
-          sudo install -d /opt/test.doxaxsolutions.com/assets
-          sudo install -m 0644 app.py /opt/test.doxaxsolutions.com/app.py
-          sudo install -m 0644 home.html /opt/test.doxaxsolutions.com/home.html
-          sudo install -m 0644 dx_sermon.html /opt/test.doxaxsolutions.com/dx_sermon.html
-          sudo install -m 0644 ai_courses.html /opt/test.doxaxsolutions.com/ai_courses.html
-          sudo install -m 0644 workshop.html /opt/test.doxaxsolutions.com/workshop.html
-          sudo install -m 0644 how_to_help.html /opt/test.doxaxsolutions.com/how_to_help.html
-          sudo install -m 0644 index.html /opt/test.doxaxsolutions.com/index.html
-          sudo install -m 0644 site.css /opt/test.doxaxsolutions.com/site.css
-          sudo cp -R assets/. /opt/test.doxaxsolutions.com/assets/
+          sudo install -d /opt/caim_web/assets
+          sudo install -m 0644 app.py /opt/caim_web/app.py
+          sudo install -m 0644 home.html /opt/caim_web/home.html
+          sudo install -m 0644 dx_sermon.html /opt/caim_web/dx_sermon.html
+          sudo install -m 0644 ai_courses.html /opt/caim_web/ai_courses.html
+          sudo install -m 0644 workshop.html /opt/caim_web/workshop.html
+          sudo install -m 0644 how_to_help.html /opt/caim_web/how_to_help.html
+          sudo install -m 0644 index.html /opt/caim_web/index.html
+          sudo install -m 0644 site.css /opt/caim_web/site.css
+          sudo cp -R assets/. /opt/caim_web/assets/
 
       - name: Install Apache vhost files
         run: |
           sudo install -m 0644 deploy/apache/caim.doxaxsolutions.com.conf /etc/httpd/conf.d/caim.doxaxsolutions.com.conf
           sudo install -m 0644 deploy/apache/caim.doxaxsolutions.com-le-ssl.conf /etc/httpd/conf.d/caim.doxaxsolutions.com-le-ssl.conf
 
+      - name: Install CAIM systemd service
+        run: |
+          sudo install -m 0644 deploy/systemd/doxax-caim-web.service /etc/systemd/system/doxax-caim-web.service
+          sudo systemctl daemon-reload
+          sudo systemctl enable doxax-caim-web.service
+
       - name: Test Apache configuration
         run: sudo apachectl configtest
 
       - name: Restart CAIM app
-        run: sudo systemctl restart doxax-testhtml.service
+        run: sudo systemctl restart doxax-caim-web.service
 
       - name: Reload Apache
         run: sudo systemctl reload httpd
