@@ -27,7 +27,7 @@ CAIM standalone website
 - The workflow is written for a self-hosted runner labeled `prod` running inside the PROD intranet or on the PROD host itself.
 - It installs the CAIM Apache vhost files into `/etc/httpd/conf.d/`, runs `apachectl configtest`, and reloads `httpd`.
 
-## CAIM Test Home
+## CAIM Site
 
 - `caim.doxaxsolutions.com` is deployed as a host-specific CAIM-owned site.
 - The CAIM home page mirrors the source CAIM tab from `D:\workspace\doxaxsolutions.com` in layout, hero treatment, and color scheme, while keeping the CAIM header, menu, and logo separate.
@@ -38,5 +38,5 @@ CAIM standalone website
 
 ## Local Preview
 
-- Open [`preview/caim-home-preview.html`](preview/caim-home-preview.html) directly in a browser on Windows 11.
-- [`preview/README.md`](preview/README.md) has the same one-line instruction.
+- Open [`home.html`](home.html) directly in a browser on Windows 11.
+- [`preview/caim-home-preview.html`](preview/caim-home-preview.html) redirects to the same page.
