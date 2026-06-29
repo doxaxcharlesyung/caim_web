@@ -35,3 +35,8 @@ CAIM standalone website
 - The current homepage keeps the `EN / 中文` language switch; the remaining CAIM tabs will be worked on later.
 - Legacy CAIM routes now redirect back to the CAIM home page.
 - CAIM routes are intentionally separate from the theology host and do not link to `www.doxaxsolutions.com`.
+
+## Local Preview
+
+- Open [`preview/caim-home-preview.html`](preview/caim-home-preview.html) directly in a browser on Windows 11.
+- [`preview/README.md`](preview/README.md) has the same one-line instruction.
