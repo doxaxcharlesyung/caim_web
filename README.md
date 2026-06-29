@@ -17,7 +17,8 @@ CAIM standalone website
 
 - Apache vhost templates for `caim.doxaxsolutions.com` live in [`deploy/apache/`](deploy/apache/).
 - The CAIM vhost uses the same name-based vhost pattern as `theology.doxaxsolutions.com`.
-- Both HTTP and HTTPS proxy to `127.0.0.1:18001`, which matches the active `dx-theology-qa.service` on the host.
+- Both HTTP and HTTPS proxy to `127.0.0.1:18000`, which matches the mirrored CAIM snapshot service on the host.
+- The Apache vhost internally maps `/` to `/caim-2/` so the CAIM root opens the CAIM page instead of the main mirrored homepage.
 - The SSL vhost expects a Let's Encrypt certificate at `/etc/letsencrypt/live/caim.doxaxsolutions.com/`.
 
 ## Deployment
