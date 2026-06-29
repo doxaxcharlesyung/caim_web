@@ -30,7 +30,7 @@ CAIM standalone website
 ## CAIM Test Home
 
 - `caim.doxaxsolutions.com` is deployed as a host-specific CAIM-owned site.
-- The CAIM home page now mirrors the look and content structure of the CAIM tab from the source `doxaxsolutions.com` repo, but it runs as a separate CAIM implementation.
+- The CAIM home page mirrors the source CAIM tab from `D:\workspace\doxaxsolutions.com` in layout, hero treatment, and color scheme, while keeping the CAIM header, menu, and logo separate.
 - The homepage is self-contained and uses CAIM-local content only.
 - The current homepage keeps the `EN / 中文` language switch; the remaining CAIM tabs will be worked on later.
 - Legacy CAIM routes now redirect back to the CAIM home page.
