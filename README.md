@@ -34,12 +34,11 @@ CAIM standalone website
 - `caim.doxaxsolutions.com` is deployed as a host-specific CAIM-owned site.
 - The CAIM home page mirrors the source home page content from `D:\workspace\doxaxsolutions.com`, including the hero, Our Services, AI Opportunities, challenges, process, latest articles, and FAQ sections.
 - The homepage is self-contained and uses CAIM-local content only.
-- The current homepage keeps the `EN / 中文` language switch; the remaining CAIM tabs will be worked on later.
+- The current English pages use `EN / ZH` labels only; Chinese page content is not enabled yet.
 - Legacy CAIM routes now redirect back to the CAIM home page.
 - CAIM routes are intentionally separate from the theology host and do not link to `www.doxaxsolutions.com`.
 
 ## Local Preview
 
 - Open [`home.html`](home.html) directly in a browser on Windows 11.
-- [`preview/caim-home-preview.html`](preview/caim-home-preview.html) redirects to the same page.
 - Run `py -3.12 app.py` from the repo root to start a local Flask server on `http://127.0.0.1:8000/`.
