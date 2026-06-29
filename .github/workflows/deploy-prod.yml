@@ -1,0 +1,37 @@
+name: Deploy to PROD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: caim-prod-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, prod]
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate Apache vhost templates
+        run: |
+          test -f deploy/apache/caim.doxaxsolutions.com.conf
+          test -f deploy/apache/caim.doxaxsolutions.com-le-ssl.conf
+
+      - name: Install Apache vhost files
+        run: |
+          sudo install -m 0644 deploy/apache/caim.doxaxsolutions.com.conf /etc/httpd/conf.d/caim.doxaxsolutions.com.conf
+          sudo install -m 0644 deploy/apache/caim.doxaxsolutions.com-le-ssl.conf /etc/httpd/conf.d/caim.doxaxsolutions.com-le-ssl.conf
+
+      - name: Test Apache configuration
+        run: sudo apachectl configtest
+
+      - name: Reload Apache
+        run: sudo systemctl reload httpd
