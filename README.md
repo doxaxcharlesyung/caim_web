@@ -25,7 +25,7 @@ CAIM standalone website
 
 - GitHub Actions deploys on pushes to `main` through [.github/workflows/deploy-prod.yml](.github/workflows/deploy-prod.yml).
 - The workflow is written for a self-hosted runner labeled `prod` running inside the PROD intranet or on the PROD host itself.
-- It installs the CAIM Apache vhost files into `/etc/httpd/conf.d/`, runs `apachectl configtest`, and reloads `httpd`.
+- It installs the CAIM site files into `/opt/test.doxaxsolutions.com/`, installs the CAIM Apache vhost files into `/etc/httpd/conf.d/`, restarts `doxax-testhtml.service`, runs `apachectl configtest`, and reloads `httpd`.
 
 ## CAIM Site
 
@@ -40,3 +40,4 @@ CAIM standalone website
 
 - Open [`home.html`](home.html) directly in a browser on Windows 11.
 - [`preview/caim-home-preview.html`](preview/caim-home-preview.html) redirects to the same page.
+- Run `py -3.12 app.py` from the repo root to start a local Flask server on `http://127.0.0.1:8000/`.
