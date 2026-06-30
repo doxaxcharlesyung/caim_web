@@ -34,7 +34,7 @@ CAIM standalone website
 - `caim.doxaxsolutions.com` is deployed as a host-specific CAIM-owned site.
 - The CAIM home page mirrors the source home page content from `D:\workspace\doxaxsolutions.com`, including the hero, Our Services, AI Opportunities, challenges, process, latest articles, and FAQ sections.
 - The homepage is self-contained and uses CAIM-local content only.
-- The current English pages use `EN / ZH` labels only; Chinese page content is not enabled yet.
+- The site includes paired English and Traditional Chinese pages. The `EN / ZH` language switch links each page to its matching translation.
 - Legacy CAIM routes now redirect back to the CAIM home page.
 - CAIM routes are intentionally separate from the theology host and do not link to `www.doxaxsolutions.com`.
 

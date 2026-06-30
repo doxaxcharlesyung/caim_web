@@ -31,10 +31,15 @@ jobs:
           sudo install -d /opt/caim_web/assets
           sudo install -m 0644 app.py /opt/caim_web/app.py
           sudo install -m 0644 home.html /opt/caim_web/home.html
+          sudo install -m 0644 zh_home.html /opt/caim_web/zh_home.html
           sudo install -m 0644 dx_sermon.html /opt/caim_web/dx_sermon.html
+          sudo install -m 0644 zh_dx_sermon.html /opt/caim_web/zh_dx_sermon.html
           sudo install -m 0644 ai_courses.html /opt/caim_web/ai_courses.html
+          sudo install -m 0644 zh_ai_courses.html /opt/caim_web/zh_ai_courses.html
           sudo install -m 0644 workshop.html /opt/caim_web/workshop.html
+          sudo install -m 0644 zh_workshop.html /opt/caim_web/zh_workshop.html
           sudo install -m 0644 how_to_help.html /opt/caim_web/how_to_help.html
+          sudo install -m 0644 zh_how_to_help.html /opt/caim_web/zh_how_to_help.html
           sudo install -m 0644 index.html /opt/caim_web/index.html
           sudo install -m 0644 site.css /opt/caim_web/site.css
           sudo cp -R assets/. /opt/caim_web/assets/
