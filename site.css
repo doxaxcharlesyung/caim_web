@@ -398,6 +398,74 @@ h1 {
   border-left: 4px solid var(--green);
   background: #fafcf9;
 }
+.missionary-discount {
+  position: relative;
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+  margin: 0 0 34px;
+  padding: 30px 34px;
+  overflow: hidden;
+  border: 1px solid rgba(91, 32, 240, 0.2);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(91, 32, 240, 0.96) 0%, rgba(60, 155, 208, 0.94) 100%),
+    #4b2ab7;
+  color: #fff;
+  box-shadow: 0 22px 52px rgba(48, 34, 92, 0.18);
+}
+.missionary-discount::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  pointer-events: none;
+}
+.missionary-discount__badge {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: 130px;
+  padding: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.missionary-discount__content {
+  position: relative;
+  z-index: 1;
+}
+.missionary-discount__eyebrow {
+  margin: 0 0 8px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.missionary-discount h2 {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 1;
+}
+.missionary-discount h2 span {
+  color: #bff28c;
+}
+.missionary-discount p {
+  max-width: 66ch;
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 18px;
+}
 
 .workshop-source-hero {
   min-height: 311px;
@@ -570,6 +638,16 @@ h1 {
   .workshop-stat {
     min-height: 86px;
   }
+  .missionary-discount {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .missionary-discount__badge {
+    min-height: auto;
+    width: fit-content;
+    border-radius: 999px;
+    padding: 10px 18px;
+  }
   .hero__panel img,
   .split__media img {
     min-height: 280px;
@@ -603,6 +681,16 @@ h1 {
   .section { padding: 58px 0; }
   .split__copy,
   .block { padding: 22px; }
+  .missionary-discount {
+    padding: 24px;
+  }
+  .missionary-discount h2 {
+    font-size: 30px;
+    line-height: 1.08;
+  }
+  .missionary-discount p {
+    font-size: 16px;
+  }
   .workshop-source-hero {
     min-height: 250px;
   }
