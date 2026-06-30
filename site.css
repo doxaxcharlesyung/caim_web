@@ -339,6 +339,90 @@ h1 {
   padding-left: 18px;
 }
 
+.article-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.article-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(23, 32, 23, 0.05);
+}
+.article-card__media {
+  display: block;
+  background: #ece7df;
+}
+.article-card__media img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+.article-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px;
+}
+.article-card__body h3 {
+  margin: 0;
+  color: #1d2830;
+  font-size: 22px;
+  line-height: 1.15;
+}
+.article-card__body h3 a:hover,
+.article-card__body h3 a:focus,
+.article-card__link:hover,
+.article-card__link:focus {
+  color: var(--blue-strong);
+}
+.article-card__body p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+}
+.article-card__link {
+  margin-top: auto;
+  color: var(--purple);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.faq-table {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+.faq-row {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+.faq-row:first-child {
+  border-top: 0;
+}
+.faq-q,
+.faq-a {
+  padding: 20px 24px;
+  font-size: 16px;
+}
+.faq-q {
+  background: #fbfaf7;
+  color: #1d2830;
+  font-weight: 800;
+}
+.faq-a {
+  color: var(--muted);
+}
+
 .page-hero {
   position: relative;
   overflow: hidden;
@@ -636,9 +720,11 @@ h1 {
   .split,
   .page-grid-2,
   .blocks,
+  .article-grid,
   .course-grid,
   .grid-3,
   .workshop-stats__grid,
+  .faq-row,
   .workshop-posters__grid {
     grid-template-columns: 1fr;
   }
@@ -700,6 +786,10 @@ h1 {
   }
   .missionary-discount p {
     font-size: 16px;
+  }
+  .faq-q,
+  .faq-a {
+    padding: 18px 20px;
   }
   .workshop-source-hero {
     min-height: 250px;
