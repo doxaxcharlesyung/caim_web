@@ -394,33 +394,51 @@ h1 {
   text-transform: uppercase;
 }
 
-.faq-table {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  overflow: hidden;
+.faq-heading {
+  margin: 0 0 24px;
+  color: #62b6e8;
+  font-size: clamp(30px, 3vw, 42px);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.faq-accordion {
+  border: 1px solid #d7dbe1;
+  border-bottom: 0;
   background: #fff;
 }
-.faq-row {
-  display: grid;
-  grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
-  gap: 0;
-  border-top: 1px solid var(--line);
+.faq-item {
+  border-bottom: 1px solid #d7dbe1;
 }
-.faq-row:first-child {
-  border-top: 0;
-}
-.faq-q,
-.faq-a {
-  padding: 20px 24px;
+.faq-item summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 16px;
+  cursor: pointer;
+  color: #202020;
   font-size: 16px;
+  line-height: 1.35;
 }
-.faq-q {
-  background: #fbfaf7;
-  color: #1d2830;
-  font-weight: 800;
+.faq-item summary::-webkit-details-marker {
+  display: none;
 }
-.faq-a {
+.faq-item summary::before {
+  content: "+";
+  flex: 0 0 auto;
+  color: #202020;
+  font-size: 18px;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+.faq-item[open] summary::before {
+  content: "−";
+}
+.faq-panel {
+  padding: 0 16px 16px 42px;
   color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .page-hero {
@@ -724,7 +742,6 @@ h1 {
   .course-grid,
   .grid-3,
   .workshop-stats__grid,
-  .faq-row,
   .workshop-posters__grid {
     grid-template-columns: 1fr;
   }
@@ -787,9 +804,14 @@ h1 {
   .missionary-discount p {
     font-size: 16px;
   }
-  .faq-q,
-  .faq-a {
-    padding: 18px 20px;
+  .faq-heading {
+    font-size: 28px;
+  }
+  .faq-item summary {
+    padding: 14px 14px;
+  }
+  .faq-panel {
+    padding: 0 14px 14px 38px;
   }
   .workshop-source-hero {
     min-height: 250px;
