@@ -77,16 +77,17 @@ Create these repository secrets before pushing deployment changes to `main`:
 - `PROD_USER`: `cyung`
 - `PROD_SECRET_KEY`: a long, random value used by Flask as the production `SECRET_KEY`
 - `PROD_SSH_PRIVATE_KEY`: the private SSH key authorized for the `cyung` account on the production server
-- `PROD_CRM_API_URL`: `https://dxcrm.doxaxsolutions.com/api/v1/public/consultation-intake`
 - `PROD_CRM_CONSULTATION_TOKEN`: the optional token matching dx-crm's `CONSULTATION_FORM_SECRET`
 
 `PROD_SECRET_KEY` and `PROD_SSH_PRIVATE_KEY` are different secrets and must not be reused for
 each other. The workflow writes `PROD_SECRET_KEY` to `/opt/caim_web/.env` with owner-only
 permissions. Do not commit any secret value to the repository or place it in this file.
 
-The CAIM contact form submits server-side to dx-crm's public consultation intake endpoint. The
-browser never receives the CRM token. The submitted name, organization, email, phone, inquiry
-type, and message are mapped to a dx-crm consultation request.
+The deployment writes the non-secret CRM endpoint to `/opt/caim_web/.env` as
+`CRM_API_URL=https://dxcrm.doxaxsolutions.com/api/v1/public/consultation-intake`. The CAIM
+contact form submits server-side to this dx-crm endpoint; the browser never receives the CRM
+token. The submitted name, organization, email, phone, inquiry type, and message are mapped to a
+dx-crm consultation request.
 
 No MySQL secret is required by the current migration because article database integration has
 not been implemented yet. When MySQL is added, create a separate secret such as

@@ -4,12 +4,16 @@ import os
 import httpx
 
 logger = logging.getLogger(__name__)
-CRM_API_URL = os.getenv("CRM_API_URL", "https://dxcrm.doxaxsolutions.com/api/v1/public/consultation-intake")
+CRM_API_URL = os.getenv("CRM_API_URL", "")
 CRM_CONSULTATION_TOKEN = os.getenv("CRM_CONSULTATION_TOKEN", "")
 CRM_TIMEOUT_SECONDS = float(os.getenv("CRM_TIMEOUT_SECONDS", "15"))
 
 
 def submit_consultation_request(payload: dict[str, str]) -> tuple[bool, str]:
+    if not CRM_API_URL:
+        logger.error("CRM_API_URL is not configured")
+        return False, "The request service is not configured. Please try again later."
+
     headers = {"Accept": "application/json"}
     if CRM_CONSULTATION_TOKEN:
         headers["X-Consultation-Token"] = CRM_CONSULTATION_TOKEN
