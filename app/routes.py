@@ -1,5 +1,6 @@
-from flask import Blueprint, abort, current_app, g, render_template
+from flask import Blueprint, abort, current_app, g, render_template, request
 
+from .crm import submit_consultation_request
 from .data import PAGE_META
 
 public = Blueprint("public", __name__)
@@ -82,9 +83,33 @@ def article_detail(slug: str):
     return page("articles/detail.html", "articles", slug=slug)
 
 
-@public.get("/contact/")
+@public.route("/contact/", methods=["GET", "POST"])
 def contact():
-    return page("pages/contact.html", "contact")
+    contact_notice = ""
+    contact_error = ""
+    if request.method == "POST":
+        form = request.form
+        name_parts = form.get("name", "").strip().split(maxsplit=1)
+        first_name = name_parts[0] if name_parts else ""
+        last_name = name_parts[1] if len(name_parts) > 1 else "-"
+        message = form.get("message", "").strip()
+        payload = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": form.get("email", "").strip(),
+            "phone": form.get("phone", "").strip(),
+            "company_name": form.get("organization", "").strip(),
+            "message": f"查詢類別：{form.get('type', '一般查詢').strip()}\n\n{message}",
+        }
+        if not first_name or not payload["email"] or not message:
+            contact_error = "請填寫姓名、電郵及訊息內容。"
+        else:
+            submitted, error_message = submit_consultation_request(payload)
+            if submitted:
+                contact_notice = "查詢已成功送出，CAIM 團隊將與你聯絡。"
+            else:
+                contact_error = error_message
+    return page("pages/contact.html", "contact", contact_notice=contact_notice, contact_error=contact_error)
 
 
 @public.app_errorhandler(404)

@@ -96,6 +96,16 @@ jobs:
             ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
               "sudo install -o '$PROD_USER' -g '$PROD_USER' -m 0600 /dev/stdin '$PROD_APP_DIR/.env'"
 
+      - name: Configure CRM integration
+        env:
+          PROD_CRM_API_URL: ${{ secrets.PROD_CRM_API_URL }}
+          PROD_CRM_CONSULTATION_TOKEN: ${{ secrets.PROD_CRM_CONSULTATION_TOKEN }}
+        run: |
+          test -n "$PROD_CRM_API_URL"
+          printf 'CRM_API_URL=%s\nCRM_CONSULTATION_TOKEN=%s\n' "$PROD_CRM_API_URL" "$PROD_CRM_CONSULTATION_TOKEN" |
+            ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+              "sudo tee -a '$PROD_APP_DIR/.env' >/dev/null && sudo chown '$PROD_USER':'$PROD_USER' '$PROD_APP_DIR/.env' && sudo chmod 0600 '$PROD_APP_DIR/.env'"
+
       - name: Prepare production virtual environment
         run: |
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
