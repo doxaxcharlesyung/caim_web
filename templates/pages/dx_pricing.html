@@ -1,0 +1,4 @@
+{% extends "layouts/base.html" %}{% block content %}
+{% set hero_title='DX Sermon 收費計劃' %}{% set hero_subtitle='按你的研經、講道預備與團隊需要，選擇合適的使用方式。' %}{% set hero_image='dx-sermon-one-stop.png' %}{% include 'components/page_hero.html' %}
+<section class="section"><div class="container"><div class="pricing-grid">{% for name,audience in [('體驗計劃','適合初次認識 DX Sermon 的使用者'),('個人計劃','適合牧者、傳道人、神學生及信徒'),('教會及機構計劃','適合需要多人協作和培訓的團隊')] %}<article class="price-card sacred-card"><span class="kicker">{{ name }}</span><h2>{{ audience }}</h2><p>詳細功能、用量及最新價格，請聯絡 CAIM 團隊查詢。</p><a class="btn btn-primary" href="{{ url_for('public.contact') }}">查詢計劃</a></article>{% endfor %}</div></div></section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+<section class="home-hero glow-host" data-glow>
+  <div class="hero-backdrop"><img src="{{ url_for('static', filename='assets/caim-hero-sacred-threshold.png') }}" alt="教會與人工智能時代的交會"></div>
+  <div class="container hero-content reveal">
+    <span class="kicker">CENTRE FOR AI &amp; MINISTRY</span>
+    <h1>在人工智能時代，<br>以智慧忠心服事</h1>
+    <p>結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問，與教會一起辨識科技、塑造實踐、回應使命。</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="{{ url_for('public.about') }}">認識 CAIM</a><a class="btn btn-ivory" href="{{ url_for('public.contact') }}">與我們同行</a></div>
+  </div>
+</section>
+<section class="section"><div class="container split"><div>{% set section_title='人工智能事工中心是甚麼？' %}{% set section_text='人工智能事工中心 (Centre for AI & Ministry, CAIM) 是一個結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問的事工平台。我們與教會同行，幫助信仰群體在 AI 時代中，不只是追趕科技，而是以清晰的使命、成熟的辨識與負責任的實踐，塑造科技在教會中的合宜使用。' %}{% include 'components/section_header.html' %}</div><div class="media-frame reveal"><img src="{{ url_for('static', filename='assets/caim-ministry.png') }}" alt="CAIM 人工智能事工"></div></div></section>
+<section class="section dark transform-section"><div class="container"><div class="section-header center"><h2 class="section-title reveal">三個同行向度</h2><p class="section-copy reveal">從信仰反思開始，建立清晰的使用界線，並將 AI 合宜地應用在實際事工之中。</p></div><div class="feature-grid"><article class="sacred-card info-card reveal"><h3>神學辨識</h3><p>從聖經、教義與教會使命出發，理解人工智能對人、群體與事奉的意義。</p></article><article class="sacred-card info-card reveal"><h3>倫理治理</h3><p>建立透明、安全、負責任的原則，保護私隱並守護教會群體。</p></article><article class="sacred-card info-card reveal"><h3>事工實踐</h3><p>把合適的工具融入研經、講道、培訓、行政與宣教工作。</p></article></div></div></section>
+<section class="section"><div class="container split"><div class="media-frame reveal"><img src="{{ url_for('static', filename='assets/dx-sermon-spirit.jpg') }}" alt="聖經研習"></div><div>{% set section_title='DX Sermon：為牧者與信徒而設的人工智能聖經研習平台' %}{% set section_text='DX Sermon 幫助牧者、傳道人、神學生及信徒從經文出發，進行多維度研究、釋經分析、講章構思與查經材料預備。它不是取代禱告、默想與釋經功夫，而是成為一個有啟迪、有深度、能促進信仰反思的研經空間。' %}{% include 'components/section_header.html' %}<a class="btn btn-primary" href="{{ url_for('public.dx_sermon') }}">了解 DX Sermon</a></div></div></section>
+<section class="section alt"><div class="container"><div class="section-header center"><h2 class="section-title reveal">為牧者、領袖與信徒而設的實用 AI 課程</h2><p class="section-copy reveal">公開講座、實務工作坊、教會內部培訓及宗派領袖研討會。</p></div><div class="center-action"><a class="btn btn-primary" href="{{ url_for('public.courses') }}">瀏覽課程與講座</a></div></div></section>
+{% endblock %}

@@ -1,4 +1,4 @@
-name: Deploy to PROD
+name: Deploy CAIM to PROD
 
 on:
   push:
@@ -12,54 +12,79 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, prod]
+    runs-on: ubuntu-latest
+    environment: PROD
     permissions:
       contents: read
+
+    env:
+      PROD_SERVER: ${{ secrets.PROD_SERVER }}
+      PROD_PORT: ${{ secrets.PROD_PORT }}
+      PROD_USER: ${{ secrets.PROD_USER }}
+      PROD_APP_DIR: /opt/caim_web
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Validate Apache vhost templates
+      - name: Validate Flask application
         run: |
-          test -f deploy/apache/caim.doxaxsolutions.com.conf
-          test -f deploy/apache/caim.doxaxsolutions.com-le-ssl.conf
-          test -f deploy/systemd/doxax-caim-web.service
+          test -f app/__init__.py
+          test -f app/routes.py
+          test -f templates/layouts/base.html
+          test -f static/css/site.css
+          test -f wsgi.py
+          python3 -m compileall -q app app.py wsgi.py
 
-      - name: Install CAIM site files
+      - name: Configure SSH authentication
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
+
+      - name: Trust production SSH host
         run: |
-          sudo install -d /opt/caim_web/assets
-          sudo install -m 0644 app.py /opt/caim_web/app.py
-          sudo install -m 0644 home.html /opt/caim_web/home.html
-          sudo install -m 0644 zh_home.html /opt/caim_web/zh_home.html
-          sudo install -m 0644 dx_sermon.html /opt/caim_web/dx_sermon.html
-          sudo install -m 0644 zh_dx_sermon.html /opt/caim_web/zh_dx_sermon.html
-          sudo install -m 0644 ai_courses.html /opt/caim_web/ai_courses.html
-          sudo install -m 0644 zh_ai_courses.html /opt/caim_web/zh_ai_courses.html
-          sudo install -m 0644 workshop.html /opt/caim_web/workshop.html
-          sudo install -m 0644 zh_workshop.html /opt/caim_web/zh_workshop.html
-          sudo install -m 0644 how_to_help.html /opt/caim_web/how_to_help.html
-          sudo install -m 0644 zh_how_to_help.html /opt/caim_web/zh_how_to_help.html
-          sudo install -m 0644 index.html /opt/caim_web/index.html
-          sudo install -m 0644 site.css /opt/caim_web/site.css
-          sudo cp -R assets/. /opt/caim_web/assets/
+          test -n "$PROD_SERVER"
+          test -n "$PROD_PORT"
+          test -n "$PROD_USER"
+          mkdir -p "$HOME/.ssh"
+          chmod 700 "$HOME/.ssh"
+          ssh-keyscan -p "$PROD_PORT" -H "$PROD_SERVER" >> "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
 
-      - name: Install Apache vhost files
+      - name: Verify production SSH access
         run: |
-          sudo install -m 0644 deploy/apache/caim.doxaxsolutions.com.conf /etc/httpd/conf.d/caim.doxaxsolutions.com.conf
-          sudo install -m 0644 deploy/apache/caim.doxaxsolutions.com-le-ssl.conf /etc/httpd/conf.d/caim.doxaxsolutions.com-le-ssl.conf
+          ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" "printf 'SSH connection established\\n'"
 
-      - name: Install CAIM systemd service
+      - name: Transfer application to production
         run: |
-          sudo install -m 0644 deploy/systemd/doxax-caim-web.service /etc/systemd/system/doxax-caim-web.service
-          sudo systemctl daemon-reload
-          sudo systemctl enable doxax-caim-web.service
+          tar -czf - app templates static app.py wsgi.py requirements.txt deploy |
+            ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+              "sudo install -d -o '$PROD_USER' -g '$PROD_USER' '$PROD_APP_DIR' && sudo tar -xzf - -C '$PROD_APP_DIR'"
 
-      - name: Test Apache configuration
-        run: sudo apachectl configtest
+          ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+            "sudo chown -R '$PROD_USER':'$PROD_USER' '$PROD_APP_DIR/app' '$PROD_APP_DIR/templates' '$PROD_APP_DIR/static'"
 
-      - name: Restart CAIM app
-        run: sudo systemctl restart doxax-caim-web.service
+      - name: Configure production application secret
+        env:
+          PROD_SECRET_KEY: ${{ secrets.PROD_SECRET_KEY }}
+        run: |
+          test -n "$PROD_SECRET_KEY"
+          printf 'SECRET_KEY=%s\n' "$PROD_SECRET_KEY" |
+            ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+              "sudo install -o '$PROD_USER' -g '$PROD_USER' -m 0600 /dev/stdin '$PROD_APP_DIR/.env'"
 
-      - name: Reload Apache
-        run: sudo systemctl reload httpd
+      - name: Prepare production virtual environment
+        run: |
+          ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+            "if [ ! -x '$PROD_APP_DIR/.venv/bin/python' ]; then python3.12 -m venv '$PROD_APP_DIR/.venv'; fi && '$PROD_APP_DIR/.venv/bin/python' -m pip install --upgrade pip && '$PROD_APP_DIR/.venv/bin/pip' install --requirement '$PROD_APP_DIR/requirements.txt'"
+
+      - name: Install and restart CAIM service
+        run: |
+          ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+            "sudo install -m 0644 '$PROD_APP_DIR/deploy/systemd/doxax-caim-web.service' /etc/systemd/system/doxax-caim-web.service && sudo install -m 0644 '$PROD_APP_DIR/deploy/apache/caim.doxaxsolutions.com.conf' /etc/httpd/conf.d/caim.doxaxsolutions.com.conf && sudo install -m 0644 '$PROD_APP_DIR/deploy/apache/caim.doxaxsolutions.com-le-ssl.conf' /etc/httpd/conf.d/caim.doxaxsolutions.com-le-ssl.conf && sudo apachectl configtest && sudo systemctl daemon-reload && sudo systemctl enable doxax-caim-web.service && sudo systemctl restart doxax-caim-web.service && sudo systemctl is-active --quiet doxax-caim-web.service"
+
+      - name: Reload Apache and run health checks
+        run: |
+          ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+            "sudo systemctl reload httpd && curl --fail --silent --show-error http://127.0.0.1:18003/ >/dev/null"
+          curl --fail --silent --show-error --head "https://$PROD_SERVER/"

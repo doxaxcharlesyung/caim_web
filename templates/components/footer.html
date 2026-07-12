@@ -1,0 +1,11 @@
+<footer class="footer dark grid-texture">
+  <div class="container footer-grid">
+    <div>
+      <a class="footer-brand" href="{{ url_for('public.home') }}"><img class="footer-logo" src="{{ url_for('static', filename='assets/caim-dx-logo.png') }}" alt=""><span><strong>{{ site.name }}</strong><small>{{ site.tagline }}</small></span></a>
+      <p>在 AI 時代，與教會同行，以神學深度、倫理智慧與使命意識，負責任地塑造科技在教會中的使用。</p>
+    </div>
+    <nav aria-label="頁尾導覽">{% for item in navigation %}<a href="{{ url_for(item.endpoint) }}">{{ item.label }}</a>{% endfor %}</nav>
+    <div><h2>聯絡</h2><a href="mailto:{{ site.email }}">{{ site.email }}</a><a class="btn btn-primary" href="{{ url_for('public.contact') }}">預約講座及訓練</a></div>
+  </div>
+  <div class="container footer-bottom">© {{ current_year }} CAIM. All rights reserved.</div>
+</footer>

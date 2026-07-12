@@ -1,0 +1,4 @@
+{% extends "layouts/base.html" %}{% block content %}
+{% set hero_title='教會AI轉型支援' %}{% set hero_subtitle='從準備度評估、倫理政策、AI 系統設計到牧者培訓，CAIM 與教會同行，建立安全、負責任、信仰導向的人工智能應用路徑。' %}{% set hero_image='reading-book.jpg' %}{% include 'components/page_hero.html' %}
+<section class="section"><div class="container service-list">{% for title,text in [('AI 準備度評估','了解教會現況、使命、風險與可行起步點。'),('教會 AI 政策與倫理治理','建立私隱、安全、問責與使用界線。'),('事工流程與工具設計','把人工智能合宜地融入行政、教學、牧養與溝通。'),('牧者與領袖培訓','提升領袖對人工智能的理解、辨識與決策能力。')] %}<article class="service-row reveal"><span class="index">0{{ loop.index }}</span><div><h2>{{ title }}</h2><p>{{ text }}</p></div></article>{% endfor %}</div></section>
+{% endblock %}

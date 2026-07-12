@@ -1,0 +1,4 @@
+{% extends "layouts/base.html" %}{% block content %}
+{% set hero_title='專欄文章' %}{% set hero_subtitle='整理 CAIM 對人工智能、教會實踐、神學辨識與時代使命的觀察、反思與分享。' %}{% set hero_image='articles-hero-bible.jpg' %}{% include 'components/page_hero.html' %}
+<section class="section"><div class="container"><div class="section-header"><h2 class="section-title">最新文章</h2><p class="section-copy">文章資料庫將在下一個獲批准的階段接入；目前保留完整的列表版面與路由接口。</p></div><div class="article-grid"><article class="article-card sacred-card"><img src="{{ url_for('static', filename='assets/reading-book.jpg') }}" alt=""><div><span class="kicker">人工智能與信仰</span><h2>文章內容即將發佈</h2><p>未來文章會由 Python 從 MySQL 讀取，並在這個固定模板內呈現。</p></div></article></div></div></section>
+{% endblock %}

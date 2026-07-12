@@ -1,0 +1,10 @@
+<section class="page-hero glow-host {{ hero_variant|default('') }}" data-glow>
+  <div class="container page-hero-grid">
+    <div class="page-hero-copy reveal">
+      {% if hero_eyebrow %}<span class="page-hero-eyebrow">{{ hero_eyebrow }}</span>{% endif %}
+      <h1>{{ hero_title }}</h1><p>{{ hero_subtitle }}</p>
+      {% block hero_actions scoped %}{% endblock %}
+    </div>
+    {% if hero_image %}<div class="page-hero-media reveal"><img src="{{ url_for('static', filename='assets/' ~ hero_image) }}" alt="{{ hero_alt|default('') }}"></div>{% endif %}
+  </div>
+</section>
