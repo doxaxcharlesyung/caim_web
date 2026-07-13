@@ -84,6 +84,14 @@ class ArticleStudioTests(unittest.TestCase):
             / "doxax-caim-web.service"
         ).read_text(encoding="utf-8")
         self.assertIn("--limit-request-field_size 32768", service)
+        apache_http = (
+            Path(__file__).resolve().parents[1]
+            / "deploy"
+            / "apache"
+            / "caim.doxaxsolutions.com.conf"
+        ).read_text(encoding="utf-8")
+        self.assertIn("Redirect permanent / https://caim.doxaxsolutions.com/", apache_http)
+        self.assertNotIn("ProxyPass /", apache_http)
         anonymous = self.app.test_client().get("/article-dashboard/")
         self.assertEqual(anonymous.status_code, 302)
         self.assertIn("/article-dashboard/login/", anonymous.location)
