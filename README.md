@@ -100,17 +100,29 @@ Run the database-backed route tests with:
 .venv\Scripts\python -m unittest discover -s tests -v
 ```
 
-## Article Dashboard and Studio
+## Content Manager
 
-The authenticated entry point is `/article-dashboard/`. Administrator accounts and password
-hashes are stored in the `admin_users` MySQL table. The initial migration seeds user `admin`;
-change its initial password immediately through the user-management page.
+The content-management application is separated from the public CAIM layout under `/content`.
+Its authenticated entry point is `/content/content-manager`; successful login lands on
+`/content/content-dashboard`. Administrator accounts and password hashes are stored in the
+`admin_users` MySQL table. The initial migration seeds user `admin`; change its initial password
+immediately through `/content/users`.
 
-The dashboard provides article search, six tiles per page, pagination, Saved/Posted/Expired
-statuses, soft deletion, and links into `/article-studio/`. The studio supports scheduled posting,
-Hero image replacement/removal, DOCX/PDF/Markdown extraction, saving for later, and posting.
-Expired and Deleted records are hidden from the public site. Deleted records remain in MySQL for
-manual review and physical deletion by a database administrator.
+The dashboard provides navigation for three managed content groups:
+
+- Articles: `/content/articles` and `/content/article-studio`
+- Courses and workshop/events: `/content/courses` and `/content/course-studio`
+- News and events: `/content/news` and `/content/news-studio`
+
+Each library provides search, six tiles per page, pagination, Saved/Posted/Expired statuses,
+scheduled posting, and soft deletion. Article Studio retains document extraction and Hero image
+upload. Course Studio manages the existing public `/courses/` listing and detail pages, with
+workshops classified as `event`. News Studio manages normalized records imported from the Astro
+`src/data/news.ts`; posted news is shown on the CAIM home page.
+
+Expired and Deleted records are hidden from public pages. Deleted records remain in MySQL for
+manual review and physical deletion by a database administrator. Legacy `/article-dashboard/`
+and `/article-studio/` GET URLs redirect to the new content manager.
 
 For an existing installation, apply the dashboard migration once:
 
@@ -141,7 +153,7 @@ intranet address `192.168.2.43`.
 
 - Apache vhost templates for `caim.doxaxsolutions.com` live in [`deploy/apache/`](deploy/apache/).
 - The CAIM vhost uses the same name-based vhost pattern as `theology.doxaxsolutions.com`.
-- Both HTTP and HTTPS proxy to `127.0.0.1:18003`, which serves the dedicated CAIM app from `/opt/caim_web`.
+- HTTP redirects permanently to HTTPS; the HTTPS vhost proxies to `127.0.0.1:18003`, which serves the dedicated CAIM app from `/opt/caim_web`.
 - `test.doxaxsolutions.com` remains separate and is served from `/opt/test.doxaxsolutions.com` on `127.0.0.1:18000`.
 - The CAIM app itself serves a host-specific home page at `/`, and the current CAIM pages are self-contained.
 - The SSL vhost expects a Let's Encrypt certificate at `/etc/letsencrypt/live/caim.doxaxsolutions.com/`.

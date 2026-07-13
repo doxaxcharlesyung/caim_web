@@ -11,6 +11,7 @@ from .content import (
     get_course,
     get_courses,
     get_page,
+    get_news_items,
     get_studio_article,
     get_dashboard_articles,
     save_studio_article,
@@ -53,7 +54,7 @@ def home():
         pillars=get_collection("pillars"),
         services=get_collection("services"),
         testimonials=get_collection("testimonials"),
-        news_items=get_collection("newsItems"),
+        news_items=get_news_items(),
     )
 
 
@@ -133,6 +134,8 @@ def article_detail(slug: str):
 @public.route("/article-studio/", methods=["GET", "POST"])
 @admin_required
 def article_studio():
+    if request.method == "GET":
+        return redirect(url_for("content_admin.article_studio", slug=request.args.get("slug", "")))
     selected_slug = request.args.get("slug", "").strip()
     selected = get_studio_article(selected_slug) if selected_slug else None
     notice = request.args.get("notice", "")
@@ -178,6 +181,7 @@ def article_studio_delete():
 
 @public.route("/article-dashboard/login/", methods=["GET", "POST"])
 def article_dashboard_login():
+    return redirect(url_for("content_admin.content_manager"), code=301)
     error = ""
     if request.method == "POST":
         if request.form.get("csrf_token") != session.get("login_csrf"):
@@ -201,6 +205,7 @@ def article_dashboard_logout():
 @public.get("/article-dashboard/")
 @admin_required
 def article_dashboard():
+    return redirect(url_for("content_admin.content_dashboard"), code=301)
     search = request.args.get("q", "").strip()
     try:
         current_page = max(1, int(request.args.get("page", 1)))
@@ -224,6 +229,8 @@ def article_dashboard_status(slug):
 @public.route("/article-dashboard/users/", methods=["GET", "POST"])
 @admin_required
 def article_dashboard_users():
+    if request.method == "GET":
+        return redirect(url_for("content_admin.users"), code=301)
     error = ""
     if request.method == "POST":
         if not validate_csrf(request.form.get("csrf_token")):

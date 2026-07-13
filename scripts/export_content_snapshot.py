@@ -32,8 +32,9 @@ def main():
             for table, query in {
                 "page_content": "SELECT content_key,title,subtitle,sections FROM page_content ORDER BY id",
                 "content_items": "SELECT collection_name,item_key,sort_order,item_data FROM content_items ORDER BY collection_name,sort_order,id",
-                "courses": "SELECT code,slug,title,description,image,alt,href,cta_label,detail,sort_order,is_published FROM courses ORDER BY sort_order,id",
+                "courses": "SELECT code,slug,title,description,image,alt,href,cta_label,detail,sort_order,is_published,content_type,status,scheduled_posting_at,posted_at FROM courses WHERE status<>'deleted' ORDER BY sort_order,id",
                 "articles": "SELECT slug,title,excerpt,category,image,alt,published_date,href,detail,status,scheduled_posting_at,posted_at FROM articles WHERE status<>'deleted' ORDER BY id",
+                "news": "SELECT slug,title,event_date,date_label,content,content_type,status,scheduled_posting_at,posted_at FROM news WHERE status<>'deleted' ORDER BY event_date DESC,id",
             }.items():
                 cursor.execute(query)
                 snapshot[table] = cursor.fetchall()

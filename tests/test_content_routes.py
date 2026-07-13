@@ -34,6 +34,8 @@ class ContentRouteTests(unittest.TestCase):
 
 class ArticleStudioTests(unittest.TestCase):
     slug = "article-studio-automated-test"
+    course_slug = "content-manager-course-test"
+    news_slug = "content-manager-news-test"
 
     @classmethod
     def setUpClass(cls):
@@ -42,19 +44,23 @@ class ArticleStudioTests(unittest.TestCase):
             "SECRET_KEY": "article-studio-test-secret",
         })
         cls.client = cls.app.test_client()
-        login_page = cls.client.get("/article-dashboard/login/").get_data(as_text=True)
+        login_page = cls.client.get("/content/content-manager").get_data(as_text=True)
         token = re.search(r'name="csrf_token" value="([^"]+)"', login_page).group(1)
-        response = cls.client.post("/article-dashboard/login/", data={"csrf_token": token, "username": "admin", "password": "New2P@ss"})
+        response = cls.client.post("/content/content-manager", data={"csrf_token": token, "username": "admin", "password": "New2P@ss"})
         assert response.status_code == 302
 
     @classmethod
     def tearDownClass(cls):
         from app.content import delete_studio_article
+        from app.db import get_db
         with cls.app.app_context():
             delete_studio_article(cls.slug)
+            with get_db().cursor() as cursor:
+                cursor.execute("DELETE FROM courses WHERE slug=%s", (cls.course_slug,))
+                cursor.execute("DELETE FROM news WHERE slug=%s", (cls.news_slug,))
 
     def csrf_token(self):
-        page = self.client.get("/article-studio/").get_data(as_text=True)
+        page = self.client.get("/content/article-studio").get_data(as_text=True)
         return re.search(r'name="csrf_token" value="([^"]+)"', page).group(1)
 
     def article_data(self, action):
@@ -92,34 +98,62 @@ class ArticleStudioTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("Redirect permanent / https://caim.doxaxsolutions.com/", apache_http)
         self.assertNotIn("ProxyPass /", apache_http)
-        anonymous = self.app.test_client().get("/article-dashboard/")
+        anonymous = self.app.test_client().get("/content/content-dashboard")
         self.assertEqual(anonymous.status_code, 302)
-        self.assertIn("/article-dashboard/login/", anonymous.location)
+        self.assertIn("/content/content-manager", anonymous.location)
         self.assertNotIn("?next=", anonymous.location)
 
         response = self.client.post(
-            "/article-studio/", data=self.article_data("save")
+            "/content/article-studio", data=self.article_data("save")
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.client.get(f"/articles/{self.slug}/").status_code, 404)
-        saved = self.client.get("/article-dashboard/").get_data(as_text=True)
+
+    def test_course_and_news_management_workflows(self):
+        token = self.csrf_token()
+        course = {
+            "csrf_token": token, "action": "post", "code": "TST901", "slug": self.course_slug,
+            "content_type": "event", "sort_order": "99", "title": "Content Manager Workshop",
+            "description": "Workshop managed from the course studio.", "image": "/assets/courses-training-courses.png",
+            "alt": "Workshop", "cta_label": "Details", "eyebrow": "WORKSHOP", "subtitle": "Managed event",
+            "body": "Workshop first paragraph.\n\nWorkshop second paragraph.", "scheduled_posting_at": "2026-01-01T09:00",
+        }
+        response = self.client.post("/content/course-studio", data=course)
+        self.assertEqual(response.status_code, 302)
+        public_course = self.client.get(f"/courses/{self.course_slug}/")
+        self.assertEqual(public_course.status_code, 200)
+        self.assertIn("Workshop second paragraph.", public_course.get_data(as_text=True))
+
+        news = {
+            "csrf_token": token, "action": "post", "slug": self.news_slug, "content_type": "news",
+            "event_date": "2026-01-01", "date_label": "JAN. 01, 2026", "title": "Content Manager News Test",
+            "content": "News migrated and managed in the normalized news table.", "scheduled_posting_at": "2026-01-01T09:00",
+        }
+        response = self.client.post("/content/news-studio", data=news)
+        self.assertEqual(response.status_code, 302)
+        home = self.client.get("/").get_data(as_text=True)
+        self.assertIn("Content Manager News Test", home)
+        dashboard = self.client.get("/content/content-dashboard").get_data(as_text=True)
+        self.assertIn("Courses & Workshops", dashboard)
+        self.assertIn("News & Events", dashboard)
+        saved = self.client.get("/content/articles").get_data(as_text=True)
         self.assertIn(self.slug, saved)
         self.assertIn("Saved", saved)
         loaded = self.client.get(
-            f"/article-studio/?slug={self.slug}"
+            f"/content/article-studio?slug={self.slug}"
         ).get_data(as_text=True)
         self.assertIn("First paragraph.", loaded)
         self.assertIn("Database-backed article studio test.", loaded)
 
         response = self.client.post(
-            "/article-studio/", data=self.article_data("post")
+            "/content/article-studio", data=self.article_data("post")
         )
         self.assertEqual(response.status_code, 302)
         public = self.client.get(f"/articles/{self.slug}/")
         self.assertEqual(public.status_code, 200)
         self.assertIn("Second paragraph.", public.get_data(as_text=True))
 
-        response = self.client.post(f"/article-dashboard/articles/{self.slug}/status/",
+        response = self.client.post(f"/content/articles/{self.slug}/status",
             data={"csrf_token": self.csrf_token(), "status": "deleted"})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.client.get(f"/articles/{self.slug}/").status_code, 404)

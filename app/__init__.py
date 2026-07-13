@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from .context import register_context
+from .content_manager import content_admin
 from .db import close_db
 from .routes import public
 
@@ -31,6 +32,7 @@ def create_app(config: dict | None = None) -> Flask:
         app.config.update(config)
 
     app.register_blueprint(public)
+    app.register_blueprint(content_admin)
     app.teardown_appcontext(close_db)
     register_context(app)
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)

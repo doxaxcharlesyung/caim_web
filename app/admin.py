@@ -16,7 +16,7 @@ def admin_required(view):
             session.clear()
             # The login endpoint always returns to the dashboard. Avoid carrying
             # request.full_path, which can include a trailing bare '?'.
-            return redirect(url_for("public.article_dashboard_login"))
+            return redirect(url_for("content_admin.content_manager"))
         g.admin_user = user
         return view(*args, **kwargs)
     return wrapped

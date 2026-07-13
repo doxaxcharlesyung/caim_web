@@ -31,7 +31,26 @@ CREATE TABLE IF NOT EXISTS courses (
     detail JSON NULL,
     sort_order INT NOT NULL DEFAULT 0,
     is_published BOOLEAN NOT NULL DEFAULT TRUE,
+    content_type VARCHAR(20) NOT NULL DEFAULT 'course',
+    status VARCHAR(20) NOT NULL DEFAULT 'posted',
+    scheduled_posting_at DATETIME NULL,
+    posted_at DATETIME NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS news (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(191) NOT NULL UNIQUE,
+    title VARCHAR(500) NOT NULL,
+    event_date DATE NOT NULL,
+    date_label VARCHAR(50) NOT NULL,
+    content TEXT NOT NULL,
+    content_type VARCHAR(20) NOT NULL DEFAULT 'news',
+    status VARCHAR(20) NOT NULL DEFAULT 'posted',
+    scheduled_posting_at DATETIME NULL,
+    posted_at DATETIME NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    KEY ix_news_status_date (status, event_date)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS articles (

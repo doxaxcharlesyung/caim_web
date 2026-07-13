@@ -1,0 +1,4 @@
+{% extends 'content/base.html' %}{% block content %}<div class="content-heading"><span class="kicker">CONTENT OPERATIONS</span><h1>Content Dashboard</h1><p>Select a content type to create, edit, schedule, post, expire, or archive.</p></div><div class="content-type-grid">
+<a class="content-type-card" href="{{ url_for('content_admin.articles') }}"><span>Editorial</span><strong>Articles</strong><b>{{ counts.articles }}</b><p>Long-form articles and thought leadership.</p></a>
+<a class="content-type-card" href="{{ url_for('content_admin.courses') }}"><span>Learning</span><strong>Courses & Workshops</strong><b>{{ counts.courses }}</b><p>Courses and event-classified workshops.</p></a>
+<a class="content-type-card" href="{{ url_for('content_admin.news') }}"><span>Updates</span><strong>News & Events</strong><b>{{ counts.news }}</b><p>Homepage news and event announcements.</p></a></div>{% endblock %}
