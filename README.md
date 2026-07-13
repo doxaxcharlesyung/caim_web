@@ -148,8 +148,8 @@ the application-owned virtual environment at `/opt/caim_web/.venv` and starts `w
 
 ## GitHub Actions secrets
 
-Create these repository secrets before pushing deployment changes to `main`. GitHub Actions uses
-the runtime secrets to write `/opt/caim_web/.env`; they are not committed to this repository.
+Create these repository secrets before pushing deployment changes to `main`. They are used only
+for deployment access and application integrations:
 
 - `PROD_SERVER`: `doxaxsolutions.com`
 - `PROD_PORT`: `14322`
@@ -157,21 +157,19 @@ the runtime secrets to write `/opt/caim_web/.env`; they are not committed to thi
 - `PROD_SECRET_KEY`: a long, random value used by Flask as the production `SECRET_KEY`
 - `PROD_SSH_PRIVATE_KEY`: the private SSH key authorized for the `cyung` account on the production server
 - `PROD_CRM_CONSULTATION_TOKEN`: the optional token matching dx-crm's `CONSULTATION_FORM_SECRET`
-- `PROD_CAIM_DB_HOST`: the production MySQL hostname reachable by the CAIM service
-- `PROD_CAIM_DB_PASSWORD`: the password for the production `caimadmin` MySQL account
-- `PROD_MYSQL_ADMIN_PASSWORD`: a MySQL administrator password used only during database bootstrap
-- `PROD_MYSQL_ADMIN_SOCKET`: optional production MySQL Unix socket path; use this when root does not accept TCP connections
 
 `PROD_SECRET_KEY` and `PROD_SSH_PRIVATE_KEY` are different secrets and must not be reused for
-each other. `PROD_SECRET_KEY`, `PROD_CRM_CONSULTATION_TOKEN`, `PROD_CAIM_DB_HOST`, and
-`PROD_CAIM_DB_PASSWORD` are runtime configuration values and are written to `/opt/caim_web/.env`
-with owner-only permissions. Do not commit any populated `.env` file.
+each other. Do not commit any populated `.env` file.
 
 `PROD_SERVER`, `PROD_PORT`, `PROD_USER`, and `PROD_SSH_PRIVATE_KEY` remain deployment transport
 secrets. They cannot be moved into the application `.env` because the workflow needs them before
-it can connect to the server. `PROD_MYSQL_ADMIN_PASSWORD` is a temporary bootstrap credential;
-the workflow writes it to a protected temporary file, runs the database creation script, and
-removes that file. It is deliberately not retained in `/opt/caim_web/.env`.
+it can connect to the server.
+
+Database settings are stored on the production server, not in GitHub Actions secrets. Before the
+first deployment, create `/opt/caim_web/.env` from [`deploy/prod.env.example`](deploy/prod.env.example)
+and set `DB_HOST`, `DB_PASSWORD`, `MYSQL_ADMIN_USER`, `MYSQL_ADMIN_PASSWORD`, and optionally
+`MYSQL_ADMIN_SOCKET`. The workflow validates and sources these values remotely, creates or
+bootstraps `caimdb`, and imports `scripts/content_snapshot.json`. Keep the file mode `0600`.
 
 The deployment writes the non-secret CRM endpoint to `/opt/caim_web/.env` as
 `CRM_API_URL=https://dxcrm.doxaxsolutions.com/api/v1/public/consultation-intake`. The CAIM
