@@ -1,2 +1,43 @@
-{% extends 'content/base.html' %}{% block content %}{% set detail=selected.detail if selected else {} %}<div class="dashboard-head"><div><span class="kicker">LEARNING</span><h1>Course Studio</h1></div><a class="btn btn-secondary" href="{{ url_for('content_admin.courses') }}">Back to Courses</a></div>{% if notice %}<p class="studio-notice">{{ notice }}</p>{% endif %}{% if error %}<p class="studio-error">{{ error }}</p>{% endif %}<form class="studio-form sacred-card" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="original_slug" value="{{ selected.slug if selected else '' }}"><div class="studio-form-head"><strong>{{ selected.title if selected else 'New Course or Event' }}</strong><div class="studio-toolbar"><a class="btn btn-secondary" href="{{ url_for('content_admin.course_studio') }}">New</a><button class="btn btn-secondary" name="action" value="save">Save</button><button class="btn btn-primary" name="action" value="post">Post</button></div></div><div class="studio-fields">
-<label class="field">Type<select name="content_type"><option value="course">Course</option><option value="event" {% if selected and selected.content_type=='event' %}selected{% endif %}>Workshop / Event</option></select></label><label class="field">Code<input name="code" required value="{{ selected.code if selected else '' }}"></label><label class="field">Slug<input name="slug" required value="{{ selected.slug if selected else '' }}"></label><label class="field">Sort order<input name="sort_order" type="number" value="{{ selected.sort_order if selected else 0 }}"></label><label class="field span-2">Title<input name="title" required value="{{ selected.title if selected else '' }}"></label><label class="field span-2">Description<textarea name="description" required rows="4">{{ selected.description if selected else '' }}</textarea></label><label class="field">Image path<input name="image" value="{{ selected.image if selected else '/assets/courses-training-courses.png' }}"></label><label class="field">Image alt<input name="alt" value="{{ selected.alt if selected else '' }}"></label><label class="field">CTA label<input name="cta_label" value="{{ selected.cta_label if selected else '了解更多' }}"></label><label class="field">Scheduled posting<input name="scheduled_posting_at" type="datetime-local" value="{{ selected.scheduled_posting_at.strftime('%Y-%m-%dT%H:%M') if selected and selected.scheduled_posting_at else '' }}" {% if selected and selected.status=='posted' %}readonly{% endif %}></label><label class="field">Eyebrow<input name="eyebrow" value="{{ detail.eyebrow or selected.code if selected else '' }}"></label><label class="field">Subtitle<input name="subtitle" value="{{ detail.subtitle if selected else '' }}"></label><label class="field span-2">Course detail body<textarea name="body" rows="18">{{ detail.paragraphs|join('\n\n') if selected else '' }}</textarea></label></div></form>{% endblock %}
+{% extends 'content/base.html' %}
+{% block content %}
+{% set detail = selected.detail if selected else {} %}
+{% set submitted = request.form if request.method == 'POST' else none %}
+{% macro value(name, fallback='') %}{{ submitted.get(name, fallback) if submitted else fallback }}{% endmacro %}
+{% set schedule_default = selected.scheduled_posting_at.strftime('%Y-%m-%dT%H:%M') if selected and selected.scheduled_posting_at else now_value %}
+<div class="dashboard-head">
+  <div><span class="kicker">LEARNING</span><h1>Course Studio</h1></div>
+  <a class="btn btn-secondary" href="{{ url_for('content_admin.courses') }}">Back to Courses</a>
+</div>
+{% if notice %}<p class="studio-notice">{{ notice }}</p>{% endif %}
+{% if error %}<p class="studio-error">{{ error }}</p>{% endif %}
+<form class="studio-form sacred-card" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <input type="hidden" name="original_slug" value="{{ selected.slug if selected else '' }}">
+  <div class="studio-form-head">
+    <strong>{{ selected.title if selected else 'New Course or Event' }}</strong>
+    <div class="studio-toolbar">
+      <a class="btn btn-secondary" href="{{ url_for('content_admin.course_studio') }}">New</a>
+      <button class="btn btn-secondary" name="action" value="save">Save</button>
+      <button class="btn btn-primary" name="action" value="post">Post for Review</button>
+    </div>
+  </div>
+  {% if selected and selected.image %}<img class="course-image-preview" src="{{ url_for('static', filename=selected.image.lstrip('/')) }}" alt="{{ selected.alt }}">{% endif %}
+  <div class="studio-fields">
+    <label class="field">Type<select name="content_type"><option value="course" {% if value('content_type', selected.content_type if selected else 'course')|trim == 'course' %}selected{% endif %}>Course</option><option value="event" {% if value('content_type', selected.content_type if selected else 'course')|trim == 'event' %}selected{% endif %}>Workshop / Event</option></select></label>
+    <label class="field">Code<input name="code" required value="{{ value('code', selected.code if selected else '') }}"></label>
+    <label class="field">Slug<input name="slug" required value="{{ value('slug', selected.slug if selected else '') }}"></label>
+    <label class="field">Sort order<input name="sort_order" type="number" value="{{ value('sort_order', selected.sort_order if selected else 0) }}"></label>
+    <label class="field span-2">Title<input name="title" required value="{{ value('title', selected.title if selected else '') }}"></label>
+    <label class="field span-2">Description<textarea name="description" required rows="4">{{ value('description', selected.description if selected else '') }}</textarea></label>
+    <label class="field">Upload image<input name="course_image" type="file" accept="image/*"></label>
+    <label class="field">Image path<input name="image" value="{{ value('image', selected.image if selected else '/assets/courses-training-courses.png') }}"></label>
+    <label class="field">Image alt<input name="alt" value="{{ value('alt', selected.alt if selected else '') }}"></label>
+    <label class="field">CTA label<input name="cta_label" value="{{ value('cta_label', selected.cta_label if selected else 'Learn More') }}"></label>
+    <label class="field">Scheduled posting<input name="scheduled_posting_at" type="datetime-local" value="{{ value('scheduled_posting_at', schedule_default) }}" {% if selected and selected.status == 'posted' %}readonly{% endif %}></label>
+    <label class="field">Eyebrow<input name="eyebrow" value="{{ value('eyebrow', detail.eyebrow or selected.code if selected else '') }}"></label>
+    <label class="field">Subtitle<input name="subtitle" value="{{ value('subtitle', detail.subtitle if selected else '') }}"></label>
+    <label class="field span-2">Course detail body<textarea name="body" rows="18">{{ value('body', detail.paragraphs|join('\n\n') if selected else '') }}</textarea></label>
+    <fieldset class="reviewer-picker span-2"><legend>Reviewers</legend><p>Select at least one user other than yourself. Every selected reviewer must approve.</p><div>{% for reviewer in reviewers %}<label><input type="checkbox" name="reviewer_ids" value="{{ reviewer.id }}" {% if reviewer.selected %}checked{% endif %}>{{ reviewer.username }}</label>{% else %}<span>No other active users are available.</span>{% endfor %}</div></fieldset>
+  </div>
+</form>
+{% endblock %}

@@ -1,3 +1,43 @@
-{% extends 'content/base.html' %}{% block content %}{% set detail=selected.detail if selected else {} %}<div class="dashboard-head"><div><span class="kicker">EDITORIAL</span><h1>Article Studio</h1></div><a class="btn btn-secondary" href="{{ url_for('content_admin.articles') }}">Back to Articles</a></div>{% if notice %}<p class="studio-notice">{{ notice }}</p>{% endif %}{% if error %}<p class="studio-error">{{ error }}</p>{% endif %}
-<form class="studio-form sacred-card" method="post" enctype="multipart/form-data"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="original_slug" value="{{ selected.slug if selected else '' }}"><input type="hidden" name="existing_image" value="{{ selected.image if selected else '' }}"><div class="studio-form-head"><strong>{{ selected.title if selected else 'New Article' }}</strong><div class="studio-toolbar"><a class="btn btn-secondary" href="{{ url_for('content_admin.article_studio') }}">New</a><button class="btn btn-secondary" name="action" value="save">Save</button><button class="btn btn-primary" name="action" value="post">Post</button></div></div><div class="studio-fields">
-<label class="field span-2">Source file<input name="source_file" type="file" accept=".docx,.pdf,.md,.txt"></label><label class="field">Hero image<input name="hero_image" type="file" accept="image/*"></label><label class="field">Image alt<input name="image_alt" value="{{ selected.alt if selected else '' }}"></label><label class="field span-2">Title<input name="title" required value="{{ selected.title if selected else '' }}"></label><label class="field">Slug<input name="slug" required value="{{ selected.slug if selected else '' }}"></label><label class="field">Category<input name="category" value="{{ selected.category if selected else 'AI 與教會' }}"></label><label class="field">Author<input name="author" value="{{ detail.author or 'CAIM' }}"></label><label class="field">Publish date<input name="date" type="date" required value="{{ selected.published_date if selected else '' }}"></label><label class="field">Scheduled posting<input name="scheduled_posting_at" type="datetime-local" value="{{ selected.scheduled_posting_at.strftime('%Y-%m-%dT%H:%M') if selected and selected.scheduled_posting_at else '' }}" {% if selected and selected.status=='posted' %}readonly{% endif %}></label><label class="field span-2">Lead<textarea name="lead" rows="4">{{ detail.lead or selected.excerpt if selected else '' }}</textarea></label><label class="field span-2">Body<textarea name="body" rows="22">{{ detail.body or (detail.paragraphs|join('\n\n')) if selected else '' }}</textarea></label><label class="field span-2">Topics<input name="topics" value="{{ detail.relatedTopics|map(attribute='label')|join(',') if selected else '所有文章' }}"></label><label class="field span-2">Meta title<input name="meta_title" value="{{ detail.metaTitle or selected.title if selected else '' }}"></label><label class="field span-2">SEO description<textarea name="description">{{ detail.description or selected.excerpt if selected else '' }}</textarea></label></div></form>{% endblock %}
+{% extends 'content/base.html' %}
+{% block content %}
+{% set detail = selected.detail if selected else {} %}
+{% set submitted = request.form if request.method == 'POST' else none %}
+{% macro value(name, fallback='') %}{{ submitted.get(name, fallback) if submitted else fallback }}{% endmacro %}
+{% set schedule_default = selected.scheduled_posting_at.strftime('%Y-%m-%dT%H:%M') if selected and selected.scheduled_posting_at else now_value %}
+<div class="dashboard-head">
+  <div><span class="kicker">EDITORIAL</span><h1>Article Studio</h1></div>
+  <a class="btn btn-secondary" href="{{ url_for('content_admin.articles') }}">Back to Articles</a>
+</div>
+{% if notice %}<p class="studio-notice">{{ notice }}</p>{% endif %}
+{% if error %}<p class="studio-error">{{ error }}</p>{% endif %}
+<form class="studio-form sacred-card" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <input type="hidden" name="original_slug" value="{{ selected.slug if selected else '' }}">
+  <input type="hidden" name="existing_image" value="{{ selected.image if selected else '' }}">
+  <div class="studio-form-head">
+    <strong>{{ selected.title if selected else 'New Article' }}</strong>
+    <div class="studio-toolbar">
+      <a class="btn btn-secondary" href="{{ url_for('content_admin.article_studio') }}">New</a>
+      <button class="btn btn-secondary" name="action" value="save">Save</button>
+      <button class="btn btn-primary" name="action" value="post">Post for Review</button>
+    </div>
+  </div>
+  <div class="studio-fields">
+    <label class="field span-2">Source file<input name="source_file" type="file" accept=".docx,.pdf,.md,.txt"></label>
+    <label class="field">Hero image<input name="hero_image" type="file" accept="image/*"></label>
+    <label class="field">Image alt<input name="image_alt" value="{{ value('image_alt', selected.alt if selected else '') }}"></label>
+    <label class="field span-2">Title<input name="title" required value="{{ value('title', selected.title if selected else '') }}"></label>
+    <label class="field">Slug<input name="slug" required value="{{ value('slug', selected.slug if selected else '') }}"></label>
+    <label class="field">Category<input name="category" value="{{ value('category', selected.category if selected else 'AI and Church') }}"></label>
+    <label class="field">Author<input name="author" value="{{ value('author', detail.author or 'CAIM') }}"></label>
+    <label class="field">Publish date<input name="date" type="date" required value="{{ value('date', selected.published_date if selected else '') }}"></label>
+    <label class="field">Scheduled posting<input name="scheduled_posting_at" type="datetime-local" value="{{ value('scheduled_posting_at', schedule_default) }}" {% if selected and selected.status == 'posted' %}readonly{% endif %}></label>
+    <label class="field span-2">Lead<textarea name="lead" rows="4">{{ value('lead', detail.lead or selected.excerpt if selected else '') }}</textarea></label>
+    <label class="field span-2">Body<textarea name="body" rows="22">{{ value('body', detail.body or (detail.paragraphs|join('\n\n')) if selected else '') }}</textarea></label>
+    <label class="field span-2">Topics<input name="topics" value="{{ value('topics', detail.relatedTopics|map(attribute='label')|join(',') if selected else 'All Articles') }}"></label>
+    <label class="field span-2">Meta title<input name="meta_title" value="{{ value('meta_title', detail.metaTitle or selected.title if selected else '') }}"></label>
+    <label class="field span-2">SEO description<textarea name="description">{{ value('description', detail.description or selected.excerpt if selected else '') }}</textarea></label>
+    <fieldset class="reviewer-picker span-2"><legend>Reviewers</legend><p>Select at least one user other than yourself. Every selected reviewer must approve.</p><div>{% for reviewer in reviewers %}<label><input type="checkbox" name="reviewer_ids" value="{{ reviewer.id }}" {% if reviewer.selected %}checked{% endif %}>{{ reviewer.username }}</label>{% else %}<span>No other active users are available.</span>{% endfor %}</div></fieldset>
+  </div>
+</form>
+{% endblock %}

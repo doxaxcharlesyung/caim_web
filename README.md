@@ -173,6 +173,20 @@ intranet address `192.168.2.43`.
 Apache terminates HTTPS and proxies to Gunicorn on `127.0.0.1:18003`. The systemd unit uses
 the application-owned virtual environment at `/opt/caim_web/.venv` and starts `wsgi:app`.
 
+## Content manager workflow
+
+- `/content/content-manager` is the login entry point and `/content/content-dashboard` is the authenticated landing page.
+- Authenticated `/content` pages include Logout. Sessions expire after 60 minutes without activity and are invalidated whenever the systemd application service restarts.
+- `admin` is the initial administrator. `charles.yung` and `francis.lau` are seeded as active reviewers with the requested initial password. Change all seed passwords after first production login.
+- `admin` is treated as a superuser account and is not offered as a content reviewer. With the two seeded content users, work created by `charles.yung` defaults to `francis.lau` as reviewer, and vice versa.
+- Saving keeps content in `Saved`. Posting changes it to `Review`; it is not public at this stage.
+- Article, course, and news studios let the creator select one or more active users as reviewers. The creator cannot select themselves, and every selected reviewer must approve.
+- At least one reviewer is required. When the system has only two active users, the sole user other than the creator is selected automatically.
+- If studio validation fails, submitted text, dates, selections, and reviewer choices are rendered back into the form. Browsers intentionally do not restore file-upload controls, so a file must be selected again.
+- Studio saves distinguish New from Select/Edit. New content always uses an SQL insert and never an upsert; duplicate article/news slugs, course slugs, or course codes produce a validation error without changing the existing row. Select/Edit updates only the record identified by its original slug.
+- After the last required approval, content becomes `Posted`. Public article, course, and news queries still hide it until its scheduled posting time. New studio forms default that time to Now.
+- Course Studio accepts an uploaded image or an existing image path for both new and existing courses. Production uploads are retained under `/opt/caim_web/uploads` and linked into the static asset tree, so application deployments do not erase them.
+
 ## GitHub Actions secrets
 
 Create these repository secrets before pushing deployment changes to `main`. They are used only

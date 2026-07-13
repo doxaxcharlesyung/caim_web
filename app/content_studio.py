@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from .studio import SLUG_PATTERN, split_paragraphs
+from .studio import SLUG_PATTERN, save_course_image, split_paragraphs
 
 
 def _schedule(form, existing):
@@ -12,7 +12,7 @@ def _schedule(form, existing):
 
 def _status(form, existing):
     if form.get("action") == "post":
-        return "posted"
+        return "review"
     return "posted" if existing and existing.get("status") == "posted" else "saved"
 
 
@@ -22,7 +22,7 @@ def _posted_at(status, existing):
     return datetime.now() if status == "posted" else None
 
 
-def build_course(form, existing=None):
+def build_course(form, image_upload=None, existing=None):
     code = form.get("code", "").strip().upper()
     slug = form.get("slug", "").strip().lower()
     title = form.get("title", "").strip()
@@ -42,9 +42,11 @@ def build_course(form, existing=None):
         "subtitle": form.get("subtitle", "").strip(),
         "paragraphs": split_paragraphs(body),
     })
+    uploaded_image = save_course_image(image_upload)
+    image = uploaded_image or form.get("image", "").strip() or (existing or {}).get("image") or "/assets/courses-training-courses.png"
     return {
         "code": code, "slug": slug, "title": title, "description": description,
-        "image": form.get("image", "").strip() or "/assets/courses-training-courses.png",
+        "image": image,
         "alt": form.get("alt", "").strip() or title, "href": f"/courses/{slug}/",
         "cta_label": form.get("cta_label", "").strip() or "了解更多",
         "detail": detail, "sort_order": int(form.get("sort_order", 0) or 0),

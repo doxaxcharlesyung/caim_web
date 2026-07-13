@@ -59,14 +59,14 @@ jobs:
       - name: Transfer application to production
         run: |
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
-            "sudo rm -rf '$PROD_APP_DIR/app' '$PROD_APP_DIR/templates' '$PROD_APP_DIR/static' && sudo install -d -o '$PROD_USER' -g '$PROD_USER' '$PROD_APP_DIR'"
+            "sudo install -d -o '$PROD_USER' -g '$PROD_USER' '$PROD_APP_DIR/uploads/articles' '$PROD_APP_DIR/uploads/courses' && if [ -d '$PROD_APP_DIR/static/assets/articles' ] && [ ! -L '$PROD_APP_DIR/static/assets/articles' ]; then sudo cp -an '$PROD_APP_DIR/static/assets/articles/.' '$PROD_APP_DIR/uploads/articles/'; fi && if [ -d '$PROD_APP_DIR/static/assets/courses' ] && [ ! -L '$PROD_APP_DIR/static/assets/courses' ]; then sudo cp -an '$PROD_APP_DIR/static/assets/courses/.' '$PROD_APP_DIR/uploads/courses/'; fi && sudo rm -rf '$PROD_APP_DIR/app' '$PROD_APP_DIR/templates' '$PROD_APP_DIR/static' && sudo install -d -o '$PROD_USER' -g '$PROD_USER' '$PROD_APP_DIR'"
 
           tar -czf - app templates scripts app.py wsgi.py requirements.txt deploy static |
             ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
               "sudo install -d -o '$PROD_USER' -g '$PROD_USER' '$PROD_APP_DIR' && sudo tar -xzf - -C '$PROD_APP_DIR'"
 
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
-            "sudo chown -R '$PROD_USER':'$PROD_USER' '$PROD_APP_DIR/app' '$PROD_APP_DIR/templates' '$PROD_APP_DIR/static'"
+            "sudo install -d -o '$PROD_USER' -g '$PROD_USER' '$PROD_APP_DIR/uploads/articles' '$PROD_APP_DIR/uploads/courses' && sudo rm -rf '$PROD_APP_DIR/static/assets/articles' '$PROD_APP_DIR/static/assets/courses' && sudo ln -s ../../uploads/articles '$PROD_APP_DIR/static/assets/articles' && sudo ln -s ../../uploads/courses '$PROD_APP_DIR/static/assets/courses' && sudo chown -R '$PROD_USER':'$PROD_USER' '$PROD_APP_DIR/app' '$PROD_APP_DIR/templates' '$PROD_APP_DIR/static' '$PROD_APP_DIR/uploads'"
 
       - name: Configure production application secret
         env:

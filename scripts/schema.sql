@@ -76,6 +76,37 @@ CREATE TABLE IF NOT EXISTS admin_users (
     username VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    is_reviewer BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS content_approvals (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    content_type VARCHAR(20) NOT NULL,
+    content_key VARCHAR(191) NOT NULL,
+    submitted_by BIGINT UNSIGNED NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    approved_at DATETIME NULL,
+    UNIQUE KEY uq_content_approval (content_type, content_key),
+    KEY ix_approval_status (status, submitted_at)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS content_approval_votes (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    approval_id BIGINT UNSIGNED NOT NULL,
+    reviewer_id BIGINT UNSIGNED NOT NULL,
+    approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_approval_reviewer (approval_id, reviewer_id),
+    CONSTRAINT fk_vote_approval FOREIGN KEY (approval_id) REFERENCES content_approvals(id) ON DELETE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS content_approval_reviewers (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    approval_id BIGINT UNSIGNED NOT NULL,
+    reviewer_id BIGINT UNSIGNED NOT NULL,
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_approval_assigned_reviewer (approval_id, reviewer_id),
+    CONSTRAINT fk_reviewer_approval FOREIGN KEY (approval_id) REFERENCES content_approvals(id) ON DELETE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

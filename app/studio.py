@@ -56,6 +56,19 @@ def save_hero_image(upload):
     return f"/assets/articles/{filename}"
 
 
+def save_course_image(upload):
+    if not upload or not upload.filename:
+        return None
+    extension = Path(secure_filename(upload.filename)).suffix.lower()
+    if extension not in IMAGE_EXTENSIONS:
+        raise ValueError("Course image supports JPG, PNG, WebP, or AVIF only.")
+    directory = Path(current_app.static_folder) / "assets" / "courses"
+    directory.mkdir(parents=True, exist_ok=True)
+    filename = f"{uuid4().hex}{extension}"
+    upload.save(directory / filename)
+    return f"/assets/courses/{filename}"
+
+
 def remove_uploaded_image(image_path):
     prefix = "/assets/articles/"
     if not image_path or not image_path.startswith(prefix):
@@ -102,7 +115,7 @@ def build_article(form, source_file, hero_image, existing=None):
     else:
         scheduled_at = datetime.strptime(schedule_value, "%Y-%m-%dT%H:%M") if schedule_value else datetime.now()
     action = form.get("action")
-    status = "posted" if action == "post" else (existing.get("status") if existing and existing.get("status") == "posted" else "saved")
+    status = "review" if action == "post" else (existing.get("status") if existing and existing.get("status") == "posted" else "saved")
     detail = {
         "author": form.get("author", "CAIM").strip() or "CAIM",
         "updatedAt": published_date,
@@ -126,5 +139,5 @@ def build_article(form, source_file, hero_image, existing=None):
         "detail": detail,
         "status": status,
         "scheduled_posting_at": scheduled_at,
-        "posted_at": datetime.now() if status == "posted" and not (existing or {}).get("posted_at") else (existing or {}).get("posted_at"),
+        "posted_at": (existing or {}).get("posted_at"),
     }

@@ -3,6 +3,19 @@ import json
 from .db import decode_json_fields, fetch_all, fetch_one, get_db
 
 
+def validate_content_identity(kind, slug, original_slug="", code=""):
+    tables = {"articles": "articles", "courses": "courses", "news": "news"}
+    if kind not in tables:
+        raise ValueError("Invalid content type")
+    row = fetch_one(f"SELECT slug FROM `{tables[kind]}` WHERE slug=%s", (slug,))
+    if row and row["slug"] != original_slug:
+        raise ValueError(f"The slug '{slug}' already exists. Choose a unique slug for new content.")
+    if kind == "courses" and code:
+        row = fetch_one("SELECT slug FROM courses WHERE code=%s", (code,))
+        if row and row["slug"] != original_slug:
+            raise ValueError(f"The course code '{code}' already exists. Choose a unique course code.")
+
+
 def get_page(key):
     row = fetch_one("SELECT content_key, title, subtitle, sections FROM page_content WHERE content_key=%s", (key,))
     return decode_json_fields(row, "sections")
@@ -70,25 +83,33 @@ def get_studio_article(slug):
     return decode_json_fields(row, "detail")
 
 
-def save_studio_article(article):
+def save_studio_article(article, original_slug=None):
     with get_db().cursor() as cursor:
-        cursor.execute(
-            """INSERT INTO articles
-            (slug, title, excerpt, category, image, alt, published_date, href, detail, status, scheduled_posting_at, posted_at)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-            ON DUPLICATE KEY UPDATE title=VALUES(title), excerpt=VALUES(excerpt),
-            category=VALUES(category), image=VALUES(image), alt=VALUES(alt),
-            published_date=VALUES(published_date), href=VALUES(href),
-            detail=VALUES(detail), status=VALUES(status),
-            scheduled_posting_at=IF(articles.status='posted',articles.scheduled_posting_at,VALUES(scheduled_posting_at)),
-            posted_at=COALESCE(articles.posted_at,VALUES(posted_at))""",
-            (
-                article["slug"], article["title"], article["excerpt"], article["category"],
-                article["image"], article["alt"], article["published_date"], article["href"],
-                json.dumps(article["detail"], ensure_ascii=False), article["status"],
-                article["scheduled_posting_at"], article["posted_at"],
-            ),
+        values = (
+            article["slug"], article["title"], article["excerpt"], article["category"],
+            article["image"], article["alt"], article["published_date"], article["href"],
+            json.dumps(article["detail"], ensure_ascii=False), article["status"],
+            article["scheduled_posting_at"], article["posted_at"],
         )
+        if original_slug:
+            cursor.execute("SELECT id FROM articles WHERE slug=%s", (original_slug,))
+            if not cursor.fetchone():
+                raise ValueError("The article being edited no longer exists.")
+            cursor.execute(
+                """UPDATE articles SET slug=%s,title=%s,excerpt=%s,category=%s,image=%s,alt=%s,
+                published_date=%s,href=%s,detail=%s,status=%s,
+                scheduled_posting_at=IF(status='posted',scheduled_posting_at,%s),
+                posted_at=COALESCE(posted_at,%s) WHERE slug=%s""",
+                values + (original_slug,),
+            )
+            if original_slug != article["slug"]:
+                cursor.execute("UPDATE content_approvals SET content_key=%s WHERE content_type='articles' AND content_key=%s",
+                    (article["slug"], original_slug))
+        else:
+            cursor.execute(
+                """INSERT INTO articles
+            (slug, title, excerpt, category, image, alt, published_date, href, detail, status, scheduled_posting_at, posted_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", values)
 
 
 def delete_studio_article(slug):
@@ -145,21 +166,30 @@ def get_studio_course(slug):
     return decode_json_fields(row, "detail")
 
 
-def save_studio_course(course):
+def save_studio_course(course, original_slug=None):
     with get_db().cursor() as cursor:
-        cursor.execute(
-            """INSERT INTO courses
+        values = (course["code"], course["slug"], course["title"], course["description"], course["image"],
+            course["alt"], course["href"], course["cta_label"], json.dumps(course["detail"], ensure_ascii=False),
+            course["sort_order"], course["is_published"], course["content_type"], course["status"],
+            course["scheduled_posting_at"], course["posted_at"])
+        if original_slug:
+            cursor.execute("SELECT id FROM courses WHERE slug=%s", (original_slug,))
+            if not cursor.fetchone():
+                raise ValueError("The course being edited no longer exists.")
+            cursor.execute(
+                """UPDATE courses SET code=%s,slug=%s,title=%s,description=%s,image=%s,alt=%s,href=%s,
+                cta_label=%s,detail=%s,sort_order=%s,is_published=%s,content_type=%s,status=%s,
+                scheduled_posting_at=%s,posted_at=COALESCE(posted_at,%s) WHERE slug=%s""",
+                values + (original_slug,),
+            )
+            if original_slug != course["slug"]:
+                cursor.execute("UPDATE content_approvals SET content_key=%s WHERE content_type='courses' AND content_key=%s",
+                    (course["slug"], original_slug))
+        else:
+            cursor.execute(
+                """INSERT INTO courses
             (code,slug,title,description,image,alt,href,cta_label,detail,sort_order,is_published,content_type,status,scheduled_posting_at,posted_at)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-            ON DUPLICATE KEY UPDATE code=VALUES(code),title=VALUES(title),description=VALUES(description),
-            image=VALUES(image),alt=VALUES(alt),href=VALUES(href),cta_label=VALUES(cta_label),detail=VALUES(detail),
-            sort_order=VALUES(sort_order),is_published=VALUES(is_published),content_type=VALUES(content_type),
-            status=VALUES(status),scheduled_posting_at=VALUES(scheduled_posting_at),posted_at=COALESCE(courses.posted_at,VALUES(posted_at))""",
-            (course["code"], course["slug"], course["title"], course["description"], course["image"],
-             course["alt"], course["href"], course["cta_label"], json.dumps(course["detail"], ensure_ascii=False),
-             course["sort_order"], course["is_published"], course["content_type"], course["status"],
-             course["scheduled_posting_at"], course["posted_at"]),
-        )
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""", values)
 
 
 def set_course_status(slug, status):
@@ -200,17 +230,27 @@ def get_studio_news(slug):
     )
 
 
-def save_studio_news(item):
+def save_studio_news(item, original_slug=None):
     with get_db().cursor() as cursor:
-        cursor.execute(
-            """INSERT INTO news
+        values = tuple(item[key] for key in (
+            "slug","title","event_date","date_label","content","content_type","status","scheduled_posting_at","posted_at"
+        ))
+        if original_slug:
+            cursor.execute("SELECT id FROM news WHERE slug=%s", (original_slug,))
+            if not cursor.fetchone():
+                raise ValueError("The news or event item being edited no longer exists.")
+            cursor.execute(
+                """UPDATE news SET slug=%s,title=%s,event_date=%s,date_label=%s,content=%s,
+                content_type=%s,status=%s,scheduled_posting_at=%s,posted_at=COALESCE(posted_at,%s)
+                WHERE slug=%s""", values + (original_slug,))
+            if original_slug != item["slug"]:
+                cursor.execute("UPDATE content_approvals SET content_key=%s WHERE content_type='news' AND content_key=%s",
+                    (item["slug"], original_slug))
+        else:
+            cursor.execute(
+                """INSERT INTO news
             (slug,title,event_date,date_label,content,content_type,status,scheduled_posting_at,posted_at)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
-            ON DUPLICATE KEY UPDATE title=VALUES(title),event_date=VALUES(event_date),date_label=VALUES(date_label),
-            content=VALUES(content),content_type=VALUES(content_type),status=VALUES(status),
-            scheduled_posting_at=VALUES(scheduled_posting_at),posted_at=COALESCE(news.posted_at,VALUES(posted_at))""",
-            tuple(item[key] for key in ("slug","title","event_date","date_label","content","content_type","status","scheduled_posting_at","posted_at")),
-        )
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""", values)
 
 
 def set_news_status(slug, status):

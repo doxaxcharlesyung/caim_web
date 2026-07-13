@@ -1,5 +1,31 @@
-{% extends 'content/base.html' %}{% block content %}{% set labels={'articles':'Articles','courses':'Courses & Events','news':'News & Events'} %}{% set studios={'articles':'content_admin.article_studio','courses':'content_admin.course_studio','news':'content_admin.news_studio'} %}
-<div class="dashboard-head"><div><span class="kicker">CONTENT LIBRARY</span><h1>{{ labels[content_kind] }}</h1></div><a class="btn btn-primary" href="{{ url_for(studios[content_kind]) }}">New Content</a></div>
+{% extends 'content/base.html' %}
+{% block content %}
+{% set labels = {'articles':'Articles','courses':'Courses & Events','news':'News & Events'} %}
+{% set studios = {'articles':'content_admin.article_studio','courses':'content_admin.course_studio','news':'content_admin.news_studio'} %}
+<div class="dashboard-head">
+  <div><span class="kicker">CONTENT LIBRARY</span><h1>{{ labels[content_kind] }}</h1></div>
+  <a class="btn btn-primary" href="{{ url_for(studios[content_kind]) }}">New Content</a>
+</div>
+{% if notice %}<p class="studio-notice">{{ notice }}</p>{% endif %}
 <form class="dashboard-search"><input name="q" value="{{ search }}" placeholder="Search title, code, category, or content"><button class="btn btn-secondary">Search</button></form>
-<div class="article-dashboard-grid">{% for item in items %}<article class="dashboard-tile sacred-card">{% if item.image %}<img src="{{ url_for('static',filename=item.image.lstrip('/')) }}" alt="">{% endif %}<div class="dashboard-tile-body"><div class="tile-meta"><span class="status status-{{ item.status }}">{{ item.status|title }}</span><span>{{ item.content_type or item.category }}</span></div><h2>{{ item.title }}</h2><p>{{ (item.excerpt or item.description or item.content)|truncate(170) }}</p><div class="tile-actions"><a class="btn btn-secondary" href="{{ url_for(studios[content_kind],slug=item.slug) }}">Select</a><form method="post" action="{{ url_for('content_admin.set_status',kind=content_kind,slug=item.slug) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn-secondary" name="status" value="expired">Expire</button></form><form method="post" action="{{ url_for('content_admin.set_status',kind=content_kind,slug=item.slug) }}" onsubmit="return confirm('Mark as Deleted?') && confirm('Second warning: database cleanup is manual. Continue?')"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn-danger" name="status" value="deleted">Delete</button></form></div></div></article>{% else %}<p>No content found.</p>{% endfor %}</div>
-{% if total_pages>1 %}<nav class="dashboard-pagination">{% for number in range(1,total_pages+1) %}<a class="{{ 'is-active' if number==current_page }}" href="?page={{ number }}&q={{ search }}">{{ number }}</a>{% endfor %}</nav>{% endif %}{% endblock %}
+<div class="article-dashboard-grid">
+  {% for item in items %}
+  <article class="dashboard-tile sacred-card">
+    {% if item.image %}<img src="{{ url_for('static', filename=item.image.lstrip('/')) }}" alt="">{% endif %}
+    <div class="dashboard-tile-body">
+      <div class="tile-meta"><span class="status status-{{ item.status }}">{{ item.status|title }}</span><span>{{ item.content_type or item.category }}</span></div>
+      <h2>{{ item.title }}</h2>
+      <p>{{ (item.excerpt or item.description or item.content)|truncate(170) }}</p>
+      {% if item.status == 'review' %}<p class="approval-progress">Approvals: {{ item.approval.approved }} / {{ item.approval.required }}</p>{% endif %}
+      <div class="tile-actions">
+        <a class="btn btn-secondary" href="{{ url_for(studios[content_kind], slug=item.slug) }}">Select</a>
+        {% if item.approval.can_approve %}<form method="post" action="{{ url_for('content_admin.approve_content', kind=content_kind, slug=item.slug) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn-primary">Approve</button></form>{% endif %}
+        <form method="post" action="{{ url_for('content_admin.set_status', kind=content_kind, slug=item.slug) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn-secondary" name="status" value="expired">Expire</button></form>
+        <form method="post" action="{{ url_for('content_admin.set_status', kind=content_kind, slug=item.slug) }}" onsubmit="return confirm('Mark as Deleted?') && confirm('Second warning: database cleanup is manual. Continue?')"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn-danger" name="status" value="deleted">Delete</button></form>
+      </div>
+    </div>
+  </article>
+  {% else %}<p>No content found.</p>{% endfor %}
+</div>
+{% if total_pages > 1 %}<nav class="dashboard-pagination">{% for number in range(1, total_pages + 1) %}<a class="{{ 'is-active' if number == current_page }}" href="?page={{ number }}&q={{ search }}">{{ number }}</a>{% endfor %}</nav>{% endif %}
+{% endblock %}

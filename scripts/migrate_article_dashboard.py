@@ -30,9 +30,16 @@ def main():
             cursor.execute("UPDATE articles SET scheduled_posting_at=COALESCE(scheduled_posting_at,published_date), posted_at=COALESCE(posted_at,updated_at) WHERE status='posted'")
             cursor.execute("""CREATE TABLE IF NOT EXISTS admin_users (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 username VARCHAR(100) NOT NULL UNIQUE,password_hash VARCHAR(255) NOT NULL,is_active BOOLEAN NOT NULL DEFAULT TRUE,
+                is_reviewer BOOLEAN NOT NULL DEFAULT FALSE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
                 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci""")
+            if not column_exists(cursor, "admin_users", "is_reviewer"):
+                cursor.execute("ALTER TABLE admin_users ADD is_reviewer BOOLEAN NOT NULL DEFAULT FALSE AFTER is_active")
             cursor.execute("INSERT IGNORE INTO admin_users (username,password_hash) VALUES ('admin',%s)", (generate_password_hash("New2P@ss"),))
+            for username in ("charles.yung", "francis.lau"):
+                cursor.execute("INSERT IGNORE INTO admin_users (username,password_hash,is_reviewer) VALUES (%s,%s,1)",
+                    (username, generate_password_hash("New2P@ss")))
+                cursor.execute("UPDATE admin_users SET is_active=1,is_reviewer=1 WHERE username=%s", (username,))
             course_status_added = not column_exists(cursor, "courses", "status")
             for column, definition in {
                 "content_type": "VARCHAR(20) NOT NULL DEFAULT 'course' AFTER is_published",
@@ -59,6 +66,28 @@ def main():
                     (slug,title,event_date,date_label,content,content_type,status,scheduled_posting_at,posted_at)
                     VALUES (%s,%s,%s,%s,%s,'news','posted',%s,NOW())""",
                     (row[0].lower().replace("_", "-"), item["title"], item["date"], item.get("dateLabel", ""), item["content"], item["date"]))
+            cursor.execute("""CREATE TABLE IF NOT EXISTS content_approvals (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,content_type VARCHAR(20) NOT NULL,
+                content_key VARCHAR(191) NOT NULL,submitted_by BIGINT UNSIGNED NOT NULL,
+                status VARCHAR(20) NOT NULL DEFAULT 'pending',submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                approved_at DATETIME NULL,UNIQUE KEY uq_content_approval (content_type,content_key),
+                KEY ix_approval_status (status,submitted_at)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci""")
+            cursor.execute("""CREATE TABLE IF NOT EXISTS content_approval_reviewers (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,approval_id BIGINT UNSIGNED NOT NULL,
+                reviewer_id BIGINT UNSIGNED NOT NULL,assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE KEY uq_approval_assigned_reviewer (approval_id,reviewer_id),
+                CONSTRAINT fk_reviewer_approval FOREIGN KEY (approval_id) REFERENCES content_approvals(id) ON DELETE CASCADE)
+                CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci""")
+            cursor.execute("""CREATE TABLE IF NOT EXISTS content_approval_votes (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,approval_id BIGINT UNSIGNED NOT NULL,
+                reviewer_id BIGINT UNSIGNED NOT NULL,approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE KEY uq_approval_reviewer (approval_id,reviewer_id),
+                CONSTRAINT fk_vote_approval FOREIGN KEY (approval_id) REFERENCES content_approvals(id) ON DELETE CASCADE)
+                CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci""")
+            cursor.execute("""INSERT IGNORE INTO content_approval_reviewers (approval_id,reviewer_id)
+                SELECT a.id,u.id FROM content_approvals a JOIN admin_users u
+                ON u.is_active=1 AND u.is_reviewer=1 AND u.id<>a.submitted_by
+                WHERE a.status='pending'""")
         connection.commit()
         print("Content manager schema migrated; article, course, news, and admin data are ready.")
     finally:

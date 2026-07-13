@@ -15,6 +15,7 @@ from .content import (
     get_studio_article,
     get_dashboard_articles,
     save_studio_article,
+    validate_content_identity,
     set_article_status,
 )
 from .admin import admin_required, authenticate, create_admin_user, get_admin_users, login_csrf_token, update_admin_user
@@ -146,13 +147,14 @@ def article_studio():
         selected_slug = request.form.get("original_slug", "").strip()
         selected = get_studio_article(selected_slug) if selected_slug else None
         try:
+            validate_content_identity("articles", request.form.get("slug", "").strip().lower(), selected_slug)
             article = build_article(
                 request.form,
                 request.files.get("source_file"),
                 request.files.get("hero_image"),
                 selected,
             )
-            save_studio_article(article)
+            save_studio_article(article, selected_slug)
             action_label = "已發佈" if article["status"] == "posted" else "已儲存"
             return redirect(url_for("public.article_studio", slug=article["slug"], notice=action_label))
         except (ValueError, OSError) as exc:

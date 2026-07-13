@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 from flask import Flask
 from dotenv import load_dotenv
@@ -27,6 +28,10 @@ def create_app(config: dict | None = None) -> Flask:
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
         SESSION_COOKIE_SECURE=os.getenv("APP_ENV") == "production",
+        PERMANENT_SESSION_LIFETIME=timedelta(minutes=60),
+        SESSION_REFRESH_EACH_REQUEST=True,
+        SESSION_EPOCH=os.getenv("INVOCATION_ID", f"gunicorn-parent-{os.getppid()}"),
+        SESSION_IDLE_SECONDS=3600,
     )
     if config:
         app.config.update(config)
