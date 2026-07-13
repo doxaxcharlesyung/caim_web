@@ -1,5 +1,6 @@
 import re
 import unittest
+from pathlib import Path
 
 from app import create_app
 
@@ -76,6 +77,13 @@ class ArticleStudioTests(unittest.TestCase):
 
     def test_authentication_and_publish_workflow(self):
         self.assertEqual(self.app.config["SESSION_COOKIE_NAME"], "caim_session")
+        service = (
+            Path(__file__).resolve().parents[1]
+            / "deploy"
+            / "systemd"
+            / "doxax-caim-web.service"
+        ).read_text(encoding="utf-8")
+        self.assertIn("--limit-request-field_size 32768", service)
         anonymous = self.app.test_client().get("/article-dashboard/")
         self.assertEqual(anonymous.status_code, 302)
         self.assertIn("/article-dashboard/login/", anonymous.location)
