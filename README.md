@@ -186,6 +186,7 @@ the application-owned virtual environment at `/opt/caim_web/.venv` and starts `w
 - Studio saves distinguish New from Select/Edit. New content always uses an SQL insert and never an upsert; duplicate article/news slugs, course slugs, or course codes produce a validation error without changing the existing row. Select/Edit updates only the record identified by its original slug.
 - After the last required approval, content becomes `Posted`. Public article, course, and news queries still hide it until its scheduled posting time. New studio forms default that time to Now.
 - Course Studio accepts an uploaded image or an existing image path for both new and existing courses. Production uploads are retained under `/opt/caim_web/uploads` and linked into the static asset tree, so application deployments do not erase them.
+- The homepage News & Events section renders all currently posted and scheduled-eligible database items in a single-row carousel. Desktop displays three cards, arrows appear when more than three items exist, and the carousel advances every five seconds before looping to the beginning. Hover, keyboard focus, reduced-motion preferences, and mobile swipe behavior are respected.
 
 ## GitHub Actions secrets
 

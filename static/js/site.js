@@ -94,3 +94,63 @@ prayerToggle?.addEventListener("click", () => {
     }, 360);
   }
 });
+
+document.querySelectorAll("[data-news-carousel]").forEach((carousel) => {
+  const track = carousel.querySelector("[data-news-track]");
+  const cards = [...carousel.querySelectorAll("[data-news-card]")];
+  const previous = carousel.querySelector("[data-news-previous]");
+  const next = carousel.querySelector("[data-news-next]");
+  const status = carousel.querySelector("[data-news-status]");
+  const autoplay = carousel.dataset.autoplay === "true" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let index = 0;
+  let timer;
+  let touchStartX = 0;
+
+  const visibleCount = () => window.innerWidth <= 680 ? 1 : window.innerWidth <= 980 ? 2 : 3;
+  const maximumIndex = () => Math.max(0, cards.length - visibleCount());
+
+  const render = () => {
+    index = Math.min(index, maximumIndex());
+    const offset = cards[index] ? cards[index].offsetLeft - cards[0].offsetLeft : 0;
+    track.style.transform = `translateX(${-offset}px)`;
+    if (status) status.textContent = `Showing news item ${index + 1} of ${cards.length}`;
+  };
+
+  const advance = (direction = 1) => {
+    const maximum = maximumIndex();
+    index = direction > 0
+      ? (index >= maximum ? 0 : index + 1)
+      : (index <= 0 ? maximum : index - 1);
+    render();
+  };
+
+  const stop = () => window.clearInterval(timer);
+  const start = () => {
+    stop();
+    if (autoplay && cards.length > 3 && !document.hidden) timer = window.setInterval(advance, 5000);
+  };
+  const manuallyAdvance = (direction) => {
+    advance(direction);
+    start();
+  };
+
+  previous?.addEventListener("click", () => manuallyAdvance(-1));
+  next?.addEventListener("click", () => manuallyAdvance(1));
+  carousel.addEventListener("touchstart", (event) => {
+    touchStartX = event.changedTouches[0].clientX;
+    stop();
+  }, { passive: true });
+  carousel.addEventListener("touchend", (event) => {
+    const distance = event.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(distance) > 45) manuallyAdvance(distance < 0 ? 1 : -1);
+    else start();
+  }, { passive: true });
+  carousel.addEventListener("focusin", stop);
+  carousel.addEventListener("focusout", (event) => {
+    if (!carousel.contains(event.relatedTarget)) start();
+  });
+  document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
+  window.addEventListener("resize", render);
+  render();
+  start();
+});

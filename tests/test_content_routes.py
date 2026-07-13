@@ -34,6 +34,29 @@ class ContentRouteTests(unittest.TestCase):
         self.assertEqual(self.client.get("/courses/not-a-course/").status_code, 404)
         self.assertEqual(self.client.get("/articles/not-an-article/").status_code, 404)
 
+    def test_homepage_news_carousel_renders_every_database_item(self):
+        from app.content import get_news_items
+        with self.app.app_context():
+            expected_count = len(get_news_items())
+        page = self.client.get("/").get_data(as_text=True)
+        self.assertEqual(page.count("data-news-card"), expected_count)
+        self.assertNotIn("news_items[:6]", page)
+        if expected_count > 3:
+            self.assertIn('data-autoplay="true"', page)
+            self.assertIn("data-news-previous", page)
+            self.assertIn("data-news-next", page)
+        root = Path(__file__).resolve().parents[1]
+        script = (root / "static" / "js" / "site.js").read_text(encoding="utf-8")
+        styles = (root / "static" / "css" / "site.css").read_text(encoding="utf-8")
+        self.assertIn("window.setInterval(advance, 5000)", script)
+        self.assertIn("index >= maximum ? 0 : index + 1", script)
+        self.assertIn("cards[index].offsetLeft - cards[0].offsetLeft", script)
+        self.assertNotIn('carousel.addEventListener("pointerenter", stop)', script)
+        self.assertIn("flex:0 0 calc((100% - 36px)/3)", styles)
+        self.assertIn(".nav-dropdown-menu", styles)
+        self.assertIn("top:100%", styles)
+        self.assertNotIn("top:calc(100% + 8px)", styles)
+
 
 class ArticleStudioTests(unittest.TestCase):
     slug = "article-studio-automated-test"
