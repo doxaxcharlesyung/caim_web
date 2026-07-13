@@ -1,7 +1,7 @@
 """Create and bootstrap the CAIM production MySQL database.
 
-This script is idempotent and never stores the MySQL administrator password.
-Provide MYSQL_ADMIN_PASSWORD through the environment or a protected env file.
+This script is idempotent. Local MySQL root accounts may authenticate through
+the Unix socket; password authentication remains supported for remote admins.
 """
 
 import os
@@ -13,6 +13,11 @@ from dotenv import dotenv_values, load_dotenv
 from werkzeug.security import generate_password_hash
 
 ROOT = Path(__file__).resolve().parents[1]
+MYSQL_SOCKET_CANDIDATES = (
+    Path("/var/lib/mysql/mysql.sock"),
+    Path("/var/run/mysqld/mysqld.sock"),
+    Path("/run/mysqld/mysqld.sock"),
+)
 
 
 def env_value(name, values):
@@ -27,17 +32,37 @@ def execute_schema(connection):
                 cursor.execute(statement)
 
 
+def resolve_admin_socket(configured_socket, host, admin_user, running_as_root=None):
+    if configured_socket:
+        socket_path = Path(configured_socket)
+        if not socket_path.exists():
+            raise SystemExit(f"MYSQL_ADMIN_SOCKET does not exist: {socket_path}")
+        return str(socket_path)
+
+    if running_as_root is None:
+        running_as_root = hasattr(os, "geteuid") and os.geteuid() == 0
+    if admin_user != "root" or host not in {"127.0.0.1", "localhost", "::1"} or not running_as_root:
+        return None
+
+    for socket_path in MYSQL_SOCKET_CANDIDATES:
+        if socket_path.exists():
+            return str(socket_path)
+    return None
+
+
 def main():
     load_dotenv(ROOT / ".env")
     bootstrap_values = dotenv_values(os.getenv("CAIM_BOOTSTRAP_ENV", "")) if os.getenv("CAIM_BOOTSTRAP_ENV") else {}
     host = env_value("MYSQL_ADMIN_HOST", bootstrap_values) or env_value("DB_HOST", bootstrap_values) or "127.0.0.1"
     port = int(env_value("MYSQL_ADMIN_PORT", bootstrap_values) or env_value("DB_PORT", bootstrap_values) or 3306)
-    socket_path = env_value("MYSQL_ADMIN_SOCKET", bootstrap_values)
     admin_user = env_value("MYSQL_ADMIN_USER", bootstrap_values) or "root"
     admin_password = env_value("MYSQL_ADMIN_PASSWORD", bootstrap_values)
+    socket_path = resolve_admin_socket(
+        env_value("MYSQL_ADMIN_SOCKET", bootstrap_values), host, admin_user
+    )
     app_password = env_value("DB_PASSWORD", bootstrap_values)
-    if not admin_password:
-        raise SystemExit("MYSQL_ADMIN_PASSWORD is required")
+    if not socket_path and not admin_password:
+        raise SystemExit("MYSQL_ADMIN_PASSWORD is required when Unix socket authentication is unavailable")
     if not app_password:
         raise SystemExit("DB_PASSWORD is required")
 
@@ -45,7 +70,12 @@ def main():
     app_user = env_value("DB_USER", bootstrap_values) or "caimadmin"
     if not re.fullmatch(r"[A-Za-z0-9_]+", app_user) or not re.fullmatch(r"[A-Za-z0-9_]+", database):
         raise SystemExit("DB_NAME and DB_USER may contain only letters, numbers, and underscores")
-    connection_options = {"user": admin_user, "password": admin_password, "charset": "utf8mb4", "autocommit": True}
+    connection_options = {
+        "user": admin_user,
+        "password": admin_password or "",
+        "charset": "utf8mb4",
+        "autocommit": True,
+    }
     if socket_path:
         connection_options["unix_socket"] = socket_path
     else:

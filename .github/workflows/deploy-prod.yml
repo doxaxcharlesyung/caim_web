@@ -109,7 +109,7 @@ jobs:
       - name: Validate MySQL content database configuration
         run: |
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
-            "set -a && . '$PROD_APP_DIR/.env' && set +a && test -n \"\$DB_HOST\" || { echo 'Missing DB_HOST in PROD .env' >&2; exit 1; }; test -n \"\$DB_PASSWORD\" || { echo 'Missing DB_PASSWORD in PROD .env' >&2; exit 1; }; test -n \"\$MYSQL_ADMIN_PASSWORD\" || { echo 'Missing MYSQL_ADMIN_PASSWORD in PROD .env' >&2; exit 1; }"
+            "set -a && . '$PROD_APP_DIR/.env' && set +a && test -n \"\$DB_HOST\" || { echo 'Missing DB_HOST in PROD .env' >&2; exit 1; }; test -n \"\$DB_PASSWORD\" || { echo 'Missing DB_PASSWORD in PROD .env' >&2; exit 1; }"
 
       - name: Prepare production virtual environment
         run: |
@@ -119,7 +119,7 @@ jobs:
       - name: Create or bootstrap production database
         run: |
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
-            "cd '$PROD_APP_DIR' && set -a && . '$PROD_APP_DIR/.env' && set +a && '$PROD_APP_DIR/.venv/bin/python' scripts/create_prod_database.py"
+            "sudo sh -c \"cd '$PROD_APP_DIR' && set -a && . '$PROD_APP_DIR/.env' && set +a && '$PROD_APP_DIR/.venv/bin/python' scripts/create_prod_database.py\""
 
       - name: Migrate article dashboard database
         run: |
