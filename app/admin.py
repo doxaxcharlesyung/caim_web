@@ -14,7 +14,9 @@ def admin_required(view):
         user = fetch_one("SELECT id, username, is_active FROM admin_users WHERE id=%s", (user_id,)) if user_id else None
         if not user or not user["is_active"]:
             session.clear()
-            return redirect(url_for("public.article_dashboard_login", next=request.full_path))
+            # The login endpoint always returns to the dashboard. Avoid carrying
+            # request.full_path, which can include a trailing bare '?'.
+            return redirect(url_for("public.article_dashboard_login"))
         g.admin_user = user
         return view(*args, **kwargs)
     return wrapped

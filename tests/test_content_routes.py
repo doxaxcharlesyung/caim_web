@@ -78,6 +78,7 @@ class ArticleStudioTests(unittest.TestCase):
         anonymous = self.app.test_client().get("/article-dashboard/")
         self.assertEqual(anonymous.status_code, 302)
         self.assertIn("/article-dashboard/login/", anonymous.location)
+        self.assertNotIn("?next=", anonymous.location)
 
         response = self.client.post(
             "/article-studio/", data=self.article_data("save")
