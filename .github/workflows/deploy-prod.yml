@@ -61,27 +61,7 @@ jobs:
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
             "sudo rm -rf '$PROD_APP_DIR/app' '$PROD_APP_DIR/templates' '$PROD_APP_DIR/static' && sudo install -d -o '$PROD_USER' -g '$PROD_USER' '$PROD_APP_DIR'"
 
-          tar -czf - app templates scripts app.py wsgi.py requirements.txt deploy \
-            static/css static/js static/favicon.svg \
-            static/assets/caim-dx-logo.png \
-            static/assets/caim-hero-sacred-threshold.png \
-            static/assets/caim-ministry.png \
-            static/assets/caim-sacred-intelligence-concept.png \
-            static/assets/dx-sermon-spirit.jpg \
-            static/assets/dx-sermon-six-flow.png \
-            static/assets/missionary-bible-bag.jpg \
-            static/assets/reading-book.jpg \
-            static/assets/articles-hero-bible.jpg \
-            static/assets/contact-team.avif \
-            static/assets/service-worship-transformation.jpg \
-            static/assets/courses-hero-youth-learning.png \
-            static/assets/courses-mt101-working-together.jpeg \
-            static/assets/courses-mt102-joyful-learning.jpeg \
-            static/assets/courses-mt103-learning-is-fun.jpeg \
-            static/assets/courses-mt104-learning-gods-word.jpeg \
-            static/assets/courses-mt105-studying-well.png \
-            static/assets/courses-mt106-love-read-bible.jpeg \
-            static/assets/courses-mt110-we-are-one.jpeg |
+          tar -czf - app templates scripts app.py wsgi.py requirements.txt deploy static |
             ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
               "sudo install -d -o '$PROD_USER' -g '$PROD_USER' '$PROD_APP_DIR' && sudo tar -xzf - -C '$PROD_APP_DIR'"
 
