@@ -1,4 +1,4 @@
 {% extends "layouts/base.html" %}{% block content %}
-{% set hero_title='宣教士支援' %}{% set hero_subtitle='CAIM 盼望與前線福音工人同行，讓 AI 成為減輕事奉重擔、支援宣教使命的工具。' %}{% set hero_image='praying-cross-book.jpg' %}{% include 'components/page_hero.html' %}
+{% set hero_title=page_content.title %}{% set hero_subtitle=page_content.subtitle %}{% set hero_image='praying-cross-book.jpg' %}{% include 'components/page_hero.html' %}
 <section class="section"><div class="container split"><div class="media-frame"><img src="{{ url_for('static', filename='assets/missionary-bible-bag.jpg') }}" alt="手持聖經的宣教士"></div><div><h2 class="section-title">DX Sermon 免費開放給所有在職宣教士</h2><div class="prose"><p>CAIM 深信，完成主所託付的福音使命，需要眾教會彼此連結、同心擺上。因此我們將 DX Sermon 向所有在職宣教士免費開放使用，盼望成為前線工人手中的實用工具。</p><p>無論是全職或帶職宣教，只要你需要，我們都誠摯邀請你使用 DX Sermon，讓我們在主裡彼此扶持。</p></div><a class="btn btn-primary" href="{{ url_for('public.contact') }}">聯絡 CAIM</a></div></div></section>
 {% endblock %}

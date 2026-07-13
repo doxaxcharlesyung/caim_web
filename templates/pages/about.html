@@ -1,5 +1,6 @@
 {% extends "layouts/base.html" %}
 {% block content %}
-{% set hero_title='認識 CAIM' %}{% set hero_subtitle='在人工智能急速改變世界的時代，CAIM 盼望與教會同行，讓信仰群體以神學深度、倫理智慧與創新勇氣，忠心回應上帝的呼召。' %}{% set hero_image='about-francis-working.png' %}{% include 'components/page_hero.html' %}
-<section class="section"><div class="container content-stack"><article class="split"><div><h2 class="section-title">我們的異象</h2><p>看見教會在人工智能時代中，仍然以清晰的神學根基、成熟的倫理辨識與創新的智慧，忠心回應上帝的呼召。</p></div><div class="media-frame"><img src="{{ url_for('static', filename='assets/caim-sacred-intelligence-concept.png') }}" alt="信仰與人工智能的辨識"></div></article><article class="text-panel"><h2>我們的使命</h2><p>裝備教會在人工智能時代中作出負責任、具神學深度並具策略眼光的回應。</p></article><article class="text-panel"><h2>我們的核心信念</h2><p>科技本身並不是目的。教會的使命始終沒有改變：愛上帝、愛人，並在世界中忠心見證耶穌基督。</p></article></div></section>
+{% set hero_title=page_content.title %}{% set hero_subtitle=page_content.subtitle %}{% set hero_image='about-francis-working.png' %}{% include 'components/page_hero.html' %}
+<section class="section"><div class="container content-stack">{% for section in page_content.sections %}<article class="text-panel"><h2>{{ section.title }}</h2><p>{{ section.text }}</p></article>{% endfor %}</div></section>
+<section class="section alt"><div class="container two-grid">{% for leader in leaders %}<article class="sacred-card info-card"><img src="{{ url_for('static', filename=leader.image.lstrip('/')) }}" alt="{{ leader.imageAlt }}"><h2>{{ leader.name }}</h2><span class="kicker">{{ leader.role }}</span><p>{{ leader.text }}</p></article>{% endfor %}</div></section>
 {% endblock %}

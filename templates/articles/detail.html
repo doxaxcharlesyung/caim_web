@@ -1,1 +1,15 @@
-{% extends "layouts/base.html" %}{% block content %}<section class="page-hero article-detail-hero"><div class="container"><span class="kicker">專欄文章</span><h1>文章尚未連接資料庫</h1><p>文章識別碼：{{ slug }}</p></div></section><section class="section"><article class="container narrow prose"><p>這個固定 Jinja 模板已準備好接收 MySQL 文章資料，包括標題、摘要、作者、發佈日期、封面圖片和正文。資料庫整合不屬於本次靜態模板遷移。</p><a class="btn btn-secondary" href="{{ url_for('public.articles') }}">返回文章列表</a></article></section>{% endblock %}
+{% extends "layouts/base.html" %}{% block content %}
+{% set hero_eyebrow=article.category %}
+{% set hero_title=article.title %}
+{% set hero_subtitle=article.detail.lead or article.excerpt %}
+{% set hero_image=article.image.removeprefix('/assets/') %}
+{% set hero_variant='article-detail-hero' %}{% include 'components/page_hero.html' %}
+<section class="section"><div class="container narrow">
+  <div class="article-meta-row"><span class="article-category">{{ article.category }}</span><span>最後更新於：{{ article.detail.updatedAt or article.published_date }}</span></div>
+  <p class="article-author-note">作者：{{ article.detail.author }}</p>
+  <article class="prose article-content">
+    {% for paragraph in article.detail.paragraphs or [] %}<p>{{ paragraph }}</p>{% endfor %}
+  </article>
+  <a class="btn btn-secondary" href="{{ url_for('public.articles') }}">返回文章列表</a>
+</div></section>
+{% endblock %}

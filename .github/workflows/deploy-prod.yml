@@ -60,7 +60,7 @@ jobs:
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
             "sudo rm -rf '$PROD_APP_DIR/app' '$PROD_APP_DIR/templates' '$PROD_APP_DIR/static' && sudo install -d -o '$PROD_USER' -g '$PROD_USER' '$PROD_APP_DIR'"
 
-          tar -czf - app templates app.py wsgi.py requirements.txt deploy \
+          tar -czf - app templates scripts app.py wsgi.py requirements.txt deploy \
             static/css static/js static/favicon.svg \
             static/assets/caim-dx-logo.png \
             static/assets/caim-hero-sacred-threshold.png \
@@ -92,7 +92,7 @@ jobs:
           PROD_SECRET_KEY: ${{ secrets.PROD_SECRET_KEY }}
         run: |
           test -n "$PROD_SECRET_KEY"
-          printf 'SECRET_KEY=%s\n' "$PROD_SECRET_KEY" |
+          printf 'SECRET_KEY=%s\nAPP_ENV=production\n' "$PROD_SECRET_KEY" |
             ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
               "sudo install -o '$PROD_USER' -g '$PROD_USER' -m 0600 /dev/stdin '$PROD_APP_DIR/.env'"
 
@@ -104,10 +104,51 @@ jobs:
             ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
               "sudo tee -a '$PROD_APP_DIR/.env' >/dev/null && sudo chown '$PROD_USER':'$PROD_USER' '$PROD_APP_DIR/.env' && sudo chmod 0600 '$PROD_APP_DIR/.env'"
 
+      - name: Configure MySQL content database
+        env:
+          PROD_CAIM_DB_HOST: ${{ secrets.PROD_CAIM_DB_HOST }}
+          PROD_CAIM_DB_PASSWORD: ${{ secrets.PROD_CAIM_DB_PASSWORD }}
+        run: |
+          test -n "$PROD_CAIM_DB_HOST"
+          test -n "$PROD_CAIM_DB_PASSWORD"
+          printf 'DB_HOST=%s\nDB_PORT=3306\nDB_USER=caimadmin\nDB_PASSWORD=%s\nDB_NAME=caimdb\n' "$PROD_CAIM_DB_HOST" "$PROD_CAIM_DB_PASSWORD" |
+            ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+              "sudo tee -a '$PROD_APP_DIR/.env' >/dev/null && sudo chown '$PROD_USER':'$PROD_USER' '$PROD_APP_DIR/.env' && sudo chmod 0600 '$PROD_APP_DIR/.env'"
+
       - name: Prepare production virtual environment
         run: |
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
             "if [ ! -x '$PROD_APP_DIR/.venv/bin/python' ]; then python3.12 -m venv '$PROD_APP_DIR/.venv'; fi && '$PROD_APP_DIR/.venv/bin/python' -m pip install --upgrade pip && '$PROD_APP_DIR/.venv/bin/pip' install --requirement '$PROD_APP_DIR/requirements.txt'"
+
+      - name: Create or bootstrap production database
+        env:
+          PROD_CAIM_DB_HOST: ${{ secrets.PROD_CAIM_DB_HOST }}
+          PROD_MYSQL_ADMIN_PASSWORD: ${{ secrets.PROD_MYSQL_ADMIN_PASSWORD }}
+          PROD_MYSQL_ADMIN_SOCKET: ${{ secrets.PROD_MYSQL_ADMIN_SOCKET }}
+        run: |
+          test -n "$PROD_MYSQL_ADMIN_PASSWORD"
+          {
+            printf 'MYSQL_ADMIN_USER=root\nMYSQL_ADMIN_PASSWORD=%s\n' "$PROD_MYSQL_ADMIN_PASSWORD"
+            if [ -n "$PROD_MYSQL_ADMIN_SOCKET" ]; then
+              printf 'MYSQL_ADMIN_SOCKET=%s\n' "$PROD_MYSQL_ADMIN_SOCKET"
+            else
+              printf 'MYSQL_ADMIN_HOST=%s\n' "$PROD_CAIM_DB_HOST"
+            fi
+          } |
+            ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+              "sudo install -o '$PROD_USER' -g '$PROD_USER' -m 0600 /dev/stdin '$PROD_APP_DIR/.db-bootstrap.env'"
+          ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+            "cd '$PROD_APP_DIR' && set -a && . '$PROD_APP_DIR/.env' && . '$PROD_APP_DIR/.db-bootstrap.env' && set +a && '$PROD_APP_DIR/.venv/bin/python' scripts/create_prod_database.py; status=\$?; rm -f '$PROD_APP_DIR/.db-bootstrap.env'; exit \$status"
+
+      - name: Migrate article dashboard database
+        run: |
+          ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+            "cd '$PROD_APP_DIR' && '$PROD_APP_DIR/.venv/bin/python' scripts/migrate_article_dashboard.py"
+
+      - name: Import committed local content snapshot
+        run: |
+          ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+            "cd '$PROD_APP_DIR' && '$PROD_APP_DIR/.venv/bin/python' scripts/import_content_snapshot.py scripts/content_snapshot.json"
 
       - name: Install and restart CAIM service
         run: |

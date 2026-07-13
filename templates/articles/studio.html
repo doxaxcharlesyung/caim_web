@@ -1,0 +1,56 @@
+{% extends "layouts/base.html" %}
+{% block content %}
+{% set detail=selected.detail if selected else {} %}
+<section class="studio-hero">
+  <div class="container studio-hero-grid">
+    <div>
+      <span class="kicker">CAIM EDITORIAL WORKSPACE</span>
+      <h1>人工智能事工中心 (CAIM) 文章生成工具</h1>
+      <p>上載文章的 <strong>docx / pdf / md</strong> 來源，再配合 Hero Image，即可建立、預覽並發佈 CAIM 專欄文章。</p>
+      <div class="studio-actions"><a class="btn btn-primary" href="#article-generator">開始建立文章</a><a class="btn btn-secondary" href="{{ url_for('public.article_dashboard') }}">返回文章管理</a></div>
+    </div>
+    <div class="studio-flow sacred-card"><span>流程</span><ol><li>選擇來源檔案並上載 Hero Image</li><li>填寫標題、slug、分類、作者與摘要</li><li>儲存草稿或直接發佈到網站</li></ol></div>
+  </div>
+</section>
+
+<section class="section studio-main" id="article-generator"><div class="container studio-layout">
+  <aside class="studio-sidebar">
+    <div class="sacred-card studio-panel"><h2>必備功能</h2><ul><li>文章標題、slug、分類、作者與發佈日期</li><li>Hero Image 上載與即時預覽</li><li>伺服器抽取 docx / pdf / md 文字</li><li>摘要、相關主題與 SEO 描述</li><li>草稿、發佈、修改與刪除均儲存在 MySQL</li></ul></div>
+    <div class="sacred-card studio-panel"><h2>適合怎樣使用</h2><p>先上載原稿，再補上圖片與元資料。儲存草稿不會出現在公開文章頁；按 PUBLISH 後所有訪客都能閱讀。</p></div>
+  </aside>
+
+  <div class="studio-builder">
+    {% if notice %}<p class="studio-notice" role="status">{{ notice }}</p>{% endif %}
+    {% if error %}<p class="studio-error" role="alert">{{ error }}</p>{% endif %}
+    <form class="studio-form sacred-card" method="post" enctype="multipart/form-data" id="article-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="original_slug" value="{{ selected.slug if selected else '' }}">
+      <input type="hidden" name="existing_image" value="{{ selected.image if selected else '' }}">
+      <div class="studio-form-head"><div><strong>文章資料</strong><span>{{ '狀態：' ~ selected.status if selected else 'New Article' }}</span></div><div class="studio-toolbar"><a class="btn btn-secondary" href="{{ url_for('public.article_studio') }}">New Article</a><button class="btn btn-secondary" name="action" value="save" type="submit">SAVE</button><button class="btn btn-primary" name="action" value="post" type="submit">POST</button></div></div>
+      <div class="studio-fields">
+        <label class="field span-2">文章來源檔案<input id="source-file" name="source_file" type="file" accept=".docx,.pdf,.md,.txt"><small>支援 docx、pdf、md、txt；伺服器會在文章內容留空時自動抽取文字。</small></label>
+        <label class="field">Hero Image<input id="hero-image" name="hero_image" type="file" accept="image/png,image/jpeg,image/webp,image/avif"><small>建議圖片寬度至少 1600px。</small>{% if selected and selected.image %}<button class="image-remove" id="remove-image" type="button">移除目前圖片</button><input type="hidden" id="remove-image-value" name="remove_image" value="0">{% endif %}</label>
+        <label class="field">圖片替代文字<input name="image_alt" value="{{ selected.alt if selected else '' }}"></label>
+        <label class="field span-2">主題 / 標題<input id="title" name="title" required value="{{ selected.title if selected else '' }}"></label>
+        <label class="field">slug<input id="slug" name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value="{{ selected.slug if selected else '' }}"></label>
+        <label class="field">分類<select id="category" name="category">{% for category in ['AI 與教會','神學辨識','AI 倫理','DX Sermon','教會 AI 應用','事工轉型','宣教支援','課程與講座','報告與觀察'] %}<option {% if selected and selected.category == category %}selected{% endif %}>{{ category }}</option>{% endfor %}</select></label>
+        <label class="field">作者<input id="author" name="author" value="{{ detail.author or 'CAIM' }}"></label>
+        <label class="field">發佈日期<input id="date" name="date" type="date" required value="{{ selected.published_date if selected else '' }}"></label>
+        <label class="field">Scheduled Posting Date<input id="scheduled-posting-at" name="scheduled_posting_at" type="datetime-local" value="{{ selected.scheduled_posting_at.strftime('%Y-%m-%dT%H:%M') if selected and selected.scheduled_posting_at else '' }}" {% if selected and selected.status == 'posted' %}readonly{% endif %}><small>{% if selected and selected.status == 'posted' %}文章已 Posted，排程日期不能修改。{% else %}網站會在此日期時間後顯示文章。{% endif %}</small></label>
+        <label class="field span-2">檔案標題 / Meta Title<input id="meta-title" name="meta_title" value="{{ detail.metaTitle or selected.title if selected else '' }}"></label>
+        <label class="field span-2">摘要 / Lead<textarea id="lead" name="lead" rows="4">{{ detail.lead or selected.excerpt if selected else '' }}</textarea></label>
+        <label class="field span-2">文章內容<textarea id="body" name="body" rows="22">{{ detail.body or (detail.paragraphs|join('\n\n')) if selected else '' }}</textarea></label>
+        <label class="field span-2">相關主題<input id="topics" name="topics" value="{{ detail.relatedTopics|map(attribute='label')|join(',') if selected else '所有文章' }}"><small>使用逗號分隔。</small></label>
+        <label class="field span-2">SEO 描述<textarea id="description" name="description" rows="3">{{ detail.description or selected.excerpt if selected else '' }}</textarea></label>
+      </div>
+    </form>
+
+    <div class="studio-preview sacred-card">
+      <div class="preview-heading"><div><strong>文章頁預覽</strong><p>確認標題、摘要、圖片和內文排版。</p></div><a class="btn btn-secondary" id="article-link" href="{{ url_for('public.article_detail', slug=selected.slug) if selected and selected.status == 'posted' else '#' }}">開啟文章</a></div>
+      <article><div class="preview-image"><img id="preview-image" src="{{ url_for('static', filename=(selected.image if selected else '/assets/hero-asian-creative-team.jpg').lstrip('/')) }}" alt=""></div><div class="preview-copy"><div class="article-meta-row"><span id="preview-category">{{ selected.category if selected else 'AI 與教會' }}</span><time id="preview-date">{{ selected.published_date if selected else '' }}</time><span id="preview-author">{{ detail.author or 'CAIM' }}</span></div><h2 id="preview-title">{{ selected.title if selected else '新文章標題' }}</h2><p id="preview-lead">{{ detail.lead if selected else '' }}</p><div id="preview-body" class="prose"></div></div></article>
+    </div>
+  </div>
+</div></section>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/article-studio.js') }}" defer></script>{% endblock %}

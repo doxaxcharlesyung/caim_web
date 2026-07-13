@@ -1,0 +1,614 @@
+{
+  "page_content": [
+    {
+      "content_key": "about",
+      "title": "認識 CAIM",
+      "subtitle": "在人工智能急速改變世界的時代，CAIM 盼望與教會同行，讓信仰群體以神學深度、倫理智慧與創新勇氣，忠心回應上帝的呼召。",
+      "sections": "[{\"text\": \"CAIM 的異象，是看見教會在人工智能時代中，仍然以清晰的神學根基、成熟的倫理辨識與創新的智慧，忠心回應上帝的呼召。\", \"title\": \"我們的異象\"}, {\"text\": \"CAIM 的使命，是裝備教會在人工智能時代中作出負責任、具神學深度並具策略眼光的回應。\", \"title\": \"我們的使命\"}, {\"text\": \"我們相信：科技本身並不是目的。教會的使命始終沒有改變——愛上帝、愛人，並在世界中忠心見證耶穌基督。\", \"title\": \"我們的核心信念\"}]"
+    },
+    {
+      "content_key": "services",
+      "title": "教會AI轉型支援",
+      "subtitle": "從準備度評估、倫理政策、AI 系統設計到牧者培訓，CAIM 與教會同行，建立安全、負責任、信仰導向的人工智能應用路徑。",
+      "sections": "null"
+    },
+    {
+      "content_key": "dx",
+      "title": "DX Sermon",
+      "subtitle": "滙聚聖經智慧的一站式人工智能研經平台，幫助牧者、傳道人、神學生及信徒從經文出發，進行深入研究、釋經分析、講章構思與查經預備。",
+      "sections": "null"
+    },
+    {
+      "content_key": "courses",
+      "title": "課程與講座",
+      "subtitle": "CAIM 提供實用、清晰、具神學辨識的 AI 課程與講座，幫助牧者、領袖、信徒與教會團隊在 AI 時代建立信仰導向的應用能力。",
+      "sections": "null"
+    },
+    {
+      "content_key": "missionaries",
+      "title": "宣教士支援",
+      "subtitle": "CAIM 盼望與前線福音工人同行，讓 AI 成為減輕事奉重擔、支援宣教使命的工具。",
+      "sections": "null"
+    },
+    {
+      "content_key": "articles",
+      "title": "專欄文章",
+      "subtitle": "整理 CAIM 對人工智能、教會實踐、神學辨識與時代使命的觀察、反思與分享。",
+      "sections": "null"
+    },
+    {
+      "content_key": "churchAiTransformation",
+      "title": "教會AI轉型",
+      "subtitle": "CAIM 陪伴教會與機構按自身處境、使命和成熟度，建立合宜、可信、可持續的人工智能轉化路徑。",
+      "sections": "null"
+    },
+    {
+      "content_key": "contact",
+      "title": "聯絡我們",
+      "subtitle": "無論你想邀請我們主領講座、培訓、查詢 DX 系列產品、了解AI 顧問服務，或與 CAIM 探索合作，我們樂意與你同行。",
+      "sections": "null"
+    }
+  ],
+  "content_items": [
+    {
+      "collection_name": "articleCategories",
+      "item_key": "0",
+      "sort_order": 0,
+      "item_data": "{\"value\": \"所有文章\"}"
+    },
+    {
+      "collection_name": "articleCategories",
+      "item_key": "1",
+      "sort_order": 1,
+      "item_data": "{\"value\": \"AI 與教會\"}"
+    },
+    {
+      "collection_name": "articleCategories",
+      "item_key": "2",
+      "sort_order": 2,
+      "item_data": "{\"value\": \"神學辨識\"}"
+    },
+    {
+      "collection_name": "articleCategories",
+      "item_key": "3",
+      "sort_order": 3,
+      "item_data": "{\"value\": \"AI 倫理\"}"
+    },
+    {
+      "collection_name": "articleCategories",
+      "item_key": "4",
+      "sort_order": 4,
+      "item_data": "{\"value\": \"DX Sermon\"}"
+    },
+    {
+      "collection_name": "articleCategories",
+      "item_key": "5",
+      "sort_order": 5,
+      "item_data": "{\"value\": \"教會 AI 應用\"}"
+    },
+    {
+      "collection_name": "articleCategories",
+      "item_key": "6",
+      "sort_order": 6,
+      "item_data": "{\"value\": \"事工轉型\"}"
+    },
+    {
+      "collection_name": "articleCategories",
+      "item_key": "7",
+      "sort_order": 7,
+      "item_data": "{\"value\": \"宣教支援\"}"
+    },
+    {
+      "collection_name": "articleCategories",
+      "item_key": "8",
+      "sort_order": 8,
+      "item_data": "{\"value\": \"課程與講座\"}"
+    },
+    {
+      "collection_name": "articleCategories",
+      "item_key": "9",
+      "sort_order": 9,
+      "item_data": "{\"value\": \"報告與觀察\"}"
+    },
+    {
+      "collection_name": "dxTools",
+      "item_key": "譯本比較",
+      "sort_order": 0,
+      "item_data": "{\"text\": \"辨識不同譯本間的微妙差異，以揭示經文內容的不同詮釋可能。\", \"title\": \"譯本比較\"}"
+    },
+    {
+      "collection_name": "dxTools",
+      "item_key": "歷史背景",
+      "sort_order": 1,
+      "item_data": "{\"text\": \"進入經文背後的世界，體悟其文化、社會及神學脈絡。\", \"title\": \"歷史背景\"}"
+    },
+    {
+      "collection_name": "dxTools",
+      "item_key": "原文字義",
+      "sort_order": 2,
+      "item_data": "{\"text\": \"深入希臘文及希伯來文的根源，發掘在翻譯中常被遺失的義涵層次。\", \"title\": \"原文字義\"}"
+    },
+    {
+      "collection_name": "dxTools",
+      "item_key": "語法亮點",
+      "sort_order": 3,
+      "item_data": "{\"text\": \"追蹤句法與思想流動，理解它們如何建構經文重點。\", \"title\": \"語法亮點\"}"
+    },
+    {
+      "collection_name": "dxTools",
+      "item_key": "文學手法",
+      "sort_order": 4,
+      "item_data": "{\"text\": \"掌握結構、文風及象徵，以欣賞經文受聖靈感動的藝術性。\", \"title\": \"文學手法\"}"
+    },
+    {
+      "collection_name": "dxTools",
+      "item_key": "神學反思",
+      "sort_order": 5,
+      "item_data": "{\"text\": \"將發現融合為屬靈洞察，讓啟示與當代世界及個人的事工呼召相連結。\", \"title\": \"神學反思\"}"
+    },
+    {
+      "collection_name": "leaders",
+      "item_key": "劉建良牧師 Rev. Francis Lau",
+      "sort_order": 0,
+      "item_data": "{\"name\": \"劉建良牧師 Rev. Francis Lau\", \"role\": \"CAIM 聯合創辦人、總幹事\", \"text\": \"劉牧師30多年來蒙恩在香港教會中牧養群羊，現看見教會極需有牧者推動人工智能轉型，故創立人工智能事工中心。藉著他過去修讀數學及任教中學電腦科的經驗，再整合豐富的牧會體驗，深知教會各方面的需要，盼望能在人工智能迅速發展的時代，與團隊一同以謙卑、負責任及以人為本的態度，幫助教會善用科技，服事社群。\", \"image\": \"/assets/rev-francis-lau-balanced-v3.png?v=20260629g\", \"imageAlt\": \"劉建良牧師肖像\", \"imageSrcSet\": \"/assets/rev-francis-lau-balanced-v3.png?v=20260629g 1x, /assets/rev-francis-lau-balanced-v3-max.png?v=20260629g 2x\"}"
+    },
+    {
+      "collection_name": "leaders",
+      "item_key": "翁昌顥先生 Mr. Charles Yung",
+      "sort_order": 1,
+      "item_data": "{\"name\": \"翁昌顥先生 Mr. Charles Yung\", \"role\": \"CAIM 聯合創辦人、副總幹事\", \"text\": \"翁先生蒙恩在人工智能策略、科技顧問、專業培訓及數碼轉型等領域工作多年，並以其在科技創新與系統設計方面的經驗，參與人工智能事工中心的建立與發展。他盼望透過豐富的專業知識及經驗，探索人工智能在教會與信仰群體中的合宜應用，幫助教會在快速變化的時代中作出更清晰的辨識，並以科技服事人、承載使命、榮耀上帝。\", \"image\": \"/assets/mr-charles-leung-balanced-v4.png?v=20260629d\", \"imageAlt\": \"翁昌顥先生肖像\", \"imageSrcSet\": \"/assets/mr-charles-leung-balanced-v4.png?v=20260629d 1x, /assets/mr-charles-leung-balanced-v4-max.png?v=20260629d 2x\"}"
+    },
+    {
+      "collection_name": "navigation",
+      "item_key": "0",
+      "sort_order": 0,
+      "item_data": "{\"href\": \"/\", \"label\": \"首頁\"}"
+    },
+    {
+      "collection_name": "navigation",
+      "item_key": "1",
+      "sort_order": 1,
+      "item_data": "{\"href\": \"/about/\", \"label\": \"認識 CAIM\"}"
+    },
+    {
+      "collection_name": "navigation",
+      "item_key": "2",
+      "sort_order": 2,
+      "item_data": "{\"href\": \"/dx-sermon/\", \"label\": \"DX Sermon\", \"children\": [{\"href\": \"/dx-sermon/pricing/\", \"label\": \"收費計劃\"}, {\"href\": \"/missionaries/\", \"label\": \"宣教士支援\"}]}"
+    },
+    {
+      "collection_name": "navigation",
+      "item_key": "3",
+      "sort_order": 3,
+      "item_data": "{\"href\": \"/church-ai-transformation/\", \"label\": \"教會AI轉型\"}"
+    },
+    {
+      "collection_name": "navigation",
+      "item_key": "4",
+      "sort_order": 4,
+      "item_data": "{\"href\": \"/courses/\", \"label\": \"課程與講座\"}"
+    },
+    {
+      "collection_name": "navigation",
+      "item_key": "5",
+      "sort_order": 5,
+      "item_data": "{\"href\": \"/articles/\", \"label\": \"專欄文章\"}"
+    },
+    {
+      "collection_name": "navigation",
+      "item_key": "6",
+      "sort_order": 6,
+      "item_data": "{\"href\": \"/contact/\", \"label\": \"聯絡我們\"}"
+    },
+    {
+      "collection_name": "newsItems",
+      "item_key": "4-6月公開講座已順利完成。9月再開始另一系列講座。",
+      "sort_order": 0,
+      "item_data": "{\"date\": \"2026-06-30\", \"open\": false, \"title\": \"4-6月公開講座已順利完成。9月再開始另一系列講座。\", \"content\": \"感謝主，CAIM 近月舉辦多場免費公開講座，與不同教會領袖、牧者、家長、教育工作者和弟兄姊妹，一同思考 AI 時代對信仰、學習、家庭、教會事工和下一代塑造所帶來的挑戰與機遇。感謝主有不少人已參加，並表示我們的講座非常實用及具啟發性。而暑期已到，公開講座會暫停兩個月，9月再次推出不同主題的講座，幫助教會群體不只是認識 AI，更學習在智慧與信仰中作出回應。4-6月多場免費公開講座已順利完成，不少參加者回應講座內容實用且具啟發性，9月將推出另一系列不同主題的講座。\", \"dateLabel\": \"JUN. 30, 2026\"}"
+    },
+    {
+      "collection_name": "newsItems",
+      "item_key": "DX Sermon是CAIM 的重要服侍工具，免費支援全職宣教士",
+      "sort_order": 1,
+      "item_data": "{\"date\": \"2026-06-29\", \"open\": false, \"title\": \"DX Sermon是CAIM 的重要服侍工具，免費支援全職宣教士\", \"content\": \"我們特別感恩地分享：CAIM 計劃將 DX Sermon 免費開放給在職宣教士使用，包括全職及帶職宣教士。我們知道，不少宣教士在前線服侍，面對資源有限、同工不足、時間緊張、跨文化適應和牧養壓力。若 AI 能夠幫助他們減輕講章預備、資料整理和事工支援上的負擔，讓他們有更多心力投放在牧養、門訓、佈道和關顧生命上，這正是 CAIM 很重要的使命。我們盼望科技不是為了取代人的服侍，而是更好地支持那些願意為福音擺上的主僕。\", \"dateLabel\": \"JUN. 29, 2026\"}"
+    },
+    {
+      "collection_name": "newsItems",
+      "item_key": "CAIM正連繫不同宗派及教會，期望系統化地協助他們有系地進行AI 轉型",
+      "sort_order": 2,
+      "item_data": "{\"date\": \"2026-06-28\", \"open\": false, \"title\": \"CAIM正連繫不同宗派及教會，期望系統化地協助他們有系地進行AI 轉型\", \"content\": \"CAIM 近月積極聯絡不同宗派教會，商議協助他們按其實際處境、事工需要、人手資源和成熟程度，逐步建立合宜的 AI 應用方向。我們盼望協助不同教會與宗派，不只是零散地試用工具，而是按處境系統化地建立合宜的 AI 使用步驟，包括教牧同工及領袖培訓、教會 AI 使用守則、事工流程優化、AI 工具導入、私隱與資料安全意識、青少年與家庭 AI 教育，以及面向未來的教會 AI 策略規劃。\", \"dateLabel\": \"JUN. 28, 2026\"}"
+    },
+    {
+      "collection_name": "newsItems",
+      "item_key": "總幹事劉建良牧師與副總幹事翁昌顥弟兄正籌備新一輪AI課程及訓練",
+      "sort_order": 3,
+      "item_data": "{\"date\": \"2026-06-27\", \"open\": false, \"title\": \"總幹事劉建良牧師與副總幹事翁昌顥弟兄正籌備新一輪AI課程及訓練\", \"content\": \"總幹事劉建良牧師 (Francis) 與副總幹事翁昌顥弟兄 (Charles) 正籌備新一輪的 AI 課程及訓練，期望能讓教會及弟兄姊妹能在 AI 閃電般的發展速度下，仍能透過 CAIM 的訓練善用最能協助教會宣講福音、造就門徒的工作。新一輪課程與訓練將繼續結合理論與實務，幫助教會與信徒更具方向地面對 AI 迅速變化帶來的衝擊。請大家為兩位的忠心與辛勞切切禱告，也求主使用這些裝備工作祝福更多教會與弟兄姊妹。\", \"dateLabel\": \"JUN. 27, 2026\"}"
+    },
+    {
+      "collection_name": "oneKeyTools",
+      "item_key": "講章評估 Review",
+      "sort_order": 0,
+      "item_data": "{\"text\": \"獲得專業、均衡的回饋以強化衝擊力與流暢度。\", \"title\": \"講章評估 Review\"}"
+    },
+    {
+      "collection_name": "oneKeyTools",
+      "item_key": "講章走向 Movement",
+      "sort_order": 1,
+      "item_data": "{\"text\": \"建構一個引人入勝的大綱，引領聽眾從洞察臻於轉化。\", \"title\": \"講章走向 Movement\"}"
+    },
+    {
+      "collection_name": "oneKeyTools",
+      "item_key": "敘事講章 Narrative",
+      "sort_order": 2,
+      "item_data": "{\"text\": \"精心編織一個以扎實聖經真理為根基的故事驅動信息。\", \"title\": \"敘事講章 Narrative\"}"
+    },
+    {
+      "collection_name": "oneKeyTools",
+      "item_key": "一點講章 1-Point",
+      "sort_order": 3,
+      "item_data": "{\"text\": \"用 Andy Stanley 記憶深刻的「我—我們—上帝—你—我們」框架來塑造講道。\", \"title\": \"一點講章 1-Point\"}"
+    },
+    {
+      "collection_name": "oneKeyTools",
+      "item_key": "幽谷講章 Lowry Loop",
+      "sort_order": 4,
+      "item_data": "{\"text\": \"體驗羅利敘事環的力量：張力、發現與恩典的顯明。\", \"title\": \"幽谷講章 Lowry Loop\"}"
+    },
+    {
+      "collection_name": "oneKeyTools",
+      "item_key": "查經助手 Bible Study Assist",
+      "sort_order": 5,
+      "item_data": "{\"text\": \"生成真實、以經文為錨的查經資料，即刻可用於小組或教學場景。\", \"title\": \"查經助手 Bible Study Assist\"}"
+    },
+    {
+      "collection_name": "pillars",
+      "item_key": "神學辨識",
+      "sort_order": 0,
+      "item_data": "{\"text\": \"幫助牧者、領袖和信徒重新思考 AI 對人、智慧、創造、權柄、牧養、門徒訓練與教會使命帶來的挑戰，讓教會不是只問「AI 可不可以用」，而是先問「怎樣使用才忠於基督信仰」。\", \"title\": \"神學辨識\"}"
+    },
+    {
+      "collection_name": "pillars",
+      "item_key": "倫理治理",
+      "sort_order": 1,
+      "item_data": "{\"text\": \"協助教會建立清晰可行的 AI 使用原則，處理數據私隱、透明度、偏見、牧養界線、青少年安全、問責機制和教會政策等問題，讓同工和信徒用得安心，也用得有界線。\", \"title\": \"倫理治理\"}"
+    },
+    {
+      "collection_name": "pillars",
+      "item_key": "事工創新",
+      "sort_order": 2,
+      "item_data": "{\"text\": \"幫助教會將 AI 落實在講道預備、行政流程、會議記錄、教會知識庫、門徒訓練、信仰教育、宣教支援和教會溝通之中，減輕同工壓力，釋放更多時間作牧養、關懷和使命實踐。\", \"title\": \"事工創新\"}"
+    },
+    {
+      "collection_name": "resources",
+      "item_key": "0",
+      "sort_order": 0,
+      "item_data": "{\"value\": \"牧者見證\"}"
+    },
+    {
+      "collection_name": "resources",
+      "item_key": "1",
+      "sort_order": 1,
+      "item_data": "{\"value\": \"AI 與教會文章\"}"
+    },
+    {
+      "collection_name": "resources",
+      "item_key": "2",
+      "sort_order": 2,
+      "item_data": "{\"value\": \"講座回顧\"}"
+    },
+    {
+      "collection_name": "resources",
+      "item_key": "3",
+      "sort_order": 3,
+      "item_data": "{\"value\": \"AI 倫理資源\"}"
+    },
+    {
+      "collection_name": "resources",
+      "item_key": "4",
+      "sort_order": 4,
+      "item_data": "{\"value\": \"教會 AI 指引\"}"
+    },
+    {
+      "collection_name": "resources",
+      "item_key": "5",
+      "sort_order": 5,
+      "item_data": "{\"value\": \"培訓回應\"}"
+    },
+    {
+      "collection_name": "seoTitles",
+      "item_key": "首頁｜CAIM 人工智能事工中心",
+      "sort_order": 0,
+      "item_data": "{\"path\": \"/\", \"title\": \"首頁｜CAIM 人工智能事工中心\"}"
+    },
+    {
+      "collection_name": "seoTitles",
+      "item_key": "認識 CAIM｜人工智能事工中心",
+      "sort_order": 1,
+      "item_data": "{\"path\": \"/about/\", \"title\": \"認識 CAIM｜人工智能事工中心\"}"
+    },
+    {
+      "collection_name": "seoTitles",
+      "item_key": "教會AI轉型支援｜教會人工智能顧問與培訓",
+      "sort_order": 2,
+      "item_data": "{\"path\": \"/services/\", \"title\": \"教會AI轉型支援｜教會人工智能顧問與培訓\"}"
+    },
+    {
+      "collection_name": "seoTitles",
+      "item_key": "DX Sermon｜人工智能聖經研習與講道預備平台",
+      "sort_order": 3,
+      "item_data": "{\"path\": \"/dx-sermon/\", \"title\": \"DX Sermon｜人工智能聖經研習與講道預備平台\"}"
+    },
+    {
+      "collection_name": "seoTitles",
+      "item_key": "DX Sermon 收費計劃｜人工智能聖經研習平台",
+      "sort_order": 4,
+      "item_data": "{\"path\": \"/dx-sermon/pricing/\", \"title\": \"DX Sermon 收費計劃｜人工智能聖經研習平台\"}"
+    },
+    {
+      "collection_name": "seoTitles",
+      "item_key": "課程與講座｜教會 AI 培訓與神學辨識",
+      "sort_order": 5,
+      "item_data": "{\"path\": \"/courses/\", \"title\": \"課程與講座｜教會 AI 培訓與神學辨識\"}"
+    },
+    {
+      "collection_name": "seoTitles",
+      "item_key": "人工智能事工中心 (CAIM) 課程報名表",
+      "sort_order": 6,
+      "item_data": "{\"path\": \"/course-registration/\", \"title\": \"人工智能事工中心 (CAIM) 課程報名表\"}"
+    },
+    {
+      "collection_name": "seoTitles",
+      "item_key": "宣教士支援｜DX Sermon 免費開放給在職宣教士",
+      "sort_order": 7,
+      "item_data": "{\"path\": \"/missionaries/\", \"title\": \"宣教士支援｜DX Sermon 免費開放給在職宣教士\"}"
+    },
+    {
+      "collection_name": "seoTitles",
+      "item_key": "專欄文章｜CAIM 人工智能、教會與神學反思",
+      "sort_order": 8,
+      "item_data": "{\"path\": \"/articles/\", \"title\": \"專欄文章｜CAIM 人工智能、教會與神學反思\"}"
+    },
+    {
+      "collection_name": "seoTitles",
+      "item_key": "教會AI轉型｜教會人工智能轉化與 AI 顧問支援",
+      "sort_order": 9,
+      "item_data": "{\"path\": \"/church-ai-transformation/\", \"title\": \"教會AI轉型｜教會人工智能轉化與 AI 顧問支援\"}"
+    },
+    {
+      "collection_name": "seoTitles",
+      "item_key": "聯絡我們｜邀請 CAIM 講座與顧問服務",
+      "sort_order": 10,
+      "item_data": "{\"path\": \"/contact/\", \"title\": \"聯絡我們｜邀請 CAIM 講座與顧問服務\"}"
+    },
+    {
+      "collection_name": "services",
+      "item_key": "教會 AI 轉型支援",
+      "sort_order": 0,
+      "item_data": "{\"icon\": \"network\", \"text\": \"評估教會需要，制定 AI 使用政策，培訓同工、領袖，度身訂造合適教會的事工應用流程。\", \"title\": \"教會 AI 轉型支援\", \"fullTitle\": \"教會 AI 轉型支援\"}"
+    },
+    {
+      "collection_name": "services",
+      "item_key": "DX 產品系列",
+      "sort_order": 1,
+      "item_data": "{\"icon\": \"shield\", \"text\": \"繼DX Sermon後，逐步推出更多協助教會AI轉型工具，支援講道、行政、知識管理與事工協調。\", \"title\": \"DX 產品系列\", \"fullTitle\": \"DX 產品系列\"}"
+    },
+    {
+      "collection_name": "services",
+      "item_key": "個人及小組AI培訓",
+      "sort_order": 2,
+      "item_data": "{\"icon\": \"compass\", \"text\": \"提供 1-1 或小組訓練，幫助牧者、領袖、信徒和職場人士掌握最新 AI 工具，建立個人化 AI 工作流程。\", \"title\": \"個人及小組AI培訓\", \"fullTitle\": \"個人及小組AI培訓\"}"
+    },
+    {
+      "collection_name": "services",
+      "item_key": "持續同行與更新",
+      "sort_order": 3,
+      "item_data": "{\"icon\": \"book\", \"text\": \"透過講座、工作坊、顧問支援和最新 AI 資訊，幫助教會和個人在快速轉變中持續學習、分辨和實踐。\", \"title\": \"持續同行與更新\", \"fullTitle\": \"持續同行與更新\"}"
+    },
+    {
+      "collection_name": "site",
+      "item_key": "CAIM 人工智能事工中心",
+      "sort_order": 0,
+      "item_data": "{\"name\": \"CAIM 人工智能事工中心\", \"email\": \"admin@doxaxsolutions.com\", \"tagline\": \"新時代的智慧服事\", \"keywords\": \"人工智能事工中心, 教會 AI, AI 與教會, 人工智能與神學, 教會 AI 培訓, AI 講座, 牧者 AI 工具, DX Sermon, AI 研經, AI 講道預備, 基督教 AI 倫理, 教會 AI 顧問, 宣教士 AI 支援\", \"shortName\": \"CAIM\", \"description\": \"CAIM 幫助教會、牧者、神學院、宣教士及基督教機構在 AI 時代中，以神學深度、倫理智慧與使命意識負責任地辨識、治理與應用人工智能。\"}"
+    },
+    {
+      "collection_name": "testimonials",
+      "item_key": "鄭牧師",
+      "sort_order": 0,
+      "item_data": "{\"name\": \"鄭牧師\", \"quote\": \"我喜歡「對話式釋經流程」DEF 的運作，使我的思緒及領受交織不斷。\", \"location\": \"多倫多\"}"
+    },
+    {
+      "collection_name": "testimonials",
+      "item_key": "鄒牧師",
+      "sort_order": 1,
+      "item_data": "{\"name\": \"鄒牧師\", \"quote\": \"DX Sermon 的一站式人工智能研經工具，使我很快將從經文中的領受寫出來。\", \"location\": \"多倫多\"}"
+    },
+    {
+      "collection_name": "testimonials",
+      "item_key": "張牧師",
+      "sort_order": 2,
+      "item_data": "{\"name\": \"張牧師\", \"quote\": \"DX Sermon 幫助我更有秩序地整理經文觀察，讓查經與講章預備回到上主話語的中心。\", \"location\": \"香港\"}"
+    },
+    {
+      "collection_name": "toolbox",
+      "item_key": "傳統詮釋",
+      "sort_order": 0,
+      "item_data": "{\"text\": \"建構一個以早期教父與宗教改革家的傳統洞察為基礎的扎實講道或聖經研習材料。\", \"title\": \"傳統詮釋\"}"
+    },
+    {
+      "collection_name": "toolbox",
+      "item_key": "經文張力",
+      "sort_order": 1,
+      "item_data": "{\"text\": \"藉由揭示經文內在的核心掙扎來激發好奇心。\", \"title\": \"經文張力\"}"
+    },
+    {
+      "collection_name": "toolbox",
+      "item_key": "轉折亮點",
+      "sort_order": 2,
+      "item_data": "{\"text\": \"提供意料外的洞察，更新與深化對經文的領會。\", \"title\": \"轉折亮點\"}"
+    },
+    {
+      "collection_name": "toolbox",
+      "item_key": "生活例證",
+      "sort_order": 3,
+      "item_data": "{\"text\": \"用生動的意象與真實的人生智慧來描繪真理。\", \"title\": \"生活例證\"}"
+    },
+    {
+      "collection_name": "toolbox",
+      "item_key": "生命見證",
+      "sort_order": 4,
+      "item_data": "{\"text\": \"編織真實的信仰經歷以建立情感的連結。\", \"title\": \"生命見證\"}"
+    },
+    {
+      "collection_name": "toolbox",
+      "item_key": "真理應用",
+      "sort_order": 5,
+      "item_data": "{\"text\": \"將聖經原則橋接至日常生活的轉化。\", \"title\": \"真理應用\"}"
+    },
+    {
+      "collection_name": "toolbox",
+      "item_key": "文化連結",
+      "sort_order": 6,
+      "item_data": "{\"text\": \"將上帝之言與世界當下的急迫議題相互關聯。\", \"title\": \"文化連結\"}"
+    },
+    {
+      "collection_name": "toolbox",
+      "item_key": "社會議題",
+      "sort_order": 7,
+      "item_data": "{\"text\": \"針對群體、公義與集體門徒訓練進行回應。\", \"title\": \"社會議題\"}"
+    },
+    {
+      "collection_name": "toolbox",
+      "item_key": "名句箴言",
+      "sort_order": 8,
+      "item_data": "{\"text\": \"在一句記憶深刻的言辭中捕捉信息的心核。\", \"title\": \"名句箴言\"}"
+    },
+    {
+      "collection_name": "toolbox",
+      "item_key": "腦力激盪",
+      "sort_order": 9,
+      "item_data": "{\"text\": \"在人工智能啟發下生成嶄新的觀點、主題與進路。\", \"title\": \"腦力激盪\"}"
+    }
+  ],
+  "courses": [
+    {
+      "code": "MT101",
+      "slug": "mt101",
+      "title": "教會AI應用全方位工作坊",
+      "description": "幫助牧者及教會領袖全面了解AI最新發展，包括AI繪圖、翻譯、影片、音樂、行政及辦公室自動化系統等；認識AI神學及倫理之基礎。另示範DX Sermon如何協助使用者撰寫深入研究及具深度反省的材料。",
+      "image": "/assets/courses-mt101-working-together.jpeg",
+      "alt": "Two people smiling and working together at a laptop",
+      "href": "/courses/mt101/",
+      "cta_label": "了解詳情",
+      "detail": "{\"meta\": [[\"日期\", \"按報名人數隨時開班\"], [\"時間\", \"6小時\"], [\"地點\", \"80E Nashdene Road, Units 223-228, Scarborough, Ontario Canada M1V 5E4\"], [\"對象\", \"牧者、傳道人、教會領袖、神學生及有志認識 AI 與事工整合的信徒\"], [\"費用\", \"每人加幣150，包括輕便午餐及正式事工培訓證書\"], [\"備註\", \"請自帶筆記型電腦。\"]], \"eyebrow\": \"課程詳情\", \"subtitle\": \"幫助牧者、傳道人及教會領袖，在人工智能迅速發展的時代，以神學判斷力、倫理清晰度與實踐智慧回應教會服侍的真實需要。\", \"paragraphs\": [\"本工作坊旨在幫助牧者、傳道人及教會領袖，全面理解人工智能在當代事工中的角色、機遇與界線，並學習如何以神學判斷力、倫理清晰度及實踐智慧，評估及應用 AI 於不同層面的教會服侍。\", \"參加者將認識 AI 的基本能力與限制，並透過真實案例、示範及策略分享，學習如何安全、有效、合宜地將 AI 應用於講道預備、聖經研究、牧養關懷、行政管理、教會溝通、資源整理及事工領導等範疇。工作坊同時會探討教會在使用 AI 時所面對的神學、倫理及實務問題，幫助參加者在提升效率與創新能力的同時，仍能持守信仰核心、人本關懷與屬靈分辨。\", \"此外，學員亦將率先認識全新發布的 DX Sermon 平台，了解它如何支援牧者在講章研究、內容整理、釋經思路發展與講道預備流程上的實際需要，並探索 AI 如何成為牧養與教學的輔助工具，而非取代牧者的屬靈職分與判斷。\", \"這是一個結合神學反思、實務應用與未來視野的工作坊，特別適合希望在 AI 時代中更有智慧地帶領教會前行的牧者與教會領袖。\"]}",
+      "sort_order": 0,
+      "is_published": 1
+    },
+    {
+      "code": "MT102",
+      "slug": "mt102",
+      "title": "第二大腦：NotebookLM 於研究及應用工作坊 (基礎篇)",
+      "description": "全面學習Google強大AI筆記硏究助手NotebookLM（NBLM），提升聖經研究、專題研習及課程撰寫的效率與深度。讓使用者輕鬆從龐大的資料庫中輕易製作實用的影音、特訂報告及多樣式簡報。",
+      "image": "/assets/courses-mt102-joyful-learning.jpeg",
+      "alt": "Two learners joyfully exploring content together",
+      "href": "/courses/mt102/",
+      "cta_label": "了解詳情",
+      "detail": "{\"meta\": [[\"日期\", \"按報名人數隨時開班\"], [\"時間\", \"2小時\"], [\"地點\", \"80E Nashdene Road, Units 223-228, Scarborough, Ontario Canada M1V 5E4\"], [\"對象\", \"有志透過 AI 提升研究與牧養效率的學員\"], [\"費用\", \"每人加幣$100\"], [\"備註\", \"建議自備筆記型電腦，以便即場操作與練習。\"]], \"eyebrow\": \"課程詳情\", \"subtitle\": \"善用 Google NotebookLM 這個 AI 筆記與研究助手，提升講道預備、聖經研究與牧養行政的效率與深度。\", \"paragraphs\": [\"本工作坊實用性強，旨在幫助牧者、神學生及教會同工，善用 Google NotebookLM（NBLM）這個 AI 筆記與研究助手，提升講道預備、聖經研究與牧養行政的效率與深度。\", \"參加者將學習如何把講章、查經資料、課程講義及會議紀錄等文件匯入 NBLM，並透過 AI 生成摘要、討論問題、靈修材料與事工報告，將既有內容轉化為更多服事資源。\", \"工作坊同時會探討在教會情境中使用 AI 的倫理與實務界線，幫助事奉者在保持神學深度與屬靈分辨的前提下，善用科技成為牧養與教學的助手，而非取代者。\"]}",
+      "sort_order": 1,
+      "is_published": 1
+    },
+    {
+      "code": "MT103",
+      "slug": "mt103",
+      "title": "第二大腦：NotebookLM 於研究及應用工作坊 (進深篇)",
+      "description": "NBLM進深篇將有系統地學習進階指定報告格式及內容的技巧，包括高質質資料庫、管理不同類型資料、進階指令群組設定、跨資料比較分析技巧及NBLM與其他AI工具整合等，務求讓使用者全面掌握AI協助研究的強大力量。",
+      "image": "/assets/courses-mt103-learning-is-fun.jpeg",
+      "alt": "Two people smiling and learning together over laptops",
+      "href": "/courses/mt103/",
+      "cta_label": "了解詳情",
+      "detail": "{\"meta\": [[\"日期\", \"按報名人數隨時開班\"], [\"時間\", \"2小時\"], [\"地點\", \"80E Nashdene Road, Units 223-228, Scarborough, Ontario Canada M1V 5E4\"], [\"對象\", \"已具備 NotebookLM 基礎概念的學員\"], [\"費用\", \"每人加幣$100\"], [\"備註\", \"建議自備筆記型電腦，以便即場建立個人 AI 工作流程。\"]], \"eyebrow\": \"課程詳情\", \"subtitle\": \"更有系統地把教會的講章庫、教材、小組與牧養資料整合成可持續累積與傳承的教會知識庫。\", \"paragraphs\": [\"NBLM 進深篇將帶領已具備 NotebookLM 基礎概念的牧者、神學生與教會同工，更有系統地把教會的講章庫、主日學與培訓教材、小組與牧養記錄等資料，整合成可持續累積與傳承的「教會知識庫」，讓 AI 成為事工設計與團隊協作的進階助手。\", \"參加者將透過實作，學習如何運用 NotebookLM 設計系列講道與課程架構、整理長期事工數據與回饋、為不同年齡與處境的群體客製教學與牧養資源，並嘗試建立適合自己教會的 AI 工作流程與模板。\", \"同時，工作坊也會更深入探討在實際牧會現場使用 AI 時可能面對的神學與牧養張力，例如依賴度、屬靈分辨、隱私與資料安全等議題，幫助參加者在進一步擁抱科技效能的同時，仍堅守召命、尊重人的獨特與聖靈的帶領。\"]}",
+      "sort_order": 2,
+      "is_published": 1
+    },
+    {
+      "code": "MT110",
+      "slug": "mt110",
+      "title": "負責任的管家：如何設定教會人工智能使用章則",
+      "description": "協助教會領袖回應人工智能所帶來的機遇與挑戰。透過問卷及討論，歸納出全方位教會使用AI的倫理框架、基本的法律意識，以及成熟的神學判斷力，以能審慎地運用這些工具，使科技成為服侍人的助力。",
+      "image": "/assets/courses-mt110-we-are-one.jpeg",
+      "alt": "Community gathered together with a joyful sense of unity",
+      "href": "/courses/mt110/",
+      "cta_label": "了解詳情",
+      "detail": "{\"meta\": [[\"日期\", \"按報名人數隨時開班\"], [\"時間\", \"2小時\"], [\"對象\", \"教會領袖、牧者、同工及有志認識教會人工智能使用章則的學員\"], [\"費用\", \"歡迎查詢\"], [\"備註\", \"可按教會或機構需要安排內容深度與討論形式。\"]], \"eyebrow\": \"課程詳情\", \"subtitle\": \"幫助教會領袖回應人工智能帶來的機遇與挑戰，建立清晰的倫理框架、法律意識與成熟的神學判斷力。\", \"paragraphs\": [\"本課程旨在協助教會領袖回應人工智能所帶來的機遇與挑戰，從實際牧養、行政管理與教會治理角度，建立合宜而清晰的使用原則。\", \"參加者將透過問卷、案例與討論，歸納出全方位教會使用 AI 的倫理框架、基本法律意識，以及成熟的神學判斷力，幫助教會在面對新工具時不盲目跟風，也不因陌生而完全拒絕。\", \"課程也會協助教會思考如何在私隱、透明度、責任歸屬、內容真確性與人本關懷之間取得平衡，使科技成為服侍人的助力，而非削弱牧養與使命的負擔。\"]}",
+      "sort_order": 3,
+      "is_published": 1
+    },
+    {
+      "code": "MT104",
+      "slug": "mt104",
+      "title": "AI繪圖、音樂及短片速成班",
+      "description": "利用人工智能工具，快速創作圖片、音樂及短片內容，讓學員體驗 AI 創作的無限可能。透過簡單實用的教學，學員將學習如何使用 AI 生成藝術圖片、創作背景音樂，以及製作吸引人的短片。",
+      "image": "/assets/courses-mt104-learning-gods-word.jpeg",
+      "alt": "Young learner smiling while using a computer",
+      "href": "/courses/mt104/",
+      "cta_label": "了解詳情",
+      "detail": "{\"meta\": [[\"對象\", \"希望學習 AI 創作工具、提升內容製作效率的牧者、教會同工、領袖及信徒\"], [\"備註\", \"可配合實作形式進行，建議自備筆記型電腦。\"]], \"eyebrow\": \"課程詳情\", \"subtitle\": \"快速進入 AI 創作的世界，從圖片、音樂到短片內容，學習如何用簡單實用的方法將創意化為作品。\", \"paragraphs\": [\"利用人工智能工具，快速創作圖片、音樂及短片內容，讓學員體驗 AI 創作的無限可能。\", \"透過簡單實用的教學，學員將學習如何使用 AI 生成藝術圖片、創作背景音樂，以及製作吸引人的短片。\", \"本課程特別適合希望在教會宣傳、教學簡報、社交媒體內容及創意事工中更有效運用 AI 的使用者。\"]}",
+      "sort_order": 4,
+      "is_published": 1
+    },
+    {
+      "code": "MT105",
+      "slug": "mt105",
+      "title": "AI快速POWERPOINT製作攻略",
+      "description": "運用人工智能工具，快速製作專業又美觀的 PowerPoint 簡報。學員將學習如何利用不同AI工具生成簡報大綱、自動設計版面、製作圖片與圖表，以及優化文字內容，使簡報更清晰及有說服力。",
+      "image": "/assets/courses-mt105-studying-well.png",
+      "alt": "Student studying attentively in a classroom",
+      "href": "/courses/mt105/",
+      "cta_label": "了解詳情",
+      "detail": "{\"meta\": [[\"日期\", \"按報名人數隨時開班\"], [\"時間\", \"2小時\"], [\"對象\", \"有志學習利用 AI 提升簡報製作效率的學員\"], [\"費用\", \"歡迎查詢\"], [\"備註\", \"建議自備筆記型電腦，以便即場操作與練習。\"]], \"eyebrow\": \"課程詳情\", \"subtitle\": \"善用人工智能工具，快速製作專業而清晰的 PowerPoint 簡報，提升教學、匯報與事工分享的效率。\", \"paragraphs\": [\"本課程旨在幫助學員運用人工智能工具，快速製作專業又美觀的 PowerPoint 簡報。\", \"學員將學習如何利用不同 AI 工具生成簡報大綱、自動設計版面、製作圖片與圖表，以及優化文字內容，使簡報更清晰及有說服力。\", \"課程特別適合教會教學、培訓、報告分享及對外溝通等場景，幫助使用者節省製作時間，同時提升內容表達效果。\"]}",
+      "sort_order": 5,
+      "is_published": 1
+    },
+    {
+      "code": "MT106",
+      "slug": "mt106",
+      "title": "50+日常AI生活應用班",
+      "description": "專為 50歲以上人士 設計，透過簡單易明的教學，幫助學員了解和使用人工智能（AI）工具。例如搜尋資料、整理資訊、解釋公文、健康資訊查詢、旅遊計劃，以及日常問題解決等。善用AI於生活中是智慧生活的開始。",
+      "image": "/assets/courses-mt106-love-read-bible.jpeg",
+      "alt": "Older adult joyfully reading with warm light",
+      "href": "/courses/mt106/",
+      "cta_label": "了解詳情",
+      "detail": "{\"meta\": [[\"日期\", \"按報名人數隨時開班\"], [\"時間\", \"2小時\"], [\"對象\", \"50歲以上及有興趣學習日常 AI 生活應用的學員\"], [\"費用\", \"歡迎查詢\"], [\"備註\", \"內容會以生活化例子講解，適合初學者參加。\"]], \"eyebrow\": \"課程詳情\", \"subtitle\": \"透過簡單易明的教學，幫助 50+ 學員了解和使用人工智能工具，讓科技成為更智慧、更方便的生活助手。\", \"paragraphs\": [\"本課程專為 50歲以上人士設計，透過簡單易明的教學，幫助學員了解和使用人工智能（AI）工具。\", \"課程內容包括搜尋資料、整理資訊、解釋公文、健康資訊查詢、旅遊計劃，以及日常問題解決等應用，讓學員在生活中更有信心地接觸新科技。\", \"善用 AI 並不等於追趕潮流，而是學習如何讓工具在適當的位置上真正幫助生活，成為智慧生活的開始。\"]}",
+      "sort_order": 6,
+      "is_published": 1
+    },
+    {
+      "code": "MT210",
+      "slug": "mt210",
+      "title": "DX Sermon 實踐應用班",
+      "description": "DX Sermon是強大的研經及講章準備工具，配上最先進的人工智能核心，能讓使用者更深入及全面地研讀神的話語。本班學員將了解每一個功能鍵及組合的使用，以能發掘及整理個人從經文中寶貴的真理。",
+      "image": "/assets/courses-study-bible.png",
+      "alt": "DX Sermon on screen while studying Scripture",
+      "href": "/courses/mt210/",
+      "cta_label": "了解詳情",
+      "detail": "{\"meta\": [[\"日期\", \"按報名人數隨時開班\"], [\"時間\", \"2小時\"], [\"對象\", \"有志學習 DX Sermon 作研經及講章預備的學員\"], [\"費用\", \"歡迎查詢\"], [\"備註\", \"建議自備筆記型電腦，以便即場實作。\"]], \"eyebrow\": \"課程詳情\", \"subtitle\": \"深入認識 DX Sermon 的核心功能與實際操作方法，幫助學員更有系統地整理經文研究與講章預備流程。\", \"paragraphs\": [\"DX Sermon 是強大的研經及講章準備工具，配上最先進的人工智能核心，能讓使用者更深入及全面地研讀神的話語。\", \"本班學員將了解每一個功能鍵及組合的使用，學習如何從經文中發掘重點、整理思路，並建立更有秩序的研經流程。\", \"課程特別適合希望善用 AI 協助整理釋經材料、預備查經與講章內容，同時保持信仰深度與神學辨識的使用者。\"]}",
+      "sort_order": 7,
+      "is_published": 1
+    }
+  ],
+  "articles": [
+    {
+      "slug": "human-machine-coexistence-ai-tools-vs-ai-risk",
+      "title": "人機共生：從AI工具論與AI危險論走向信仰的對話",
+      "excerpt": "從 AI 工具論與 AI 危險論出發，走向更深層的信仰對話，思考人機共生如何成為更新神學視野的契機。",
+      "category": "AI 與教會",
+      "image": "/assets/hero-asian-creative-team.jpg",
+      "alt": "Team learning together around a table",
+      "published_date": "2026-07-03",
+      "href": "/articles/human-machine-coexistence-ai-tools-vs-ai-risk/",
+      "detail": "{\"author\": \"關瑞文教授\", \"updatedAt\": \"2026-07-03\", \"paragraphs\": [\"今天要跟大家分享的題目是「人機共生」。我嘗試從常見的「AI工具論」與「AI危險論」出發，走向一個更深層的「信仰對話」。\", \"在一般的社會裡，甚至在教會中，我們對人工智慧（AI）普遍存在兩種看法：一種視AI為很好的工具，我們要擁抱它；另一種則認為AI帶給人類很大的危險與畏懼，甚至覺得這對基督徒的信仰與上帝構成了挑戰，因此我們需要格外小心。\", \"面對這兩種截然不同的態度，我想將今天的分享分為三個部分：第一部分，我會略談目前AI在民用普及層面的發展歷程；第二部分，探討上述這兩種論述的情況；第三部分，我打算用羅馬書第12章第1到2節作為基礎，進行一點神學反省——除了從工具或危機的角度，我們是否能將AI的發展視為上帝在這個時代呼喚我們更新信仰的契機？\", \"第一部分：AI 的發展現況\", \"首先，讓我們看看AI當前發展到了什麼地步。\", \"我相信大家都知道，比爾·蓋茲（Bill Gates）在幾天前（8月1日）的一個論壇上說了一句話，很能反映AI在這個時代的高速發展。他說：\\\"AI is improving at a rate that surprises me.\\\"（AI進步的速度讓我感到驚訝。）連比爾·蓋茲都對AI的發展速度感到驚訝。\", \"如果你對AI有一點關注，大概聽過許多人提到 AGI（Artificial General Intelligence，通用人工智慧）。有人說 AGI \\\"is often called the last invention humans may ever need to make\\\"（常被稱為人類可能需要做的最後一項發明）。似乎如果發展到 AGI，人類發明的高峰就到了，以後不需要再發展什麼東西。\", \"但最近有一種更新、更流行的講法，提到了 ASI（Artificial Superintelligence，超級人工智慧）。如果發展到 ASI，AI 的能力將遠遠超過人類。有一種說法是：\\\"transition from Artificial General Intelligence to ASI could be extremely fast\\\"（從通用人工智慧過渡到超級人工智慧可能會極快）。這種被稱為 \\\"intelligence explosion\\\"（智能爆炸）的概念，迫使我們重新思考：\\\"what it truly means to be human\\\"（生而為人真正的意義是什麼）。如果真的發展到 ASI，可能只需要十年八年，我們就必須重新構想「人」是什麼。\", \"AI的發展事實上對人類有很大的影響，這一點我相信沒人會反對。但如果我們進入細節，看看2025年的AI發展到了哪個層級？若用 OpenAI 兩年前提出的 \\\"Five levels of AI\\\"（AI五個等級）來構想，大概是這樣的：\", \"• Level 1: Chatbots（聊天機器人）：這是一般人比較認識的，如 ChatGPT、Claude 等，就像是一個學識淵博的百科全書，你問它，它通過模式分析來回答。Chatbot 是你們每天用的。\", \"• Level 2: Reasoners（推理者）：高一層次，現在已經做得到了。AI 不光是聊天，還可以自己做 Reasoning（推理），具備人類水平的解決問題能力。\", \"• Level 3: Agents（代理人/Agentic AI）：這是2025年民用層面最熱門的話題。我們現在正處於這個階段。AI 不僅有智慧的頭腦（Mind），還有「手腳」，能夠辦理工作。它可以幫你訂機票、訂飯店、做預約。如果你想享受一個愉快的假期，它能幫你決定什麼是「愉快」，並執行相關任務。它不光有個腦袋，還有手有腳可以幫你工作。\", \"• Level 4: Innovators（創新者）：下一步的發展是具備 Creativity（創造力），能做 Innovation（創新），從零到一創造出新的東西。\", \"• Level 5: Organizations（組織）：再推高一步，整個組織（包括公司、教會）的工作都可由 AI 完成。\", \"現在我們大概處於 Level 3，很快會邁向 Level 4，然後應該不會太遠就會到 Level 5。\", \"從 Chatbot 到 Agentic AI，我們可以做一個比喻：Chatbot 像是依賴內部靜態知識庫（Static Internal Knowledge Base）的百科全書；而 Agentic AI 則是依賴外部工具，它不光有內部知識，還可以跑去網絡、電腦、軟體工具中幫你完成任務。\", \"過去我們常擔心 AI Hallucination（AI幻覺），也就是AI一本正經地胡說八道。這讓很多基督徒擔心AI會搞亂信仰，混入異端說法，因為以前的 Chatbot 的答案似模似樣，但原來是亂來的。但現在 Agentic AI 出現幻覺的可能性比較低，因為它可以進行 Critical Self-examination（批判性自我檢視），去多方面檢查自己的答案是否需要修訂。所以出現 Hallucination 的可能性比較低。再加上諸如 RAG、API與MCP 的發展，你更可以規定它必須要從某類型的資料和 Self-examination 來給你答案，這就大大減低了 Hallucination 等問題了。\", \"我現在用某個Agentic AI 工具做一個例子：設定自己為教會牧師，要求它協助回答會眾的信仰問題。我設定目標為提供「神學準確」、「有研究基礎」且「易於理解」的答案，並要求它針對個人的具體處境回應。我給該 Agentic AI一個任務目標，當模擬一個神學生詢問「基督徒是否可以紋身」時，AI 並沒有馬上給出答案，而是先建立牧養支持架構，詢問背景細節。最後，它綜合了利未記經文、系統神學、文化視角（包括大公教會與華人文化觀點），生成了一份非常有深度且具牧養敏感度的報告。\", \"這就是 Agentic AI 可以做的事。無論是語法檢查、會議記錄、語音轉文字，我會用如 Chateverywhere 這樣的工具；如果是廣東話的應用，CantoneseVo 非常有用。又或者像我用 HeyGen 複製聲音與嘴型（Lip-sync）來製作普通話教學短片，這些工具都極大地幫助了我們的工作。在製作短片時，我只需要告訴它我需要普通話，它就能完成剩下的工作。\", \"第二部分：工具論 vs. 危險論\", \"然而，你可能會想：這個工具雖然有用，但也危險。\", \"如果發展到最高層次，工作都被AI取代，豈不是會造成大規模失業？這確實可能發生。但歷史告訴我們，每個年代科技的變革都會帶來轉變。就像幾天前我開車時看見順豐的貨van在街上走，我就想到當電商出現時，大家擔心實體店面倒閉，但後來也衍生出了新的工作形態。或許政府或機構需要做些補救工作扶助弱勢，但未必會造成絕對的災難。\", \"還有人說 AI 很危險，因為它可能產生意識（Consciousness）。2022年 Google 一位工程師曾聲稱 AI 產生了意識。雖然這有爭議，但我相信未來出現人工意識的可能性越來越高。\", \"更進一步，AI 的發展似乎模糊了人機界線。例如 Cortical Labs 成功研究將人類幹細胞培養的神經元（Neurons）結合矽晶片（Silicon），製造出「合成生物智慧」（Synthetic Biological Intelligence, SBI）。這是因為 AI 運作耗電量大，而用生物神經網絡可以大大降低耗電。這是已經發生的事實，不是幻想。\", \"所以，目前華語教會和基督徒對 AI 的看法主要分為兩派：\", \"1 工具論（Utilitarian Embracement）：視為很好的工具，擁抱它。\", \"2 危險論（Cautionary Rejection）：視為危機，拒絕或極度小心。\", \"事實上，社會大眾也是這樣看待 AI。但是，我們是否一定要把它僅僅視為一種工具，或是一種危機？當然可以這樣討論，但我希望提出第三種看法。\", \"第三部分：信仰反思（羅馬書 12:1-2）\", \"我希望用羅馬書第12章第1到2節作為進入這第三條路的思考基礎。這段經文大家很熟悉：「所以弟兄們，我以神的慈悲勸你們，將身體獻上，當作活祭，是聖潔的，是神所喜悅的；你們如此事奉乃是理所當然的。不要效法這個世界，只要心意更新而變化，叫你們察驗何為神的善良、純全、可喜悅的旨意。」\", \"從這段經文來看 AI，有幾點基礎性的考慮：第一，「所以」（Therefore）。羅馬書呈現一種「直述語—命令語」（Indicative-Imperative）的模式。前11章描述上帝如何慈悲對待人、外邦人、猶太人和受造世界；第12章開始則是命令——因為上帝這樣對待我們，所以我們也應該用上帝的慈悲，看待身旁的人、外邦人、猶太人，看待所有的生物與死物。\", \"第二，「心意更新而變化」。這段經文呼籲我們在每一個大時代的轉變裡（如工業革命、宗教改革），都需要更新變化我們的信仰。幾年前 COVID 疫情時，教會開始線上崇拜，我也曾反思這對教會觀產生了什麼樣的更新呼喚。如今在 AI 時代，我們同樣需要思考這個時代對我們的呼喚是什麼。\", \"第三，「將身體獻上當作活祭」。在保羅的希臘羅馬文化年代，身體（Soma）是人「榮辱」（Honor and Shame）所在的場域。保羅勸人將身體獻上，最簡單的意思就是：要把人的榮辱放下，當作活祭。就是不再以我們自己為中心，不再以我們的榮辱為中心，而是要以神為中心。這段經文教導我們：以神的慈悲，不以人作為中心的榮辱關懷，來參與上帝的受造世界。\", \"如果用保羅的神學來理解，我們可以參考羅馬書第8章第19節。那裡談到受造之物（Ktisis）切望等候上帝的眾子顯出來，一同得贖。保羅的神學並非「人類唯獨」（Human Exceptionalism）或「人類中心主義」（Anthropocentrism）。救贖不光與人有關，也與所有受造界有關。人不是世界的中心，也不是上帝受造物的唯一重心；人是與其他受造物在上帝的恩典裡一同享受恩典。\", \"這與我們慣常的信仰看法可能有些不同。很多時候，我們以為上帝是以人為中心，所有比人更厲害的東西，我們都覺得是危險的、是違反信仰的。但保羅的觀點並非如此。\", \"第四，「不要效法這個世界」。現在世界怎麼看待 AI？無非是功利主義的順從（擁抱它作為工具），或是反應性的順從（恐懼它作為危險）。這兩者其實都是一種效法世界的順從（Conformity）。\", \"如果我們從經文比較深層的教訓來看，可能我們可以把 AI 科技的發展，看成是上帝在這個時代呼喚我們更新信仰的契機。不是單純地擁抱或拒絕，而是透過它重新檢視：人到底在上帝的恩典裡佔據什麼位置？是不是真的像我們以往認為的「我們是中心、我們是上帝唯獨關心的對象」？\", \"當看到有東西（AI）在技能、效率、推理甚至創新上比人類更強時，我們感到受威脅，甚至抗拒它，這是否正反映了我們潛意識裡的「人類唯獨主義」？過去這種以人為中心的思維導致了生態危機，因為我們認為萬物都是為了服務我們而存在。\", \"AI 的發展是否在呼喚我們重新謙卑？在這個大時代裡，我們是否能超越「工具論」與「危險論」，超越「利用」與「恐懼」，深入思考這到底是怎麼一回事？\", \"我建議我們作為基督徒，不應人云亦云。透過認識 AI，我們可以反思上帝是否在藉著這個快速發展的時代，讓我們打破「人類唯獨中心」的迷思，走向一種「人機共生」的神學圖景。\", \"我並不是說 AI 不是好工具，它確實是很好的工具；我也不是說 AI 沒有危險，任何科技都有兩面性。但我提出這第三種可能性：在這個人機共生的時代，上帝對我們的信仰更新有著怎樣的呼喚？\"], \"relatedTopics\": [{\"href\": \"/articles/\", \"label\": \"所有文章\"}, {\"href\": \"/articles/\", \"label\": \"AI 與教會\"}, {\"href\": \"/articles/\", \"label\": \"神學辨識\"}]}",
+      "status": "posted",
+      "scheduled_posting_at": "2026-07-03 00:00:00",
+      "posted_at": "2026-07-13 18:28:50"
+    }
+  ]
+}
