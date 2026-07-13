@@ -2,7 +2,7 @@ from pathlib import Path
 from unittest import TestCase
 from unittest.mock import patch
 
-from scripts.create_prod_database import resolve_admin_socket
+from scripts.create_prod_database import ROOT, resolve_admin_socket
 
 
 class ResolveAdminSocketTests(TestCase):
@@ -19,3 +19,7 @@ class ResolveAdminSocketTests(TestCase):
 
     def test_non_root_admin_uses_tcp(self):
         self.assertIsNone(resolve_admin_socket(None, "127.0.0.1", "dbadmin", True))
+
+    def test_grant_targets_same_wildcard_host_as_created_user(self):
+        script = (ROOT / "scripts" / "create_prod_database.py").read_text(encoding="utf-8")
+        self.assertIn("TO `{app_user}`@'%'", script)

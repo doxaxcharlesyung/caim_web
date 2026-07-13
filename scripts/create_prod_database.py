@@ -86,7 +86,7 @@ def main():
             cursor.execute(f"CREATE DATABASE IF NOT EXISTS `{database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
             cursor.execute(f"CREATE USER IF NOT EXISTS `{app_user}`@'%%' IDENTIFIED BY %s", (app_password,))
             cursor.execute(f"ALTER USER `{app_user}`@'%%' IDENTIFIED BY %s", (app_password,))
-            cursor.execute(f"GRANT ALL PRIVILEGES ON `{database}`.* TO `{app_user}`@'%%'")
+            cursor.execute(f"GRANT ALL PRIVILEGES ON `{database}`.* TO `{app_user}`@'%'")
             cursor.execute("FLUSH PRIVILEGES")
         connection.select_db(database)
         execute_schema(connection)
