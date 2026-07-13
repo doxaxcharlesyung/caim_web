@@ -22,6 +22,7 @@ jobs:
       PROD_PORT: ${{ secrets.PROD_PORT }}
       PROD_USER: ${{ secrets.PROD_USER }}
       PROD_APP_DIR: /opt/caim_web
+      PROD_SITE_URL: https://caim.doxaxsolutions.com
 
     steps:
       - name: Check out repository
@@ -140,4 +141,4 @@ jobs:
         run: |
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
             "sudo systemctl reload httpd && curl --fail --silent --show-error http://127.0.0.1:18003/ >/dev/null"
-          curl --fail --silent --show-error --head "https://$PROD_SERVER/"
+          curl --fail --silent --show-error --head "$PROD_SITE_URL/"
