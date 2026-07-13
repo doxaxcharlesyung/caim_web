@@ -21,25 +21,25 @@ def main():
     try:
         with connection.cursor() as cursor:
             for row in snapshot["page_content"]:
-                cursor.execute("""INSERT INTO page_content (content_key,title,subtitle,sections) VALUES (%s,%s,%s,%s) AS incoming
-                    ON DUPLICATE KEY UPDATE title=incoming.title,subtitle=incoming.subtitle,sections=incoming.sections""",
+                cursor.execute("""INSERT INTO page_content (content_key,title,subtitle,sections) VALUES (%s,%s,%s,%s)
+                    ON DUPLICATE KEY UPDATE title=VALUES(title),subtitle=VALUES(subtitle),sections=VALUES(sections)""",
                     (row["content_key"], row["title"], row["subtitle"], row["sections"]))
             for row in snapshot["content_items"]:
-                cursor.execute("""INSERT INTO content_items (collection_name,item_key,sort_order,item_data) VALUES (%s,%s,%s,%s) AS incoming
-                    ON DUPLICATE KEY UPDATE sort_order=incoming.sort_order,item_data=incoming.item_data""",
+                cursor.execute("""INSERT INTO content_items (collection_name,item_key,sort_order,item_data) VALUES (%s,%s,%s,%s)
+                    ON DUPLICATE KEY UPDATE sort_order=VALUES(sort_order),item_data=VALUES(item_data)""",
                     (row["collection_name"], row["item_key"], row["sort_order"], row["item_data"]))
             for row in snapshot["courses"]:
                 cursor.execute("""INSERT INTO courses (code,slug,title,description,image,alt,href,cta_label,detail,sort_order,is_published)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) AS incoming
-                    ON DUPLICATE KEY UPDATE title=incoming.title,description=incoming.description,image=incoming.image,alt=incoming.alt,
-                    href=incoming.href,cta_label=incoming.cta_label,detail=incoming.detail,sort_order=incoming.sort_order,is_published=incoming.is_published""",
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    ON DUPLICATE KEY UPDATE title=VALUES(title),description=VALUES(description),image=VALUES(image),alt=VALUES(alt),
+                    href=VALUES(href),cta_label=VALUES(cta_label),detail=VALUES(detail),sort_order=VALUES(sort_order),is_published=VALUES(is_published)""",
                     tuple(row[key] for key in ("code","slug","title","description","image","alt","href","cta_label","detail","sort_order","is_published")))
             for row in snapshot["articles"]:
                 cursor.execute("""INSERT INTO articles (slug,title,excerpt,category,image,alt,published_date,href,detail,status,scheduled_posting_at,posted_at)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) AS incoming
-                    ON DUPLICATE KEY UPDATE title=incoming.title,excerpt=incoming.excerpt,category=incoming.category,image=incoming.image,
-                    alt=incoming.alt,published_date=incoming.published_date,href=incoming.href,detail=incoming.detail,status=incoming.status,
-                    scheduled_posting_at=incoming.scheduled_posting_at,posted_at=incoming.posted_at""",
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    ON DUPLICATE KEY UPDATE title=VALUES(title),excerpt=VALUES(excerpt),category=VALUES(category),image=VALUES(image),
+                    alt=VALUES(alt),published_date=VALUES(published_date),href=VALUES(href),detail=VALUES(detail),status=VALUES(status),
+                    scheduled_posting_at=VALUES(scheduled_posting_at),posted_at=VALUES(posted_at)""",
                     tuple(row[key] for key in ("slug","title","excerpt","category","image","alt","published_date","href","detail","status","scheduled_posting_at","posted_at")))
         connection.commit()
     finally:
