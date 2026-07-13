@@ -3,6 +3,21 @@
 Flask migration of the CAIM website, targeting Python 3.12 and
 `https://caim.doxaxsolutions.com`.
 
+## Repository identity
+
+This is the personal CAIM Web migration repository, separate from the other CAIM/Astro and
+DX Sermon repositories:
+
+- GitHub repository: `doxaxcharlesyung/caim_web`
+- Remote: `https://github.com/doxaxcharlesyung/caim_web.git`
+- Default branch: `main`
+- Production site: `https://caim.doxaxsolutions.com`
+- Production deployment: `.github/workflows/deploy-prod.yml`
+
+Keep repository-specific deployment changes, content snapshots, and rollback tags here. Do not
+assume that workflows, secrets, databases, or deployment paths from the other repositories apply
+to this personal repository.
+
 ## Application structure
 
 - `templates/layouts/` contains the shared HTML shell.
@@ -188,3 +203,30 @@ through the application virtual environment, and the Let's Encrypt certificate f
 `caim.doxaxsolutions.com`. The `cyung` account must be allowed to authenticate with the SSH
 private key and execute the required deployment commands through `sudo`. These are server
 prerequisites, not GitHub Actions secrets.
+
+## PROD rollback point
+
+The verified PROD deployment completed on 2026-07-13 and is tagged:
+
+```text
+prod-2026-07-13 -> 0aafdbe (Force CAIM admin traffic to HTTPS)
+```
+
+The tag is an immutable rollback point for the application, Apache, systemd, and database
+deployment scripts. The production database is not rolled back automatically; database changes
+must be assessed separately before reverting application code.
+
+To deploy this exact tagged version through GitHub Actions:
+
+```powershell
+git fetch origin --tags
+gh workflow run deploy-prod.yml --ref prod-2026-07-13
+```
+
+Verify the workflow succeeds before directing traffic to the rollback version. To inspect the
+tag locally without changing the current branch:
+
+```powershell
+git show --stat prod-2026-07-13
+git diff main...prod-2026-07-13
+```
