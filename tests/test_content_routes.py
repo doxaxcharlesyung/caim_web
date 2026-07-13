@@ -75,6 +75,7 @@ class ArticleStudioTests(unittest.TestCase):
         }
 
     def test_authentication_and_publish_workflow(self):
+        self.assertEqual(self.app.config["SESSION_COOKIE_NAME"], "caim_session")
         anonymous = self.app.test_client().get("/article-dashboard/")
         self.assertEqual(anonymous.status_code, 302)
         self.assertIn("/article-dashboard/login/", anonymous.location)

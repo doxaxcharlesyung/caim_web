@@ -22,6 +22,7 @@ def create_app(config: dict | None = None) -> Flask:
         DB_PASSWORD=os.getenv("DB_PASSWORD", ""),
         DB_NAME=os.getenv("DB_NAME", "caimdb"),
         MAX_CONTENT_LENGTH=20 * 1024 * 1024,
+        SESSION_COOKIE_NAME="caim_session",
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Lax",
         SESSION_COOKIE_SECURE=os.getenv("APP_ENV") == "production",
