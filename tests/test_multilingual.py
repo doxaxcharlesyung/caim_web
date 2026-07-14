@@ -1,6 +1,7 @@
 import unittest
 import re
 import json
+import html
 from pathlib import Path
 from unittest.mock import patch
 
@@ -8,6 +9,8 @@ from app import create_app
 from app.content import get_content_translation, save_content_translation
 from app.db import get_db
 from app.translation import translate_payload
+from app.i18n import CATALOG
+from scripts.build_static_translations import template_strings
 
 
 class PublicLocaleTests(unittest.TestCase):
@@ -68,19 +71,47 @@ class PublicLocaleTests(unittest.TestCase):
     def test_v3_static_copy_catalog_is_complete_utf8(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / "app" / "static_translations.json").read_text(encoding="utf-8"))
-        strings = set()
-        for folder in (root / "templates" / "pages", root / "templates" / "articles"):
-            for template in folder.glob("*.html"):
-                source = template.read_text(encoding="utf-8")
-                strings.update(re.findall(r"t\('([^']+)'\)", source))
-                strings.update(re.findall(r"\('([^']*[\u3400-\u9fff][^']*)'", source))
-        required = {text for text in strings if re.search(r"[\u3400-\u9fff]", text)}
+        required = set(template_strings())
         for locale in ("en", "fr", "es"):
             with self.subTest(locale=locale):
                 self.assertFalse(required - set(catalog[locale]))
                 self.assertTrue(all("\ufffd" not in value for value in catalog[locale].values()))
+                self.assertFalse([
+                    source for source in required
+                    if re.search(r"[\u3400-\u9fff]", CATALOG[locale].get(source, ""))
+                ])
         for path in list((root / "templates").rglob("*.html")) + [root / "app" / "static_translations.json"]:
             path.read_bytes().decode("utf-8", errors="strict")
+
+    def test_v3_static_pages_have_no_untranslated_visible_chinese(self):
+        paths = ("/", "/about/", "/dx-sermon/", "/dx-sermon/pricing/", "/church-ai-transformation/")
+        for locale in ("en", "fr", "es"):
+            for path in paths:
+                with self.subTest(locale=locale, path=path):
+                    body = self.client.get(f"{path}?lang={locale}").get_data(as_text=True)
+                    body = re.sub(r"<header.*?</header>|<footer.*?</footer>", " ", body, flags=re.S)
+                    if path == "/":
+                        body = re.sub(r'<section class="section news-section".*?</section>', " ", body, flags=re.S)
+                    visible = html.unescape(re.sub(r"<[^>]+>", " ", body))
+                    self.assertIsNone(re.search(r"[\u3400-\u9fff]", visible))
+
+    def test_v3_static_pages_render_simplified_chinese_tiles(self):
+        expected = {
+            "/": ("辨识．转化．同行", "神学辨识", "伦理治理", "事工创新"),
+            "/about/": ("认识 CAIM", "教会AI转型支援"),
+            "/dx-sermon/": ("甚么是 DX Sermon？", "历史背景", "神学反思"),
+            "/dx-sermon/pricing/": ("DX Sermon 收费计划", "基本版", "专业版"),
+            "/church-ai-transformation/": ("教会AI转型", "使命辨识", "流程落地"),
+        }
+        for path, phrases in expected.items():
+            with self.subTest(path=path):
+                response = self.client.get(f"{path}?lang=zh-Hans")
+                body = response.data.decode("utf-8", errors="strict")
+                self.assertEqual(response.status_code, 200)
+                self.assertIn('<html lang="zh-Hans">', body)
+                self.assertNotIn("\ufffd", body)
+                for phrase in phrases:
+                    self.assertIn(phrase, body)
 
     def test_opencc_preserves_nested_payload_and_converts_chinese(self):
         translated = translate_payload(

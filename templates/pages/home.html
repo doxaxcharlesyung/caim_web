@@ -46,7 +46,7 @@
 
 <section class="section"><div class="container">
   <div class="section-header center"><h2 class="section-title reveal">{{ t('為牧者、領袖與信徒而設的實用 AI 課程') }}</h2><p class="section-copy reveal">{{ t('CAIM 主辦公開講座、實務工作坊與課程、教會內部培訓及宗派領袖研討會，幫助教會在 AI 時代建立清晰理解、實際能力與成熟辨識。') }}</p></div>
-  <div class="quote-grid">{% for item in testimonials %}<blockquote class="sacred-card quote-card reveal"><p>「{{ t(item.quote) }}」</p><cite>{{ item.name }}｜{{ t(item.location) }}</cite></blockquote>{% endfor %}</div>
+  <div class="quote-grid">{% for item in testimonials %}<blockquote class="sacred-card quote-card reveal"><p>“{{ t(item.quote) }}”</p><cite>{{ t(item.name) }} | {{ t(item.location) }}</cite></blockquote>{% endfor %}</div>
 </div></section>
 
 <section class="section final-cta dark"><div class="container reveal"><h2>{{ t('讓我們一起推動教會在') }}<br><span>{{ t('AI 時代奮勇前行') }}</span></h2><div><a class="btn btn-primary" href="{{ url_for('public.contact', lang=locale) }}">{{ t('預約講座及訓練') }}</a><a class="btn btn-secondary" href="{{ url_for('public.contact', lang=locale) }}">{{ t('聯絡我們') }}</a></div></div></section>

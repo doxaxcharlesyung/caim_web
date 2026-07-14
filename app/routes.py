@@ -21,7 +21,7 @@ from .content import (
 from .admin import admin_required, authenticate, create_admin_user, get_admin_users, login_csrf_token, update_admin_user
 from .data import PAGE_META
 from .studio import build_article, csrf_token, validate_csrf
-from .i18n import localize_page
+from .i18n import localize_page, translate
 
 public = Blueprint("public", __name__)
 
@@ -35,8 +35,8 @@ def page(template: str, key: str, **context):
     title, description = PAGE_META[key]
     return render_template(
         template,
-        page_title=title,
-        description=description,
+        page_title=translate(title, g.locale),
+        description=translate(description, g.locale),
         page_content=localize_page(get_page(PAGE_CONTENT_KEYS.get(key, key)), PAGE_CONTENT_KEYS.get(key, key), g.locale),
         **context,
     )
