@@ -125,5 +125,5 @@ jobs:
       - name: Reload Apache and run health checks
         run: |
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
-            "sudo systemctl reload httpd && curl --fail --silent --show-error http://127.0.0.1:18003/ >/dev/null"
+            "sudo systemctl reload httpd && curl --fail --silent --show-error http://127.0.0.1:8021/ >/dev/null"
           curl --fail --silent --show-error --head "$PROD_SITE_URL/"

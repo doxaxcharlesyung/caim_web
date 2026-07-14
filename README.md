@@ -66,7 +66,7 @@ py -3.12 -m venv .venv
 .venv\Scripts\python app.py
 ```
 
-Open `http://127.0.0.1:8000/`.
+Open `http://127.0.0.1:8021/`.
 
 ## MySQL content migration
 
@@ -209,7 +209,7 @@ intranet address `192.168.2.43`.
 
 - Apache vhost templates for `caim.doxaxsolutions.com` live in [`deploy/apache/`](deploy/apache/).
 - The CAIM vhost uses the same name-based vhost pattern as `theology.doxaxsolutions.com`.
-- HTTP redirects permanently to HTTPS; the HTTPS vhost proxies to `127.0.0.1:18003`, which serves the dedicated CAIM app from `/opt/caim_web`.
+- HTTP redirects permanently to HTTPS; the HTTPS vhost proxies to `127.0.0.1:8021`, which serves the dedicated CAIM app from `/opt/caim_web`.
 - `test.doxaxsolutions.com` remains separate and is served from `/opt/test.doxaxsolutions.com` on `127.0.0.1:18000`.
 - The CAIM app itself serves a host-specific home page at `/`, and the current CAIM pages are self-contained.
 - The SSL vhost expects a Let's Encrypt certificate at `/etc/letsencrypt/live/caim.doxaxsolutions.com/`.
@@ -226,7 +226,7 @@ intranet address `192.168.2.43`.
 
 ## Production runtime
 
-Apache terminates HTTPS and proxies to Gunicorn on `127.0.0.1:18003`. The systemd unit uses
+Apache terminates HTTPS and proxies to Gunicorn on `127.0.0.1:8021`. The systemd unit uses
 the application-owned virtual environment at `/opt/caim_web/.venv` and starts `wsgi:app`.
 
 ## Content manager workflow
