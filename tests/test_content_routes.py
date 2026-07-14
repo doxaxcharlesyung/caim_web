@@ -51,12 +51,23 @@ class ContentRouteTests(unittest.TestCase):
         overrides = (root / "static" / "css" / "v3" / "overrides.css").read_text(encoding="utf-8")
         self.assertIn(".news-list", styles)
         self.assertIn(".news-item", styles)
+        self.assertIn("min-height: clamp(600px, 68vh, 720px)", styles)
+        self.assertIn("hero-height-cap", self.client.get("/").get_data(as_text=True))
         self.assertIn("animation: marquee 100s linear infinite !important", overrides)
         self.assertIn("animation-play-state: paused", overrides)
+        self.assertIn(".transform-section .transform-copy .info-card h3", styles)
+        self.assertIn("color: #fff", styles)
         self.assertIn("font-size: clamp(2.25rem, 3.85vw, 4.15rem)", overrides)
         self.assertIn("font-size: clamp(1.85rem, 8.7vw, 2.55rem)", overrides)
         self.assertIn(".page-hero h1", overrides)
         self.assertNotIn(".page-hero:not(.article-detail):not(.course-detail) h1", overrides)
+
+        global_styles = (root / "static" / "css" / "v3" / "global.css").read_text(encoding="utf-8")
+        self.assertIn("padding: 112px 0 28px", global_styles)
+        self.assertIn("padding: 96px 0 20px", global_styles)
+        self.assertNotIn("about-hero", self.client.get("/about/").get_data(as_text=True))
+        for path in ("/about/", "/courses/", "/contact/", "/dx-sermon/", "/missionaries/"):
+            self.assertIn("compact-page-hero", self.client.get(path).get_data(as_text=True))
 
 
 class PublicCRMIntegrationTests(unittest.TestCase):

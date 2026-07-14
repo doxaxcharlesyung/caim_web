@@ -212,8 +212,8 @@ img {
     radial-gradient(circle at 20% 20%, rgba(47, 143, 138, 0.16), transparent 32%),
     linear-gradient(135deg, #fdfaf4, #f5efe3 52%, #ede3d1);
   color: var(--midnight);
-  min-height: 54vh;
-  padding: 148px 0 84px;
+  min-height: 0;
+  padding: 112px 0 28px;
   position: relative;
   overflow: hidden;
 }
@@ -438,7 +438,7 @@ img {
   }
 
   .page-hero {
-    padding-top: 116px;
+    padding: 96px 0 20px;
   }
 
   .page-hero.course-detail-hero .page-hero-eyebrow {

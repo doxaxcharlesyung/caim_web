@@ -35,7 +35,7 @@
     display: grid;
     gap: clamp(32px, 5vw, 72px);
     grid-template-columns: minmax(0, 1fr);
-    min-height: clamp(640px, 84vh, 920px);
+    min-height: clamp(600px, 68vh, 720px);
     padding-bottom: 54px;
     position: relative;
     z-index: 2;
@@ -704,8 +704,8 @@
     width: 132px;
   }
 
-  .transform-copy .info-card h3 {
-    color: #16352d;
+  .transform-section .transform-copy .info-card h3 {
+    color: #fff;
   }
 
   .transform-visual-frame:hover::before {

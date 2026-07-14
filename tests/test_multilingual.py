@@ -53,6 +53,14 @@ class PublicLocaleTests(unittest.TestCase):
                 self.assertIn(f'class="header-cta"', body)
                 self.assertIn(f">{label}</a>", body)
 
+    def test_pricing_team_label_uses_short_contact_copy(self):
+        expected = {"en": "Please contact CAIM", "fr": "Veuillez contacter CAIM", "es": "Contacte con CAIM"}
+        for locale, label in expected.items():
+            with self.subTest(locale=locale):
+                body = self.client.get(f"/dx-sermon/pricing/?lang={locale}").get_data(as_text=True)
+                self.assertIn(label, body)
+                self.assertNotIn("for prices", body)
+
     def test_public_header_matches_v3_fixed_position(self):
         from pathlib import Path
 
@@ -60,6 +68,9 @@ class PublicLocaleTests(unittest.TestCase):
         header_rule = stylesheet.split(".site-header {", 1)[1].split("}", 1)[0]
         self.assertIn("position: fixed", header_rule)
         self.assertIn("top: 0", header_rule)
+        self.assertIn("height: 360px", stylesheet)
+        self.assertIn("max-height: 360px", stylesheet)
+        self.assertIn("height: 260px", stylesheet)
 
     def test_public_selector_hides_french_and_spanish_in_requested_order(self):
         body = self.client.get("/?lang=zh-Hant").get_data(as_text=True)

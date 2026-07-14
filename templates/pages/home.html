@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 {% from "components/icon.html" import icon %}
-{% block page_styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/v3/pages/index.css') }}">{% endblock %}
+{% block page_styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/v3/pages/index.css', v='hero-height-cap') }}">{% endblock %}
 {% block content %}
 <section class="home-hero glow-host" data-glow>
   <img class="hero-bg" src="{{ url_for('static', filename='assets/hero-asian-creative-team.jpg') }}" alt="" aria-hidden="true">
