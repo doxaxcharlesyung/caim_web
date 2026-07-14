@@ -61,6 +61,17 @@ class PublicLocaleTests(unittest.TestCase):
                 self.assertIn(label, body)
                 self.assertNotIn("for prices", body)
 
+    def test_courses_hero_intro_is_translated(self):
+        expected = {
+            "en": "CAIM offers practical, clear, and theologically discerning AI courses and talks",
+            "fr": "CAIM propose des cours et conférences pratiques",
+            "es": "CAIM ofrece cursos y charlas de IA prácticos",
+        }
+        for locale, copy in expected.items():
+            with self.subTest(locale=locale):
+                body = self.client.get(f"/courses/?lang={locale}").get_data(as_text=True)
+                self.assertIn(copy, body)
+
     def test_public_header_matches_v3_fixed_position(self):
         from pathlib import Path
 

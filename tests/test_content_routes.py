@@ -26,9 +26,13 @@ class ContentRouteTests(unittest.TestCase):
 
         root = Path(__file__).resolve().parents[1]
         styles = (root / "static" / "css" / "v3" / "pages" / "courses.css").read_text(encoding="utf-8")
+        template = (root / "templates" / "pages" / "courses.html").read_text(encoding="utf-8")
         self.assertIn("flex: 1", styles)
         self.assertIn("margin-top: auto", styles)
-        self.assert_page_contains("/courses/", "bottom-aligned-cta")
+        self.assertIn("courses-study-bible.png", template)
+        self.assertNotIn("courses-hero-youth-learning.png", template)
+        self.assertNotIn("courses-training-courses.png", template)
+        self.assert_page_contains("/courses/", "compact-courses-hero")
 
     def test_requested_article_contains_migrated_body(self):
         self.assert_page_contains(
