@@ -273,13 +273,14 @@ through the application virtual environment, and the Let's Encrypt certificate f
 private key and execute the required deployment commands through `sudo`. These are server
 prerequisites, not GitHub Actions secrets.
 
-## PROD rollback point
+## PROD rollback points
 
-The verified PROD deployment completed on 2026-07-13 and is tagged:
+Verified production rollback points:
 
-```text
-prod-2026-07-13 -> 0aafdbe (Force CAIM admin traffic to HTTPS)
-```
+| Deployment date | Tag | Description |
+| --- | --- | --- |
+| 2026-07-14 | `prod-2026-07-14` | Multilingual content workflow and refined public site UI |
+| 2026-07-13 | `prod-2026-07-13` | Force CAIM admin traffic to HTTPS (`0aafdbe`) |
 
 The tag is an immutable rollback point for the application, Apache, systemd, and database
 deployment scripts. The production database is not rolled back automatically; database changes
@@ -289,13 +290,13 @@ To deploy this exact tagged version through GitHub Actions:
 
 ```powershell
 git fetch origin --tags
-gh workflow run deploy-prod.yml --ref prod-2026-07-13
+gh workflow run deploy-prod.yml --ref prod-2026-07-14
 ```
 
 Verify the workflow succeeds before directing traffic to the rollback version. To inspect the
 tag locally without changing the current branch:
 
 ```powershell
-git show --stat prod-2026-07-13
-git diff main...prod-2026-07-13
+git show --stat prod-2026-07-14
+git diff main...prod-2026-07-14
 ```
