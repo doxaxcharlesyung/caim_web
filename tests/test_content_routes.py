@@ -24,6 +24,12 @@ class ContentRouteTests(unittest.TestCase):
         self.assert_page_contains("/courses/mt101/", "每人加幣150")
         self.assert_page_contains("/courses/mt210/", "MT210")
 
+        root = Path(__file__).resolve().parents[1]
+        styles = (root / "static" / "css" / "v3" / "pages" / "courses.css").read_text(encoding="utf-8")
+        self.assertIn("flex: 1", styles)
+        self.assertIn("margin-top: auto", styles)
+        self.assert_page_contains("/courses/", "bottom-aligned-cta")
+
     def test_requested_article_contains_migrated_body(self):
         self.assert_page_contains(
             "/articles/human-machine-coexistence-ai-tools-vs-ai-risk/",

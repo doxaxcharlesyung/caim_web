@@ -20,6 +20,9 @@
     border: 1px solid rgba(16, 24, 40, 0.1);
     border-radius: 0;
     box-shadow: 0 18px 40px rgba(16, 24, 40, 0.08);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     overflow: hidden;
     position: relative;
     transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
@@ -74,7 +77,9 @@
   }
 
   .course-card-body {
-    display: grid;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     gap: 14px;
     padding: 18px 20px 20px;
   }
@@ -118,7 +123,7 @@
     font-size: 1rem;
     font-weight: 700;
     justify-content: center;
-    margin-top: 8px;
+    margin-top: auto;
     min-height: 50px;
     min-width: 108px;
     padding: 12px 22px;
