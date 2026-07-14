@@ -59,6 +59,7 @@ class PublicLocaleTests(unittest.TestCase):
         stylesheet = (Path(__file__).resolve().parents[1] / "static" / "css" / "v3" / "components.css").read_text(encoding="utf-8")
         header_rule = stylesheet.split(".site-header {", 1)[1].split("}", 1)[0]
         self.assertIn("position: fixed", header_rule)
+        self.assertIn("top: 0", header_rule)
 
     def test_public_selector_hides_french_and_spanish_in_requested_order(self):
         body = self.client.get("/?lang=zh-Hant").get_data(as_text=True)

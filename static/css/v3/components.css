@@ -7,7 +7,7 @@
     left: 50%;
     padding: 18px 28px;
     position: fixed;
-    top: 14px;
+    top: 0;
     transform: translateX(-50%);
     transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
     width: min(1220px, calc(100% - 28px));
