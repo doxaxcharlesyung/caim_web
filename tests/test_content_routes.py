@@ -47,6 +47,10 @@ class ContentRouteTests(unittest.TestCase):
         self.assertIn(".news-item", styles)
         self.assertIn("animation: marquee 100s linear infinite !important", overrides)
         self.assertIn("animation-play-state: paused", overrides)
+        self.assertIn("font-size: clamp(2.25rem, 3.85vw, 4.15rem)", overrides)
+        self.assertIn("font-size: clamp(1.85rem, 8.7vw, 2.55rem)", overrides)
+        self.assertIn(".page-hero h1", overrides)
+        self.assertNotIn(".page-hero:not(.article-detail):not(.course-detail) h1", overrides)
 
 
 class ArticleStudioTests(unittest.TestCase):

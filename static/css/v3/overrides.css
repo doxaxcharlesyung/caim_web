@@ -92,6 +92,12 @@
   animation-play-state: paused;
 }
 
+/* Match standard public page heroes to the Home hero heading scale. */
+.page-hero h1 {
+  font-size: clamp(2.25rem, 3.85vw, 4.15rem);
+  line-height: 1.14;
+}
+
 @media (max-width: 1120px) {
   .language-picker {
     justify-self: end;
@@ -111,5 +117,11 @@
   .language-picker > button {
     font-size: 0.74rem;
     padding: 8px 9px;
+  }
+}
+
+@media (max-width: 620px) {
+  .page-hero h1 {
+    font-size: clamp(1.85rem, 8.7vw, 2.55rem);
   }
 }
