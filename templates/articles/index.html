@@ -3,10 +3,10 @@
 {% set hero_subtitle=(page_content.subtitle if page_content else '') %}
 {% set hero_image='articles-hero-bible.jpg' %}{% include 'components/page_hero.html' %}
 <section class="section"><div class="container">
-  <div class="section-header"><h2 class="section-title">最新文章</h2><p class="section-copy">CAIM 對人工智能、教會實踐與神學辨識的觀察和反思。</p></div>
+  <div class="section-header"><h2 class="section-title">{{ t('最新文章') }}</h2><p class="section-copy">{{ t('CAIM 對人工智能、教會實踐與神學辨識的觀察和反思。') }}</p></div>
   <div class="article-grid">
     {% for article in articles %}<article class="article-card sacred-card">
-      <a href="{{ url_for('public.article_detail', slug=article.slug) }}">
+      <a href="{{ url_for('public.article_detail', slug=article.slug, lang=locale) }}">
         <img src="{{ url_for('static', filename=article.image.lstrip('/')) }}" alt="{{ article.alt }}">
         <div><span class="kicker">{{ article.category }}</span><time>{{ article.published_date }}</time><h2>{{ article.title }}</h2><p>{{ article.excerpt }}</p></div>
       </a>

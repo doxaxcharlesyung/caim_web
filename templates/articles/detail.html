@@ -5,11 +5,11 @@
 {% set hero_image=article.image.removeprefix('/assets/') %}
 {% set hero_variant='article-detail-hero' %}{% include 'components/page_hero.html' %}
 <section class="section"><div class="container narrow">
-  <div class="article-meta-row"><span class="article-category">{{ article.category }}</span><span>最後更新於：{{ article.detail.updatedAt or article.published_date }}</span></div>
-  <p class="article-author-note">作者：{{ article.detail.author }}</p>
+  <div class="article-meta-row"><span class="article-category">{{ article.category }}</span><span>{{ t('最後更新於：') }}{{ article.detail.updatedAt or article.published_date }}</span></div>
+  <p class="article-author-note">{{ t('作者：') }}{{ article.detail.author }}</p>
   <article class="prose article-content">
     {% for paragraph in article.detail.paragraphs or [] %}<p>{{ paragraph }}</p>{% endfor %}
   </article>
-  <a class="btn btn-secondary" href="{{ url_for('public.articles') }}">返回文章列表</a>
+  <a class="btn btn-secondary" href="{{ url_for('public.articles', lang=locale) }}">{{ t('返回文章列表') }}</a>
 </div></section>
 {% endblock %}

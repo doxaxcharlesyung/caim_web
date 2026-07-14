@@ -29,26 +29,33 @@ def main():
                     ON DUPLICATE KEY UPDATE sort_order=VALUES(sort_order),item_data=VALUES(item_data)""",
                     (row["collection_name"], row["item_key"], row["sort_order"], row["item_data"]))
             for row in snapshot["courses"]:
-                cursor.execute("""INSERT INTO courses (code,slug,title,description,image,alt,href,cta_label,detail,sort_order,is_published,content_type,status,scheduled_posting_at,posted_at)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                cursor.execute("""INSERT INTO courses (code,slug,title,description,image,alt,href,cta_label,detail,sort_order,is_published,content_type,original_locale,status,scheduled_posting_at,posted_at)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                     ON DUPLICATE KEY UPDATE title=VALUES(title),description=VALUES(description),image=VALUES(image),alt=VALUES(alt),
                     href=VALUES(href),cta_label=VALUES(cta_label),detail=VALUES(detail),sort_order=VALUES(sort_order),is_published=VALUES(is_published),
-                    content_type=VALUES(content_type),status=VALUES(status),scheduled_posting_at=VALUES(scheduled_posting_at),posted_at=VALUES(posted_at)""",
-                    tuple(row[key] for key in ("code","slug","title","description","image","alt","href","cta_label","detail","sort_order","is_published","content_type","status","scheduled_posting_at","posted_at")))
+                    content_type=VALUES(content_type),original_locale=VALUES(original_locale),status=VALUES(status),scheduled_posting_at=VALUES(scheduled_posting_at),posted_at=VALUES(posted_at)""",
+                    tuple(row.get(key, "zh-Hant") if key == "original_locale" else row[key] for key in ("code","slug","title","description","image","alt","href","cta_label","detail","sort_order","is_published","content_type","original_locale","status","scheduled_posting_at","posted_at")))
             for row in snapshot["articles"]:
-                cursor.execute("""INSERT INTO articles (slug,title,excerpt,category,image,alt,published_date,href,detail,status,scheduled_posting_at,posted_at)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                cursor.execute("""INSERT INTO articles (slug,title,excerpt,category,image,alt,published_date,href,detail,status,original_locale,scheduled_posting_at,posted_at)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                     ON DUPLICATE KEY UPDATE title=VALUES(title),excerpt=VALUES(excerpt),category=VALUES(category),image=VALUES(image),
                     alt=VALUES(alt),published_date=VALUES(published_date),href=VALUES(href),detail=VALUES(detail),status=VALUES(status),
-                    scheduled_posting_at=VALUES(scheduled_posting_at),posted_at=VALUES(posted_at)""",
-                    tuple(row[key] for key in ("slug","title","excerpt","category","image","alt","published_date","href","detail","status","scheduled_posting_at","posted_at")))
+                    original_locale=VALUES(original_locale),scheduled_posting_at=VALUES(scheduled_posting_at),posted_at=VALUES(posted_at)""",
+                    tuple(row.get(key, "zh-Hant") if key == "original_locale" else row[key] for key in ("slug","title","excerpt","category","image","alt","published_date","href","detail","status","original_locale","scheduled_posting_at","posted_at")))
             for row in snapshot.get("news", []):
-                cursor.execute("""INSERT INTO news (slug,title,event_date,date_label,content,content_type,status,scheduled_posting_at,posted_at)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                cursor.execute("""INSERT INTO news (slug,title,event_date,date_label,content,content_type,original_locale,status,scheduled_posting_at,posted_at)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                     ON DUPLICATE KEY UPDATE title=VALUES(title),event_date=VALUES(event_date),date_label=VALUES(date_label),
-                    content=VALUES(content),content_type=VALUES(content_type),status=VALUES(status),
+                    content=VALUES(content),content_type=VALUES(content_type),original_locale=VALUES(original_locale),status=VALUES(status),
                     scheduled_posting_at=VALUES(scheduled_posting_at),posted_at=VALUES(posted_at)""",
-                    tuple(row[key] for key in ("slug","title","event_date","date_label","content","content_type","status","scheduled_posting_at","posted_at")))
+                    tuple(row.get(key, "zh-Hant") if key == "original_locale" else row[key] for key in ("slug","title","event_date","date_label","content","content_type","original_locale","status","scheduled_posting_at","posted_at")))
+            for row in snapshot.get("content_translations", []):
+                cursor.execute("""INSERT INTO content_translations
+                    (content_type,content_key,locale,source_locale,payload,status,scheduled_posting_at,posted_at)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                    ON DUPLICATE KEY UPDATE source_locale=VALUES(source_locale),payload=VALUES(payload),status=VALUES(status),
+                    scheduled_posting_at=VALUES(scheduled_posting_at),posted_at=VALUES(posted_at)""",
+                    tuple(row[key] for key in ("content_type","content_key","locale","source_locale","payload","status","scheduled_posting_at","posted_at")))
         connection.commit()
     finally:
         connection.close()

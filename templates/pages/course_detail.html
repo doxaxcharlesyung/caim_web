@@ -15,6 +15,6 @@
   <article class="prose">
     {% for paragraph in course.detail.paragraphs or [] %}<p>{{ paragraph }}</p>{% endfor %}
   </article>
-  <a class="btn btn-primary" href="{{ url_for('public.course_registration') }}?course={{ course.code }}">立即報名</a>
+  <a class="btn btn-primary" href="{{ url_for('public.course_registration', lang=locale, course=course.code) }}">{{ t('立即報名') }}</a>
 </div></section>
 {% endblock %}

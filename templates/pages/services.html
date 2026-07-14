@@ -1,4 +1,4 @@
 {% extends "layouts/base.html" %}{% block content %}
 {% set hero_title=page_content.title %}{% set hero_subtitle=page_content.subtitle %}{% set hero_image='reading-book.jpg' %}{% include 'components/page_hero.html' %}
-<section class="section"><div class="container service-list">{% for service in services %}<article class="service-row reveal"><span class="index">{{ '%02d'|format(loop.index) }}</span><div><h2>{{ service.fullTitle or service.title }}</h2><p>{{ service.text }}</p></div></article>{% endfor %}</div></section>
+<section class="section"><div class="container service-list">{% for service in services %}<article class="service-row reveal"><span class="index">{{ '%02d'|format(loop.index) }}</span><div><h2>{{ t(service.fullTitle or service.title) }}</h2><p>{{ t(service.text) }}</p></div></article>{% endfor %}</div></section>
 {% endblock %}

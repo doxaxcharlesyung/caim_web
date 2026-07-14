@@ -4,20 +4,20 @@
   <div class="hero-backdrop"><img src="{{ url_for('static', filename='assets/caim-hero-sacred-threshold.png') }}" alt="教會與人工智能時代的交會"></div>
   <div class="container hero-content reveal">
     <span class="kicker">CENTRE FOR AI &amp; MINISTRY</span>
-    <h1>在人工智能時代，<br>以智慧忠心服事</h1>
-    <p>結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問，與教會一起辨識科技、塑造實踐、回應使命。</p>
-    <div class="hero-actions"><a class="btn btn-primary" href="{{ url_for('public.about') }}">認識 CAIM</a><a class="btn btn-ivory" href="{{ url_for('public.contact') }}">與我們同行</a></div>
+    <h1>{{ t('在人工智能時代，') }}<br>{{ t('以智慧忠心服事') }}</h1>
+    <p>{{ t('結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問，與教會一起辨識科技、塑造實踐、回應使命。') }}</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="{{ url_for('public.about', lang=locale) }}">{{ t('認識 CAIM') }}</a><a class="btn btn-ivory" href="{{ url_for('public.contact', lang=locale) }}">{{ t('與我們同行') }}</a></div>
   </div>
 </section>
-<section class="section"><div class="container split"><div>{% set section_title='人工智能事工中心是甚麼？' %}{% set section_text='人工智能事工中心 (Centre for AI & Ministry, CAIM) 是一個結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問的事工平台。我們與教會同行，幫助信仰群體在 AI 時代中，不只是追趕科技，而是以清晰的使命、成熟的辨識與負責任的實踐，塑造科技在教會中的合宜使用。' %}{% include 'components/section_header.html' %}</div><div class="media-frame reveal"><img src="{{ url_for('static', filename='assets/caim-ministry.png') }}" alt="CAIM 人工智能事工"></div></div></section>
-<section class="section dark transform-section"><div class="container"><div class="section-header center"><h2 class="section-title reveal">三個同行向度</h2><p class="section-copy reveal">從信仰反思開始，建立清晰的使用界線，並將 AI 合宜地應用在實際事工之中。</p></div><div class="feature-grid">{% for item in pillars %}<article class="sacred-card info-card reveal"><h3>{{ item.title }}</h3><p>{{ item.text }}</p></article>{% endfor %}</div></div></section>
-<section class="section"><div class="container split"><div class="media-frame reveal"><img src="{{ url_for('static', filename='assets/dx-sermon-spirit.jpg') }}" alt="聖經研習"></div><div>{% set section_title='DX Sermon：為牧者與信徒而設的人工智能聖經研習平台' %}{% set section_text='DX Sermon 幫助牧者、傳道人、神學生及信徒從經文出發，進行多維度研究、釋經分析、講章構思與查經材料預備。它不是取代禱告、默想與釋經功夫，而是成為一個有啟迪、有深度、能促進信仰反思的研經空間。' %}{% include 'components/section_header.html' %}<a class="btn btn-primary" href="{{ url_for('public.dx_sermon') }}">了解 DX Sermon</a></div></div></section>
-<section class="section alt"><div class="container"><div class="section-header center"><h2 class="section-title reveal">為牧者、領袖與信徒而設的實用 AI 課程</h2><p class="section-copy reveal">公開講座、實務工作坊、教會內部培訓及宗派領袖研討會。</p></div><div class="center-action"><a class="btn btn-primary" href="{{ url_for('public.courses') }}">瀏覽課程與講座</a></div></div></section>
+<section class="section"><div class="container split"><div>{% set section_title=t('人工智能事工中心是甚麼？') %}{% set section_text=t('人工智能事工中心 (Centre for AI & Ministry, CAIM) 是一個結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問的事工平台。我們與教會同行，幫助信仰群體在 AI 時代中，不只是追趕科技，而是以清晰的使命、成熟的辨識與負責任的實踐，塑造科技在教會中的合宜使用。') %}{% include 'components/section_header.html' %}</div><div class="media-frame reveal"><img src="{{ url_for('static', filename='assets/caim-ministry.png') }}" alt="CAIM"></div></div></section>
+<section class="section dark transform-section"><div class="container"><div class="section-header center"><h2 class="section-title reveal">{{ t('三個同行向度') }}</h2><p class="section-copy reveal">{{ t('從信仰反思開始，建立清晰的使用界線，並將 AI 合宜地應用在實際事工之中。') }}</p></div><div class="feature-grid">{% for item in pillars %}<article class="sacred-card info-card reveal"><h3>{{ t(item.title) }}</h3><p>{{ t(item.text) }}</p></article>{% endfor %}</div></div></section>
+<section class="section"><div class="container split"><div class="media-frame reveal"><img src="{{ url_for('static', filename='assets/dx-sermon-spirit.jpg') }}" alt="Bible study"></div><div>{% set section_title=t('DX Sermon：為牧者與信徒而設的人工智能聖經研習平台') %}{% set section_text=t('DX Sermon 幫助牧者、傳道人、神學生及信徒從經文出發，進行多維度研究、釋經分析、講章構思與查經材料預備。它不是取代禱告、默想與釋經功夫，而是成為一個有啟迪、有深度、能促進信仰反思的研經空間。') %}{% include 'components/section_header.html' %}<a class="btn btn-primary" href="{{ url_for('public.dx_sermon', lang=locale) }}">{{ t('了解 DX Sermon') }}</a></div></div></section>
+<section class="section alt"><div class="container"><div class="section-header center"><h2 class="section-title reveal">{{ t('為牧者、領袖與信徒而設的實用 AI 課程') }}</h2><p class="section-copy reveal">{{ t('公開講座、實務工作坊、教會內部培訓及宗派領袖研討會。') }}</p></div><div class="center-action"><a class="btn btn-primary" href="{{ url_for('public.courses', lang=locale) }}">{{ t('瀏覽課程與講座') }}</a></div></div></section>
 {% if news_items %}
 <section class="section news-section" data-news-carousel data-autoplay="{{ 'true' if news_items|length > 3 else 'false' }}">
   <div class="container">
     <div class="section-header news-section-header">
-      <div><span class="kicker">NEWS &amp; EVENTS</span><h2 class="section-title">最新消息與活動</h2></div>
+      <div><span class="kicker">NEWS &amp; EVENTS</span><h2 class="section-title">{{ t('最新消息與活動') }}</h2></div>
       {% if news_items|length > 3 %}
       <div class="news-carousel-controls" aria-label="News carousel controls">
         <button type="button" data-news-previous aria-label="Previous news items">&#8592;</button>

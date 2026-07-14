@@ -6,6 +6,7 @@
   <div><span class="kicker">CONTENT LIBRARY</span><h1>{{ labels[content_kind] }}</h1></div>
   <a class="btn btn-primary" href="{{ url_for(studios[content_kind]) }}">New Content</a>
 </div>
+<nav class="content-language-tabs" aria-label="Review language">{% for code in supported_locales %}<a class="{{ 'is-active' if code == locale }}" href="{{ url_for('content_admin.' ~ content_kind, lang=code, q=search) }}">{{ language_names[code] }}</a>{% endfor %}</nav>
 {% if notice %}<p class="studio-notice">{{ notice }}</p>{% endif %}
 <form class="dashboard-search"><input name="q" value="{{ search }}" placeholder="Search title, code, category, or content"><button class="btn btn-secondary">Search</button></form>
 <div class="article-dashboard-grid">
@@ -14,12 +15,14 @@
     {% if item.image %}<img src="{{ url_for('static', filename=item.image.lstrip('/')) }}" alt="">{% endif %}
     <div class="dashboard-tile-body">
       <div class="tile-meta"><span class="status status-{{ item.status }}">{{ item.status|title }}</span><span>{{ item.content_type or item.category }}</span></div>
+      <p class="content-origin">Original: {{ language_names[item.original_locale] }}</p>
+      <div class="translation-statuses"><span>{{ item.original_locale }}: {{ item.status }}</span>{% for code in supported_locales if code != item.original_locale and code in item.translations %}<span>{{ code }}: {{ item.translations[code] }}</span>{% endfor %}</div>
       <h2>{{ item.title }}</h2>
       <p>{{ (item.excerpt or item.description or item.content)|truncate(170) }}</p>
       {% if item.status == 'review' %}<p class="approval-progress">Approvals: {{ item.approval.approved }} / {{ item.approval.required }}</p>{% endif %}
       <div class="tile-actions">
-        <a class="btn btn-secondary" href="{{ url_for(studios[content_kind], slug=item.slug) }}">Select</a>
-        {% if item.approval.can_approve %}<form method="post" action="{{ url_for('content_admin.approve_content', kind=content_kind, slug=item.slug) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn-primary">Approve</button></form>{% endif %}
+        <a class="btn btn-secondary" href="{{ url_for(studios[content_kind], slug=item.slug, lang=locale) }}">Select</a>
+        {% if item.approval.can_approve %}<form method="post" action="{{ url_for('content_admin.approve_content', kind=content_kind, slug=item.slug) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="content_locale" value="{{ locale }}"><button class="btn btn-primary">Approve {{ language_names[locale] }}</button></form>{% endif %}
         <form method="post" action="{{ url_for('content_admin.set_status', kind=content_kind, slug=item.slug) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn-secondary" name="status" value="expired">Expire</button></form>
         <form method="post" action="{{ url_for('content_admin.set_status', kind=content_kind, slug=item.slug) }}" onsubmit="return confirm('Mark as Deleted?') && confirm('Second warning: database cleanup is manual. Continue?')"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="btn btn-danger" name="status" value="deleted">Delete</button></form>
       </div>

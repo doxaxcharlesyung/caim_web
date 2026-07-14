@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS courses (
     sort_order INT NOT NULL DEFAULT 0,
     is_published BOOLEAN NOT NULL DEFAULT TRUE,
     content_type VARCHAR(20) NOT NULL DEFAULT 'course',
+    original_locale VARCHAR(10) NOT NULL DEFAULT 'zh-Hant',
     status VARCHAR(20) NOT NULL DEFAULT 'posted',
     scheduled_posting_at DATETIME NULL,
     posted_at DATETIME NULL,
@@ -46,6 +47,7 @@ CREATE TABLE IF NOT EXISTS news (
     date_label VARCHAR(50) NOT NULL,
     content TEXT NOT NULL,
     content_type VARCHAR(20) NOT NULL DEFAULT 'news',
+    original_locale VARCHAR(10) NOT NULL DEFAULT 'zh-Hant',
     status VARCHAR(20) NOT NULL DEFAULT 'posted',
     scheduled_posting_at DATETIME NULL,
     posted_at DATETIME NULL,
@@ -65,6 +67,7 @@ CREATE TABLE IF NOT EXISTS articles (
     href VARCHAR(500) NOT NULL,
     detail JSON NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'posted',
+    original_locale VARCHAR(10) NOT NULL DEFAULT 'zh-Hant',
     scheduled_posting_at DATETIME NULL,
     posted_at DATETIME NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -85,12 +88,29 @@ CREATE TABLE IF NOT EXISTS content_approvals (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     content_type VARCHAR(20) NOT NULL,
     content_key VARCHAR(191) NOT NULL,
+    locale VARCHAR(10) NOT NULL DEFAULT 'zh-Hant',
     submitted_by BIGINT UNSIGNED NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'pending',
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     approved_at DATETIME NULL,
-    UNIQUE KEY uq_content_approval (content_type, content_key),
+    UNIQUE KEY uq_content_approval (content_type, content_key, locale),
     KEY ix_approval_status (status, submitted_at)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS content_translations (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    content_type VARCHAR(20) NOT NULL,
+    content_key VARCHAR(191) NOT NULL,
+    locale VARCHAR(10) NOT NULL,
+    source_locale VARCHAR(10) NOT NULL,
+    payload JSON NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'saved',
+    scheduled_posting_at DATETIME NULL,
+    posted_at DATETIME NULL,
+    created_by BIGINT UNSIGNED NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_content_translation (content_type, content_key, locale),
+    KEY ix_translation_publication (content_type, locale, status, scheduled_posting_at)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS content_approval_votes (

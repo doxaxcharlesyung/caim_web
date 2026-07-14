@@ -14,6 +14,7 @@
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
   <input type="hidden" name="original_slug" value="{{ selected.slug if selected else '' }}">
   <input type="hidden" name="existing_image" value="{{ selected.image if selected else '' }}">
+  <input type="hidden" name="content_locale" value="{{ content_locale }}">
   <div class="studio-form-head">
     <strong>{{ selected.title if selected else 'New Article' }}</strong>
     <div class="studio-toolbar">
@@ -23,6 +24,9 @@
     </div>
   </div>
   <div class="studio-fields">
+    {% set original_locale = selected.original_locale if selected else content_locale %}<input type="hidden" name="original_locale" value="{{ original_locale }}"><label class="field">Original language<input value="{{ language_names[original_locale] }}" readonly aria-readonly="true"></label>
+    {% if selected %}<div class="field span-2 content-language-tabs"><strong>Edit / review language</strong>{% for code in available_content_locales %}<a class="{{ 'is-active' if code == content_locale }}" href="{{ url_for('content_admin.article_studio', slug=selected.slug, lang=code) }}">{{ language_names[code] }}</a>{% endfor %}</div>{% endif %}
+    {% if selected %}<div class="language-review-panel span-2"><h2>Language review status</h2><table><thead><tr><th>Language</th><th>Generated</th><th>Status</th></tr></thead><tbody>{% for row in language_statuses %}<tr><td>{{ language_names[row.locale] }}{% if row.locale == selected.original_locale %} <small>Original</small>{% endif %}</td><td>{{ 'Yes' if row.generated else 'No' }}</td><td>{% if row.status %}<span class="status status-{{ row.status }}">{{ row.status|title }}</span>{% else %}<span class="status status-missing">Not generated</span>{% endif %}</td></tr>{% endfor %}</tbody></table></div>{% endif %}
     <label class="field span-2">Source file<input name="source_file" type="file" accept=".docx,.pdf,.md,.txt"></label>
     <label class="field">Hero image<input name="hero_image" type="file" accept="image/*"></label>
     <label class="field">Image alt<input name="image_alt" value="{{ value('image_alt', selected.alt if selected else '') }}"></label>
@@ -40,4 +44,5 @@
     <fieldset class="reviewer-picker span-2"><legend>Reviewers</legend><p>Select at least one user other than yourself. Every selected reviewer must approve.</p><div>{% for reviewer in reviewers %}<label><input type="checkbox" name="reviewer_ids" value="{{ reviewer.id }}" {% if reviewer.selected %}checked{% endif %}>{{ reviewer.username }}</label>{% else %}<span>No other active users are available.</span>{% endfor %}</div></fieldset>
   </div>
 </form>
+{% if selected and content_locale == selected.original_locale and selected.status == 'posted' and available_content_locales|length < supported_locales|length %}<form class="translation-action sacred-card" method="post" action="{{ url_for('content_admin.translate_content', kind='articles', slug=selected.slug) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><label>Translate approved {{ language_names[selected.original_locale] }} content into every missing supported language. Each translation will require separate approval.</label><button class="btn btn-primary">Translate all languages</button></form>{% endif %}
 {% endblock %}

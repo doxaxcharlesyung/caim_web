@@ -112,6 +112,11 @@ jobs:
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
             "cd '$PROD_APP_DIR' && '$PROD_APP_DIR/.venv/bin/python' scripts/import_content_snapshot.py scripts/content_snapshot.json"
 
+      - name: Approve existing original-language content
+        run: |
+          ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+            "cd '$PROD_APP_DIR' && '$PROD_APP_DIR/.venv/bin/python' scripts/approve_existing_original_content.py"
+
       - name: Install and restart CAIM service
         run: |
           ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \

@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 {% block content %}
 {% set hero_title=page_content.title %}{% set hero_subtitle=page_content.subtitle %}{% set hero_image='about-francis-working.png' %}{% include 'components/page_hero.html' %}
-<section class="section"><div class="container content-stack">{% for section in page_content.sections %}<article class="text-panel"><h2>{{ section.title }}</h2><p>{{ section.text }}</p></article>{% endfor %}</div></section>
-<section class="section alt"><div class="container two-grid">{% for leader in leaders %}<article class="sacred-card info-card"><img src="{{ url_for('static', filename=leader.image.lstrip('/')) }}" alt="{{ leader.imageAlt }}"><h2>{{ leader.name }}</h2><span class="kicker">{{ leader.role }}</span><p>{{ leader.text }}</p></article>{% endfor %}</div></section>
+<section class="section"><div class="container content-stack">{% for section in page_content.sections %}<article class="text-panel"><h2>{{ t(section.title) }}</h2><p>{{ t(section.text) }}</p></article>{% endfor %}</div></section>
+<section class="section alt"><div class="container two-grid">{% for leader in leaders %}<article class="sacred-card info-card"><img src="{{ url_for('static', filename=leader.image.lstrip('/')) }}" alt="{{ t(leader.imageAlt) }}"><h2>{{ leader.name }}</h2><span class="kicker">{{ t(leader.role) }}</span><p>{{ t(leader.text) }}</p></article>{% endfor %}</div></section>
 {% endblock %}

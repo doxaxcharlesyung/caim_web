@@ -8,6 +8,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from .context import register_context
 from .content_manager import content_admin
 from .db import close_db
+from .i18n import ENABLED_LOCALES, SUPPORTED_LOCALES
 from .routes import public
 
 
@@ -17,7 +18,8 @@ def create_app(config: dict | None = None) -> Flask:
     app.config.from_mapping(
         SECRET_KEY=os.getenv("SECRET_KEY", "development-only-key"),
         DEFAULT_LOCALE="zh-Hant",
-        SUPPORTED_LOCALES=("zh-Hant",),
+        SUPPORTED_LOCALES=SUPPORTED_LOCALES,
+        ENABLED_LOCALES=ENABLED_LOCALES,
         DB_HOST=os.getenv("DB_HOST", "127.0.0.1"),
         DB_PORT=int(os.getenv("DB_PORT", "3306")),
         DB_USER=os.getenv("DB_USER", "caimadmin"),

@@ -21,6 +21,7 @@ from .content import (
 from .admin import admin_required, authenticate, create_admin_user, get_admin_users, login_csrf_token, update_admin_user
 from .data import PAGE_META
 from .studio import build_article, csrf_token, validate_csrf
+from .i18n import localize_page
 
 public = Blueprint("public", __name__)
 
@@ -30,19 +31,13 @@ PAGE_CONTENT_KEYS = {
 }
 
 
-@public.before_request
-def select_locale() -> None:
-    # The route architecture is locale-ready; only Traditional Chinese is enabled in this migration.
-    g.locale = current_app.config["DEFAULT_LOCALE"]
-
-
 def page(template: str, key: str, **context):
     title, description = PAGE_META[key]
     return render_template(
         template,
         page_title=title,
         description=description,
-        page_content=get_page(PAGE_CONTENT_KEYS.get(key, key)),
+        page_content=localize_page(get_page(PAGE_CONTENT_KEYS.get(key, key)), PAGE_CONTENT_KEYS.get(key, key), g.locale),
         **context,
     )
 
@@ -55,7 +50,7 @@ def home():
         pillars=get_collection("pillars"),
         services=get_collection("services"),
         testimonials=get_collection("testimonials"),
-        news_items=get_news_items(),
+        news_items=get_news_items(g.locale),
     )
 
 
@@ -98,12 +93,12 @@ def church_ai_transformation():
 
 @public.get("/courses/")
 def courses():
-    return page("pages/courses.html", "courses", courses=get_courses())
+    return page("pages/courses.html", "courses", courses=get_courses(g.locale))
 
 
 @public.get("/courses/<slug>/")
 def course_detail(slug: str):
-    course = get_course(slug)
+    course = get_course(slug, g.locale)
     if course is None:
         abort(404)
     return page("pages/course_detail.html", "courses", course=course)
@@ -116,7 +111,7 @@ def course_registration():
 
 @public.get("/articles/")
 def articles():
-    return page("articles/index.html", "articles", articles=get_articles())
+    return page("articles/index.html", "articles", articles=get_articles(g.locale))
 
 
 @public.get("/articles/published/")
@@ -126,7 +121,7 @@ def published_articles():
 
 @public.get("/articles/<slug>/")
 def article_detail(slug: str):
-    article = get_article(slug)
+    article = get_article(slug, g.locale)
     if article is None:
         abort(404)
     return page("articles/detail.html", "articles", article=article)

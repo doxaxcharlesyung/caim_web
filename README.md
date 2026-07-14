@@ -28,10 +28,21 @@ to this personal repository.
 - `app/data.py` contains site-wide presentation settings and Traditional Chinese labels.
 - `static/` contains migrated images, CSS, JavaScript, and the favicon.
 
-This migration renders Traditional Chinese (`zh-Hant`) only. Locale selection is centralized
-so approved translations can be introduced later without duplicating layouts or components.
-Article templates are separate from fixed pages so MySQL can supply article records in a later
-phase without storing fixed page content in the database.
+The public application supports Traditional Chinese (`zh-Hant`), English (`en`), French (`fr`),
+Spanish (`es`), and Simplified Chinese (`zh-Hans`). The shared header exposes the language
+selector on every public page. The selected locale is retained in the session and can also be
+specified with `?lang=<locale>`.
+
+French and Spanish are currently disabled in the UI while their formatting and content are being
+prepared. The enabled locales are Traditional Chinese, English, and Simplified Chinese. Existing
+French/Spanish database translations and static catalogs are retained and can be re-enabled later
+by adding `fr` and `es` back to `ENABLED_LOCALES` in `app/i18n.py`.
+
+All future public UI, navigation, accessibility labels, validation messages, and fixed-page copy
+must ship in all five supported languages in the same change. A feature is not complete if it
+introduces untranslated public text. Tests must cover UTF-8 rendering whenever Chinese copy is
+added or changed. Templates and source files remain UTF-8, HTTP responses use UTF-8, and MySQL
+connections/tables use `utf8mb4` so Traditional and Simplified Chinese are stored without loss.
 
 ## Local development
 
@@ -54,7 +65,14 @@ DB_PORT=3306
 DB_USER=caimadmin
 DB_PASSWORD=replace-with-the-database-password
 DB_NAME=caimdb
+TRANSLATION_API_URL=https://your-translation-service.example/translate
+TRANSLATION_API_KEY=replace-with-the-service-key
 ```
+
+`TRANSLATION_API_URL` must expose a LibreTranslate-compatible JSON endpoint for English, French,
+and Spanish translation. The API key is optional when that service does not require one.
+Traditional/Simplified Chinese conversion is performed locally with OpenCC and does not call the
+external service.
 
 After creating the database and user, import or refresh content from the Astro project with:
 
@@ -123,6 +141,30 @@ workshops classified as `event`. News Studio manages normalized records imported
 Expired and Deleted records are hidden from public pages. Deleted records remain in MySQL for
 manual review and physical deletion by a database administrator. Legacy `/article-dashboard/`
 and `/article-studio/` GET URLs redirect to the new content manager.
+
+### Multilingual content workflow
+
+- Every article, course/workshop, and news/event record stores its `original_locale`.
+- The content library marks the original language and shows the Saved, Review, or Posted state of
+  each available translation.
+- The original language must complete its own reviewer approval before the one-button translation
+  action is enabled.
+- One-button translation generates every missing supported language from the approved original in
+  one operation. Each generated row enters Review in `content_translations`; it never overwrites
+  the original record or an existing translation.
+- Each language is submitted, reviewed, approved, scheduled, and posted independently. Approval
+  of one language does not approve any other language.
+- Reviewers use the language tabs in the library and studio to inspect and approve the selected
+  language. Only Posted translations whose scheduled time has arrived are visible publicly.
+- A missing or unapproved translation falls back to the approved original-language content. Once
+  that requested language is separately approved and Posted, the public page automatically uses
+  the translated version instead.
+- Content snapshots include `original_locale` and `content_translations`, preserving multilingual
+  content and publication state during production deployment.
+- `scripts/approve_existing_original_content.py` is a guarded one-time migration for legacy base
+  content. It marks the articles, courses, and news that existed at migration time as approved and
+  Posted, while leaving Expired/Deleted records and every translated version unchanged. Its database
+  marker prevents future drafts from being approved by later deployments.
 
 For an existing installation, apply the dashboard migration once:
 

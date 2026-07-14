@@ -14,6 +14,11 @@ def column_exists(cursor, table, column):
     return cursor.fetchone() is not None
 
 
+def index_exists(cursor, table, index_name):
+    cursor.execute(f"SHOW INDEX FROM `{table}` WHERE Key_name=%s", (index_name,))
+    return cursor.fetchone() is not None
+
+
 def main():
     load_dotenv(ROOT / ".env")
     connection = pymysql.connect(host=os.getenv("DB_HOST", "127.0.0.1"), port=int(os.getenv("DB_PORT", 3306)),
@@ -27,6 +32,8 @@ def main():
                 cursor.execute("ALTER TABLE articles ADD scheduled_posting_at DATETIME NULL AFTER status")
             if not column_exists(cursor, "articles", "posted_at"):
                 cursor.execute("ALTER TABLE articles ADD posted_at DATETIME NULL AFTER scheduled_posting_at")
+            if not column_exists(cursor, "articles", "original_locale"):
+                cursor.execute("ALTER TABLE articles ADD original_locale VARCHAR(10) NOT NULL DEFAULT 'zh-Hant' AFTER status")
             cursor.execute("UPDATE articles SET scheduled_posting_at=COALESCE(scheduled_posting_at,published_date), posted_at=COALESCE(posted_at,updated_at) WHERE status='posted'")
             cursor.execute("""CREATE TABLE IF NOT EXISTS admin_users (id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 username VARCHAR(100) NOT NULL UNIQUE,password_hash VARCHAR(255) NOT NULL,is_active BOOLEAN NOT NULL DEFAULT TRUE,
@@ -46,6 +53,7 @@ def main():
                 "status": "VARCHAR(20) NOT NULL DEFAULT 'posted' AFTER content_type",
                 "scheduled_posting_at": "DATETIME NULL AFTER status",
                 "posted_at": "DATETIME NULL AFTER scheduled_posting_at",
+                "original_locale": "VARCHAR(10) NOT NULL DEFAULT 'zh-Hant' AFTER content_type",
             }.items():
                 if not column_exists(cursor, "courses", column):
                     cursor.execute(f"ALTER TABLE courses ADD `{column}` {definition}")
@@ -55,10 +63,12 @@ def main():
             cursor.execute("""CREATE TABLE IF NOT EXISTS news (
                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,slug VARCHAR(191) NOT NULL UNIQUE,
                 title VARCHAR(500) NOT NULL,event_date DATE NOT NULL,date_label VARCHAR(50) NOT NULL,
-                content TEXT NOT NULL,content_type VARCHAR(20) NOT NULL DEFAULT 'news',status VARCHAR(20) NOT NULL DEFAULT 'posted',
+                content TEXT NOT NULL,content_type VARCHAR(20) NOT NULL DEFAULT 'news',original_locale VARCHAR(10) NOT NULL DEFAULT 'zh-Hant',status VARCHAR(20) NOT NULL DEFAULT 'posted',
                 scheduled_posting_at DATETIME NULL,posted_at DATETIME NULL,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 KEY ix_news_status_date (status,event_date)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci""")
+            if not column_exists(cursor, "news", "original_locale"):
+                cursor.execute("ALTER TABLE news ADD original_locale VARCHAR(10) NOT NULL DEFAULT 'zh-Hant' AFTER content_type")
             cursor.execute("SELECT item_key,item_data FROM content_items WHERE collection_name='newsItems' ORDER BY sort_order,id")
             for row in cursor.fetchall():
                 item = json.loads(row[1]) if isinstance(row[1], str) else row[1]
@@ -68,10 +78,24 @@ def main():
                     (row[0].lower().replace("_", "-"), item["title"], item["date"], item.get("dateLabel", ""), item["content"], item["date"]))
             cursor.execute("""CREATE TABLE IF NOT EXISTS content_approvals (
                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,content_type VARCHAR(20) NOT NULL,
-                content_key VARCHAR(191) NOT NULL,submitted_by BIGINT UNSIGNED NOT NULL,
+                content_key VARCHAR(191) NOT NULL,locale VARCHAR(10) NOT NULL DEFAULT 'zh-Hant',submitted_by BIGINT UNSIGNED NOT NULL,
                 status VARCHAR(20) NOT NULL DEFAULT 'pending',submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                approved_at DATETIME NULL,UNIQUE KEY uq_content_approval (content_type,content_key),
+                approved_at DATETIME NULL,UNIQUE KEY uq_content_approval (content_type,content_key,locale),
                 KEY ix_approval_status (status,submitted_at)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci""")
+            if not column_exists(cursor, "content_approvals", "locale"):
+                cursor.execute("ALTER TABLE content_approvals ADD locale VARCHAR(10) NOT NULL DEFAULT 'zh-Hant' AFTER content_key")
+                if index_exists(cursor, "content_approvals", "uq_content_approval"):
+                    cursor.execute("ALTER TABLE content_approvals DROP INDEX uq_content_approval")
+                cursor.execute("ALTER TABLE content_approvals ADD UNIQUE KEY uq_content_approval (content_type,content_key,locale)")
+            cursor.execute("""CREATE TABLE IF NOT EXISTS content_translations (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,content_type VARCHAR(20) NOT NULL,
+                content_key VARCHAR(191) NOT NULL,locale VARCHAR(10) NOT NULL,source_locale VARCHAR(10) NOT NULL,
+                payload JSON NOT NULL,status VARCHAR(20) NOT NULL DEFAULT 'saved',scheduled_posting_at DATETIME NULL,
+                posted_at DATETIME NULL,created_by BIGINT UNSIGNED NULL,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                UNIQUE KEY uq_content_translation (content_type,content_key,locale),
+                KEY ix_translation_publication (content_type,locale,status,scheduled_posting_at))
+                CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci""")
             cursor.execute("""CREATE TABLE IF NOT EXISTS content_approval_reviewers (
                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,approval_id BIGINT UNSIGNED NOT NULL,
                 reviewer_id BIGINT UNSIGNED NOT NULL,assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
