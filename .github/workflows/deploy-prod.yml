@@ -82,8 +82,11 @@ jobs:
       - name: Configure CRM integration
         env:
           PROD_CRM_CONSULTATION_TOKEN: ${{ secrets.PROD_CRM_CONSULTATION_TOKEN }}
+          PROD_CRM_ACTIVITY_TOKEN: ${{ secrets.PROD_CRM_ACTIVITY_TOKEN }}
         run: |
-          printf 'CRM_API_URL=https://dxcrm.doxaxsolutions.com/api/v1/public/consultation-intake\nCRM_CONSULTATION_TOKEN=%s\n' "$PROD_CRM_CONSULTATION_TOKEN" |
+          ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
+            "sudo sed -i -e '/^CRM_API_URL=/d' -e '/^CRM_CONSULTATION_TOKEN=/d' -e '/^CRM_ACTIVITY_REGISTRATION_URL=/d' -e '/^CRM_ACTIVITY_TOKEN=/d' '$PROD_APP_DIR/.env'"
+          printf 'CRM_API_URL=https://dxcrm.doxaxsolutions.com/api/v1/public/consultation-intake\nCRM_CONSULTATION_TOKEN=%s\nCRM_ACTIVITY_REGISTRATION_URL=https://dxcrm.doxaxsolutions.com/api/v1/public/activity-registration\nCRM_ACTIVITY_TOKEN=%s\n' "$PROD_CRM_CONSULTATION_TOKEN" "$PROD_CRM_ACTIVITY_TOKEN" |
             ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
               "sudo tee -a '$PROD_APP_DIR/.env' >/dev/null && sudo chown '$PROD_USER':'$PROD_USER' '$PROD_APP_DIR/.env' && sudo chmod 0600 '$PROD_APP_DIR/.env'"
 

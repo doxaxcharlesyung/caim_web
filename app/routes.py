@@ -3,7 +3,7 @@ import math
 import pymysql
 from flask import Blueprint, abort, current_app, g, redirect, render_template, request, session, url_for
 
-from .crm import submit_consultation_request
+from .crm import submit_activity_registration, submit_consultation_request
 from .content import (
     get_article,
     get_articles,
@@ -107,7 +107,58 @@ def course_detail(slug: str):
 
 @public.route("/course-registration/", methods=["GET", "POST"])
 def course_registration():
-    return page("pages/course_registration.html", "course_registration")
+    courses = get_courses(g.locale)
+    values = {key: request.form.get(key, "").strip() for key in (
+        "course_slug", "english_name", "chinese_full_name", "title", "gender",
+        "church_name", "email", "mobile", "ministry_experience", "notes",
+    )}
+    if request.method == "GET":
+        values["course_slug"] = request.args.get("course", "").strip()
+
+    registration_notice = ""
+    registration_error = ""
+    registration_id = None
+    if request.method == "POST":
+        selected_course = next((course for course in courses if course["slug"] == values["course_slug"]), None)
+        if selected_course is None or not values["english_name"] or not values["email"] or not values["church_name"]:
+            registration_error = "請選擇課程，並填寫英文姓名、教會名稱及電郵。"
+        else:
+            payload = {
+                "activity_name": selected_course["title"],
+                "activity_type": "course",
+                "activity_key": selected_course["slug"],
+                "source_name": "caim.doxaxsolutions.com",
+                "source_url": "https://caim.doxaxsolutions.com/",
+                "english_name": values["english_name"],
+                "chinese_full_name": values["chinese_full_name"] or None,
+                "church_name": values["church_name"],
+                "email": values["email"],
+                "mobile": values["mobile"] or None,
+                "questionnaire": {
+                    "title": values["title"],
+                    "gender": values["gender"],
+                    "ministry_experience": values["ministry_experience"],
+                    "notes": values["notes"],
+                    "locale": g.locale,
+                },
+            }
+            submitted, error_message, result = submit_activity_registration(payload)
+            if submitted:
+                registration_notice = "報名已成功送出，CAIM 團隊將與你聯絡。"
+                registration_id = result["registration_id"]
+                session["last_activity_registration_id"] = registration_id
+                values = {key: "" for key in values}
+            else:
+                registration_error = error_message
+    return page(
+        "pages/course_registration.html",
+        "course_registration",
+        courses=courses,
+        registration_values=values,
+        registration_notice=registration_notice,
+        registration_error=registration_error,
+        registration_id=registration_id,
+    )
 
 
 @public.get("/articles/")
@@ -276,7 +327,9 @@ def contact():
             "email": form.get("email", "").strip(),
             "phone": form.get("phone", "").strip(),
             "company_name": form.get("organization", "").strip(),
-            "message": f"查詢類別：{form.get('type', '一般查詢').strip()}\n\n{message}",
+            "type": form.get("type", "一般查詢").strip(),
+            "source": "caim.doxaxsolutions.com",
+            "message": message,
         }
         if not first_name or not payload["email"] or not message:
             contact_error = "請填寫姓名、電郵及訊息內容。"
@@ -286,7 +339,13 @@ def contact():
                 contact_notice = "查詢已成功送出，CAIM 團隊將與你聯絡。"
             else:
                 contact_error = error_message
-    return page("pages/contact.html", "contact", contact_notice=contact_notice, contact_error=contact_error)
+    return page(
+        "pages/contact.html",
+        "contact",
+        contact_notice=contact_notice,
+        contact_error=contact_error,
+        contact_values=request.form,
+    )
 
 
 @public.app_errorhandler(404)

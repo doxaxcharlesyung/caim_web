@@ -59,6 +59,120 @@ class ContentRouteTests(unittest.TestCase):
         self.assertNotIn(".page-hero:not(.article-detail):not(.course-detail) h1", overrides)
 
 
+class PublicCRMIntegrationTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.app = create_app({"TESTING": True, "SERVER_NAME": "localhost:8021"})
+        cls.client = cls.app.test_client()
+
+    def test_contact_submits_dx_crm_consultation_fields(self):
+        with patch("app.routes.submit_consultation_request", return_value=(True, "")) as submit:
+            response = self.client.post("/contact/", data={
+                "name": "Avery Stone",
+                "organization": "Example Church",
+                "email": "avery@example.com",
+                "phone": "555-0110",
+                "type": "General inquiry",
+                "message": "Please contact me.",
+            })
+        self.assertEqual(response.status_code, 200)
+        payload = submit.call_args.args[0]
+        self.assertEqual(payload["source"], "caim.doxaxsolutions.com")
+        self.assertEqual(payload["type"], "General inquiry")
+        self.assertEqual(payload["message"], "Please contact me.")
+
+    def test_course_registration_submits_selected_activity(self):
+        results = [
+            (True, "", {"registration_id": 901, "activity_id": None}),
+            (True, "", {"registration_id": 902, "activity_id": None}),
+        ]
+        with patch("app.routes.submit_activity_registration", side_effect=results) as submit:
+            response = self.client.post("/course-registration/", data={
+                "course_slug": "mt101",
+                "english_name": "Ming Wang",
+                "chinese_full_name": "Wang Ming",
+                "church_name": "Example Church",
+                "email": "ming@example.com",
+                "mobile": "555-0100",
+                "ministry_experience": "5 years",
+                "notes": "No dietary restrictions",
+            })
+            second_response = self.client.post("/course-registration/", data={
+                "course_slug": "mt101",
+                "english_name": "Avery Stone",
+                "church_name": "Another Church",
+                "email": "avery@example.com",
+            })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("901", response.get_data(as_text=True))
+        self.assertIn("902", second_response.get_data(as_text=True))
+        with self.client.session_transaction() as browser_session:
+            self.assertEqual(browser_session["last_activity_registration_id"], 902)
+        payload = submit.call_args_list[0].args[0]
+        second_payload = submit.call_args_list[1].args[0]
+        self.assertNotIn("activity_id", payload)
+        self.assertEqual(payload["activity_type"], "course")
+        self.assertEqual(payload["activity_key"], "mt101")
+        self.assertEqual(second_payload["activity_key"], "mt101")
+        self.assertEqual(payload["source_name"], "caim.doxaxsolutions.com")
+        self.assertEqual(payload["source_url"], "https://caim.doxaxsolutions.com/")
+        self.assertEqual(payload["email"], "ming@example.com")
+        self.assertEqual(payload["questionnaire"]["ministry_experience"], "5 years")
+
+    def test_course_registration_preserves_values_after_api_error(self):
+        with patch("app.routes.submit_activity_registration", return_value=(False, "CRM unavailable", None)):
+            response = self.client.post("/course-registration/", data={
+                "course_slug": "mt101",
+                "english_name": "Ming Wang",
+                "church_name": "Example Church",
+                "email": "ming@example.com",
+                "notes": "Keep this note",
+            })
+        body = response.get_data(as_text=True)
+        self.assertIn('value="ming@example.com"', body)
+        self.assertIn("Keep this note", body)
+        self.assertIn("CRM unavailable", body)
+
+    def test_course_detail_preselects_registration_activity(self):
+        body = self.client.get("/courses/mt101/").get_data(as_text=True)
+        self.assertIn("course=mt101", body)
+
+    def test_registration_form_labels_are_translated(self):
+        body = self.client.get("/course-registration/?lang=en").get_data(as_text=True)
+        self.assertIn("Select course", body)
+        self.assertIn("English name", body)
+        self.assertIn("Submit registration", body)
+
+    def test_activity_client_uses_configured_url_and_server_side_token(self):
+        from app.crm import submit_activity_registration
+
+        with patch.dict("os.environ", {
+            "CRM_ACTIVITY_REGISTRATION_URL": "http://127.0.0.1:8000/api/v1/public/activity-registration",
+            "CRM_ACTIVITY_TOKEN": "activity-secret",
+        }), patch("app.crm.httpx.post") as post:
+            post.return_value.status_code = 201
+            post.return_value.json.return_value = {"registration_id": 42, "activity_id": None}
+            submitted, error, result = submit_activity_registration({"email": "ming@example.com"})
+        self.assertTrue(submitted)
+        self.assertEqual(error, "")
+        self.assertEqual(result["registration_id"], 42)
+        self.assertIsNone(result["activity_id"])
+        self.assertEqual(post.call_args.args[0], "http://127.0.0.1:8000/api/v1/public/activity-registration")
+        self.assertEqual(post.call_args.kwargs["headers"]["X-Activity-Token"], "activity-secret")
+
+    def test_activity_client_handles_401_and_422(self):
+        from app.crm import submit_activity_registration
+
+        with patch.dict("os.environ", {"CRM_ACTIVITY_REGISTRATION_URL": "https://crm.example/register"}):
+            for status, expected in ((401, "token is invalid or missing"), (422, "information is invalid")):
+                with self.subTest(status=status), patch("app.crm.httpx.post") as post:
+                    post.return_value.status_code = status
+                    submitted, error, result = submit_activity_registration({"email": "invalid"})
+                self.assertFalse(submitted)
+                self.assertIn(expected, error)
+                self.assertIsNone(result)
+
+
 class ArticleStudioTests(unittest.TestCase):
     slug = "article-studio-automated-test"
     course_slug = "content-manager-course-test"

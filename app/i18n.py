@@ -135,6 +135,41 @@ if _static_catalog_path.exists():
         CATALOG.setdefault(_locale, {})
         CATALOG[_locale] = {**_translations, **CATALOG[_locale]}
 
+FORM_TRANSLATIONS = {
+    "en": {
+        "選擇課程": "Select course", "請選擇課程": "Choose a course", "英文姓名": "English name",
+        "中文全名": "Chinese full name", "稱謂": "Title", "性別": "Gender", "請選擇": "Choose one",
+        "女": "Female", "男": "Male", "不願透露": "Prefer not to say", "教會名稱": "Church name",
+        "手提電話": "Mobile", "事奉年資": "Years of ministry experience", "備註或特別需要": "Notes or special needs",
+        "送出報名": "Submit registration", "報名編號": "Registration ID", "報名已成功送出，CAIM 團隊將與你聯絡。": "Registration submitted. The CAIM team will contact you.",
+        "請選擇課程，並填寫英文姓名、教會名稱及電郵。": "Select a course and enter your English name, church name, and email.",
+        "查詢已成功送出，CAIM 團隊將與你聯絡。": "Your inquiry has been submitted. The CAIM team will contact you.",
+        "請填寫姓名、電郵及訊息內容。": "Enter your name, email, and message.",
+    },
+    "fr": {
+        "選擇課程": "Choisir un cours", "請選擇課程": "Sélectionnez un cours", "英文姓名": "Nom anglais",
+        "中文全名": "Nom chinois complet", "稱謂": "Titre", "性別": "Genre", "請選擇": "Choisir",
+        "女": "Femme", "男": "Homme", "不願透露": "Préfère ne pas répondre", "教會名稱": "Nom de l’Église",
+        "手提電話": "Téléphone portable", "事奉年資": "Années d’expérience dans le ministère", "備註或特別需要": "Remarques ou besoins particuliers",
+        "送出報名": "Envoyer l’inscription", "報名編號": "Numéro d’inscription", "報名已成功送出，CAIM 團隊將與你聯絡。": "Inscription envoyée. L’équipe CAIM vous contactera.",
+        "請選擇課程，並填寫英文姓名、教會名稱及電郵。": "Sélectionnez un cours et indiquez votre nom anglais, le nom de votre Église et votre adresse e-mail.",
+        "查詢已成功送出，CAIM 團隊將與你聯絡。": "Votre demande a été envoyée. L’équipe CAIM vous contactera.",
+        "請填寫姓名、電郵及訊息內容。": "Indiquez votre nom, votre adresse e-mail et votre message.",
+    },
+    "es": {
+        "選擇課程": "Seleccionar curso", "請選擇課程": "Elige un curso", "英文姓名": "Nombre en inglés",
+        "中文全名": "Nombre chino completo", "稱謂": "Tratamiento", "性別": "Género", "請選擇": "Seleccionar",
+        "女": "Mujer", "男": "Hombre", "不願透露": "Prefiero no decirlo", "教會名稱": "Nombre de la iglesia",
+        "手提電話": "Móvil", "事奉年資": "Años de experiencia ministerial", "備註或特別需要": "Notas o necesidades especiales",
+        "送出報名": "Enviar inscripción", "報名編號": "Número de inscripción", "報名已成功送出，CAIM 團隊將與你聯絡。": "Inscripción enviada. El equipo de CAIM se pondrá en contacto contigo.",
+        "請選擇課程，並填寫英文姓名、教會名稱及電郵。": "Selecciona un curso e introduce tu nombre en inglés, el nombre de tu iglesia y tu correo electrónico.",
+        "查詢已成功送出，CAIM 團隊將與你聯絡。": "Tu consulta ha sido enviada. El equipo de CAIM se pondrá en contacto contigo.",
+        "請填寫姓名、電郵及訊息內容。": "Introduce tu nombre, correo electrónico y mensaje.",
+    },
+}
+for _locale, _translations in FORM_TRANSLATIONS.items():
+    CATALOG.setdefault(_locale, {}).update(_translations)
+
 PAGE_COPY = {
     "en": {
         "about": ("About CAIM", "In a world rapidly reshaped by artificial intelligence, CAIM walks with churches so faith communities can answer God’s call with theological depth, ethical wisdom, and creative courage."),

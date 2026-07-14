@@ -255,6 +255,7 @@ for deployment access and application integrations:
 - `PROD_SECRET_KEY`: a long, random value used by Flask as the production `SECRET_KEY`
 - `PROD_SSH_PRIVATE_KEY`: the private SSH key authorized for the `cyung` account on the production server
 - `PROD_CRM_CONSULTATION_TOKEN`: the optional token matching dx-crm's `CONSULTATION_FORM_SECRET`
+- `PROD_CRM_ACTIVITY_TOKEN`: the optional token matching dx-crm's `ACTIVITY_FORM_SECRET`
 
 `PROD_SECRET_KEY` and `PROD_SSH_PRIVATE_KEY` are different secrets and must not be reused for
 each other. Do not commit any populated `.env` file.
@@ -269,11 +270,27 @@ and set `DB_HOST`, `DB_PASSWORD`, `MYSQL_ADMIN_USER`, `MYSQL_ADMIN_PASSWORD`, an
 `MYSQL_ADMIN_SOCKET`. The workflow validates and sources these values remotely, creates or
 bootstraps `caimdb`, and imports `scripts/content_snapshot.json`. Keep the file mode `0600`.
 
-The deployment writes the non-secret CRM endpoint to `/opt/caim_web/.env` as
-`CRM_API_URL=https://dxcrm.doxaxsolutions.com/api/v1/public/consultation-intake`. The CAIM
-contact form submits server-side to this dx-crm endpoint; the browser never receives the CRM
-token. The submitted name, organization, email, phone, inquiry type, and message are mapped to a
-dx-crm consultation request.
+The Contact Us and Course Registration forms submit server-side to dx-crm; the browser never
+receives either CRM token. This project has DEV and PROD integrations only, with no QA target:
+
+| Environment | Consultation intake | Activity registration |
+|---|---|---|
+| DEV | `http://127.0.0.1:8000/api/v1/public/consultation-intake` | `http://127.0.0.1:8000/api/v1/public/activity-registration` |
+| PROD | `https://dxcrm.doxaxsolutions.com/api/v1/public/consultation-intake` | `https://dxcrm.doxaxsolutions.com/api/v1/public/activity-registration` |
+
+Configure these through `CRM_API_URL`, `CRM_CONSULTATION_TOKEN`,
+`CRM_ACTIVITY_REGISTRATION_URL`, and `CRM_ACTIVITY_TOKEN`. The contact form always sends source
+`caim.doxaxsolutions.com`. Course registration sends the selected course slug as the stable
+activity key and `caim.doxaxsolutions.com` as the source name. Production integration settings
+must not be deployed without explicit PROD approval.
+
+CAIM course registrations are non-native DX CRM activities. The backend therefore omits
+`activity_id`, always sends `activity_type=course`, uses `https://caim.doxaxsolutions.com/` as
+`source_url`, and reuses the same course slug as `activity_key` for every registration to that
+course. Only HTTP `201` is successful. HTTP `401` reports an invalid or missing activity token,
+and HTTP `422` reports invalid registration data. The returned `registration_id` is displayed to
+the registrant; a nullable `activity_id` is accepted. `CRM_ACTIVITY_TOKEN` is added only by the
+CAIM backend as `X-Activity-Token` and must never be exposed in HTML or browser JavaScript.
 
 MySQL is required for the migrated content. Production must provide `DB_HOST`, `DB_PORT`,
 `DB_USER`, `DB_PASSWORD`, and `DB_NAME` in `/opt/caim_web/.env`. Keep the production database
