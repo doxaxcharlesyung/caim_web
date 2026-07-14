@@ -1,0 +1,163 @@
+.course-visual {
+    background: linear-gradient(180deg, #eef4f1, #f6faf8);
+  }
+
+  .course-grid {
+    display: grid;
+    gap: 28px;
+  }
+
+  .course-grid-featured {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .course-visual :global(.section-copy) {
+    max-width: 860px;
+  }
+
+  .course-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 248, 0.98));
+    border: 1px solid rgba(16, 24, 40, 0.1);
+    border-radius: 0;
+    box-shadow: 0 18px 40px rgba(16, 24, 40, 0.08);
+    overflow: hidden;
+    position: relative;
+    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  }
+
+  .course-card:hover {
+    border-color: rgba(47, 158, 158, 0.34);
+    box-shadow: 0 24px 52px rgba(16, 24, 40, 0.12);
+    transform: translateY(-8px);
+  }
+
+  .course-card::before {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    content: "";
+    height: 100%;
+    left: -160%;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    transform: skewX(-18deg);
+    transition: left 900ms ease;
+    width: 56%;
+    z-index: 2;
+  }
+
+  .course-card:hover::before {
+    left: 160%;
+  }
+
+  .course-image-link {
+    display: block;
+  }
+
+  .course-image-wrap {
+    aspect-ratio: 1 / 1;
+    background: #dfe7e2;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .course-image-wrap img {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 420ms ease, filter 420ms ease;
+    width: 100%;
+  }
+
+  .course-card:hover .course-image-wrap img {
+    filter: saturate(1.02) contrast(1.02);
+    transform: scale(1.045);
+  }
+
+  .course-card-body {
+    display: grid;
+    gap: 14px;
+    padding: 18px 20px 20px;
+  }
+
+  .course-code {
+    color: #1f2937;
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .course-card h2,
+  .invite-card h2 {
+    font-family: "Noto Sans TC", Inter, system-ui, sans-serif;
+    line-height: 1.2;
+  }
+
+  .course-grid-featured .course-card h2 {
+    color: #1f2937;
+    font-size: 1.08rem;
+    font-weight: 650;
+    line-height: 1.32;
+    letter-spacing: 0;
+    margin: 0;
+  }
+
+  .course-description {
+    color: #475467;
+    font-size: 1.02rem;
+    font-weight: 400;
+    line-height: 1.9;
+    margin: 0;
+  }
+
+  .course-cta {
+    align-self: start;
+    background: #3b8f14;
+    color: #fff;
+    display: inline-flex;
+    font-family: "Noto Sans TC", Inter, system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    justify-content: center;
+    margin-top: 8px;
+    min-height: 50px;
+    min-width: 108px;
+    padding: 12px 22px;
+    transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .course-cta:hover {
+    background: #2f7610;
+    box-shadow: 0 10px 20px rgba(59, 143, 20, 0.24);
+    transform: translateY(-2px);
+  }
+
+  .invite-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    padding: 34px;
+  }
+
+  .invite-card p {
+    color: #d0d5dd;
+  }
+
+  .invite-card .btn {
+    margin-top: 1.5em;
+  }
+
+  @media (max-width: 1080px) {
+    .course-grid-featured {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .course-grid-featured {
+      grid-template-columns: 1fr;
+    }
+
+    .course-grid-featured .course-card h2 {
+      font-size: 1.02rem;
+    }
+  }

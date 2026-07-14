@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from flask import Flask, g
 
 from .data import NAVIGATION, SITE
-from .i18n import LANGUAGE_NAMES, language_url, select_locale, translate
+from .i18n import LANGUAGE_NAMES, PUBLIC_SELECTOR_LOCALES, language_url, select_locale, translate
 
 
 def register_context(app: Flask) -> None:
@@ -16,7 +16,7 @@ def register_context(app: Flask) -> None:
             "locale": getattr(g, "locale", app.config["DEFAULT_LOCALE"]),
             "navigation": NAVIGATION,
             "site": SITE,
-            "supported_locales": app.config["ENABLED_LOCALES"],
+            "supported_locales": PUBLIC_SELECTOR_LOCALES,
             "language_names": LANGUAGE_NAMES,
             "language_url": language_url,
             "t": translate,

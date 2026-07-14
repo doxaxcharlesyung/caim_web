@@ -1,16 +1,5 @@
-{% extends "layouts/base.html" %}{% block content %}
-{% set hero_title=(page_content.title if page_content else '課程與講座') %}
-{% set hero_subtitle=(page_content.subtitle if page_content else '') %}
-{% set hero_image='courses-hero-youth-learning.png' %}{% include 'components/page_hero.html' %}
-<section class="section"><div class="container">
-  <div class="section-header center"><h2 class="section-title">{{ t('學習、工作坊與群體同行') }}</h2><p class="section-copy">{{ t('課程涵蓋人工智能基礎、信仰與倫理辨識、實用工具、教會應用與領袖策略。') }}</p></div>
-  <div class="course-grid">
-    {% for course in courses %}
-    <article class="course-card sacred-card">
-      <img src="{{ url_for('static', filename=course.image.lstrip('/').removeprefix('assets/')) if not course.image.startswith('/assets/') else url_for('static', filename=course.image.lstrip('/')) }}" alt="{{ course.alt }}">
-      <div><span class="kicker">{{ course.code }}</span><h2>{{ course.title }}</h2><p>{{ course.description }}</p><a class="btn btn-secondary" href="{{ url_for('public.course_detail', slug=course.slug, lang=locale) }}">{{ course.cta_label }}</a></div>
-    </article>
-    {% endfor %}
-  </div>
-</div></section>
-{% endblock %}
+{% extends "layouts/base.html" %}{% block page_styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/v3/pages/courses.css') }}">{% endblock %}{% block content %}
+{% set hero_title=page_content.title %}{% set hero_subtitle=page_content.subtitle %}{% set hero_image='courses-hero-youth-learning.png' %}{% set hero_alt='Young people learning together around a laptop' %}{% include 'components/page_hero.html' %}
+<section class="section course-visual"><div class="container"><div class="section-header"><h2 class="section-title reveal">{{ t('學習、工作坊與群體同行') }}</h2><p class="section-copy reveal">{{ t('CAIM 的課程不是單向灌輸，而是讓牧者、領袖與同工一起在共同學習中辨識、提問、實踐與更新。') }}</p></div><div class="two-grid"><div class="media-frame reveal"><img src="{{ url_for('static', filename='assets/courses-training-courses.png') }}" alt="Training and courses setting with learners studying together"></div><div class="media-frame reveal"><img src="{{ url_for('static', filename='assets/courses-study-bible.png') }}" alt="Person studying the Bible with DX Sermon on a computer screen"></div></div></div></section>
+<section class="section"><div class="container"><div class="section-header"><h2 class="section-title reveal">{{ t('實用 AI 課程') }}</h2><p class="section-copy reveal">{{ t('由入門、牧者實務、倫理治理到系統轉型，課程設計幫助教會建立可實踐的辨識與能力。') }}</p></div><div class="course-grid course-grid-featured">{% for course in courses %}<article class="course-card reveal"><a class="course-image-link" href="{{ url_for('public.course_detail', slug=course.slug, lang=locale) }}" aria-label="{{ t('查看') }} {{ course.title }}"><div class="course-image-wrap"><img src="{{ url_for('static', filename=course.image.lstrip('/')) }}" alt="{{ course.alt }}"></div></a><div class="course-card-body"><p class="course-code">{{ course.code }}</p><h2>{{ course.title }}</h2><p class="course-description">{{ course.description }}</p><a class="course-cta" href="{{ url_for('public.course_detail', slug=course.slug, lang=locale) }}">{{ course.cta_label or t('了解詳情') }}</a></div></article>{% endfor %}</div></div></section>
+<section class="section dark grid-texture"><div class="container split"><div class="section-header dark"><h2 class="section-title reveal">{{ t('公開講座') }}</h2><p class="section-copy reveal">{{ t('CAIM 定期舉辦免費公開講座，幫助教會及信徒群體理解人工智能的最新發展、倫理挑戰、事工機遇及牧養回應。我們也會為不同單位提供培訓及主領聚會。') }}</p></div><div class="invite-card reveal"><h2>{{ t('邀請 CAIM 到你的教會、神學院或機構分享') }}</h2><p>{{ t('CAIM 可按不同群體的需要設計講座、工作坊及培訓課程，包括牧者退修、教會領袖培訓、青少年與家長講座、神學院課程、宗派培訓及 AI 轉型諮詢。') }}</p><a class="btn btn-primary" href="{{ url_for('public.contact', lang=locale) }}">{{ t('預約講座及訓練') }}</a></div></div></section>{% endblock %}

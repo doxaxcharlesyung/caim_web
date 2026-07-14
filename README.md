@@ -33,10 +33,24 @@ Spanish (`es`), and Simplified Chinese (`zh-Hans`). The shared header exposes th
 selector on every public page. The selected locale is retained in the session and can also be
 specified with `?lang=<locale>`.
 
-French and Spanish are currently disabled in the UI while their formatting and content are being
-prepared. The enabled locales are Traditional Chinese, English, and Simplified Chinese. Existing
-French/Spanish database translations and static catalogs are retained and can be re-enabled later
-by adding `fr` and `es` back to `ENABLED_LOCALES` in `app/i18n.py`.
+All five supported locales are enabled in the public site and Content Manager. Every public design
+or content migration must include Traditional Chinese, English, French, Spanish, and Simplified
+Chinese before it is considered complete.
+
+### Francis v3 public-site authority
+
+The Astro delivery at `D:\workspace\caim-website-francis-v3\src\pages` is the authoritative
+source for public-page Traditional Chinese wording, page structure, assets, and page-specific
+formatting. `scripts/extract_astro_styles.mjs` extracts its global, component, and page styles into
+`static/css/v3`; rerun that script whenever the v3 Astro CSS changes instead of manually copying
+individual rules. Flask templates preserve the v3 DOM and visual classes while replacing Astro's
+static collections with approved, scheduled MySQL content.
+
+Fixed public-page copy is translated through `app/i18n.py` and the checked-in UTF-8
+`app/static_translations.json` catalog. Run `python scripts/build_static_translations.py` after
+adding new Traditional Chinese template copy, then review prominent wording and run the complete
+test suite. Database-managed articles, news, and courses remain subject to independent review and
+approval per language; an unapproved translation deliberately falls back to the approved original.
 
 All future public UI, navigation, accessibility labels, validation messages, and fixed-page copy
 must ship in all five supported languages in the same change. A feature is not complete if it

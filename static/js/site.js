@@ -22,6 +22,28 @@ mobileNav?.querySelectorAll("a").forEach((link) => {
   });
 });
 
+document.querySelectorAll("[data-language-picker]").forEach((picker) => {
+  const button = picker.querySelector("button");
+  const close = () => {
+    picker.classList.remove("is-open");
+    button?.setAttribute("aria-expanded", "false");
+  };
+  button?.addEventListener("click", () => {
+    const open = !picker.classList.contains("is-open");
+    picker.classList.toggle("is-open", open);
+    button.setAttribute("aria-expanded", String(open));
+  });
+  document.addEventListener("click", (event) => {
+    if (!picker.contains(event.target)) close();
+  });
+  picker.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      close();
+      button?.focus();
+    }
+  });
+});
+
 const revealObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {

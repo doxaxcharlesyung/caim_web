@@ -1,0 +1,10 @@
+{% macro icon(name='spark') -%}
+<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24">
+{% if name == 'shield' %}<path d="M12 3l7 3v5.2c0 4.3-2.8 7.8-7 9.8-4.2-2-7-5.5-7-9.8V6l7-3z"/><path d="M9 12l2 2 4-5"/>
+{% elif name == 'compass' %}<circle cx="12" cy="12" r="8"/><path d="M15.5 8.5l-2 5-5 2 2-5 5-2z"/>
+{% elif name == 'network' %}<circle cx="6" cy="7" r="2.3"/><circle cx="18" cy="6" r="2.3"/><circle cx="12" cy="18" r="2.3"/><path d="M8.1 8l7.8-1.3M7.2 9l3.7 7M16.8 8l-3.7 8"/>
+{% elif name == 'book' %}<path d="M5 5.5c2.8-.8 5-.2 7 1.4v12c-2-1.6-4.2-2.2-7-1.4v-12z"/><path d="M19 5.5c-2.8-.8-5-.2-7 1.4v12c2-1.6 4.2-2.2 7-1.4v-12z"/>
+{% elif name == 'people' %}<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.8 19c.8-3.3 2.9-5 5.2-5s4.4 1.7 5.2 5"/><path d="M14.5 14.3c2.5.2 4.4 1.8 5.2 4.7"/>
+{% else %}<path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6L5.6 18.4"/>{% endif %}
+</svg></span>
+{%- endmacro %}

@@ -1,0 +1,317 @@
+.manifesto-section {
+    background:
+      radial-gradient(circle at top left, rgba(147, 93, 255, 0.12), transparent 26%),
+      radial-gradient(circle at bottom right, rgba(214, 168, 79, 0.12), transparent 24%),
+      linear-gradient(180deg, rgba(247, 241, 231, 0.8), rgba(255, 255, 255, 1));
+  }
+
+  .manifesto-shell {
+    display: grid;
+    gap: 28px;
+  }
+
+  .manifesto-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .manifesto-card {
+    border-radius: 28px;
+    color: #101828;
+    min-height: 250px;
+    padding: clamp(26px, 2.8vw, 34px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 22px 44px rgba(16, 24, 40, 0.08);
+    display: grid;
+    align-content: start;
+    gap: 18px;
+    transition: border-color 320ms ease, box-shadow 320ms ease, transform 320ms ease;
+  }
+
+  .manifesto-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), transparent 42%);
+    pointer-events: none;
+    transition: opacity 320ms ease;
+  }
+
+  .manifesto-card::after {
+    background: linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.72) 48%, transparent 76%);
+    content: "";
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    transform: translateX(-120%);
+    transition: transform 720ms ease, opacity 220ms ease;
+  }
+
+  .manifesto-card-head {
+    align-items: center;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 82px minmax(0, 1fr);
+    position: relative;
+    z-index: 1;
+  }
+
+  .manifesto-number {
+    align-items: center;
+    border: 3px solid currentColor;
+    border-radius: 999px;
+    box-shadow: 0 12px 22px rgba(16, 24, 40, 0.14);
+    display: inline-flex;
+    font-family: Fraunces, serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    height: 82px;
+    justify-content: center;
+    width: 82px;
+  }
+
+  .manifesto-card h3 {
+    font-family: "Noto Sans TC", Inter, system-ui, sans-serif;
+    font-size: clamp(1.55rem, 2.4vw, 2.35rem);
+    line-height: 1.12;
+    margin: 0;
+    color: currentColor;
+  }
+
+  .manifesto-rule {
+    background: currentColor;
+    border-radius: 999px;
+    height: 3px;
+    margin-top: 14px;
+    opacity: 0.18;
+    width: 88%;
+  }
+
+  .manifesto-card p {
+    color: rgba(16, 24, 40, 0.74);
+    font-size: 1.02rem;
+    line-height: 1.85;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tone-vision {
+    background:
+      radial-gradient(circle at top right, rgba(124, 58, 237, 0.14), transparent 34%),
+      linear-gradient(180deg, #fbf7ff, #fff);
+    border: 1px solid rgba(124, 58, 237, 0.18);
+    color: #7c3aed;
+  }
+
+  .tone-mission {
+    background:
+      radial-gradient(circle at top right, rgba(214, 168, 79, 0.14), transparent 34%),
+      linear-gradient(180deg, #fff8ea, #fff);
+    border: 1px solid rgba(214, 168, 79, 0.18);
+    color: #d6a84f;
+  }
+
+  .tone-belief {
+    background:
+      radial-gradient(circle at top right, rgba(37, 99, 235, 0.14), transparent 34%),
+      linear-gradient(180deg, #eff5ff, #fff);
+    border: 1px solid rgba(37, 99, 235, 0.16);
+    color: #2563eb;
+  }
+
+  .leader-card h3 {
+    font-family: "Noto Sans TC", Inter, system-ui, sans-serif;
+    font-size: clamp(1.35rem, 2.25vw, 2.05rem);
+    line-height: 1.18;
+    margin: 0;
+  }
+
+  .leader-card p,
+  .advisors p {
+    color: #475467;
+    font-size: 1.06rem;
+    margin: 0;
+  }
+
+  .service-section {
+    background: #f7f1e7;
+  }
+
+  .service-list {
+    display: grid;
+    gap: 16px;
+    margin-top: 34px;
+  }
+
+  .service-row {
+    align-items: start;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(16, 24, 40, 0.1);
+    border-radius: 8px;
+    display: grid;
+    gap: 22px;
+    grid-template-columns: 56px 56px 1fr;
+    padding: 30px;
+  }
+
+  .service-row h3 {
+    font-family: "Noto Sans TC", Inter, system-ui, sans-serif;
+    font-size: clamp(1.45rem, 3vw, 2.2rem);
+    line-height: 1.2;
+    margin: 0 0 12px;
+  }
+
+  .service-row p {
+    color: #475467;
+    margin: 0;
+  }
+
+  .index {
+    color: #d6a84f;
+    font-family: Fraunces, serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .leader-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    padding: 30px;
+  }
+
+  .leader-photo {
+    border: 1px solid rgba(214, 168, 79, 0.24);
+    border-radius: 8px;
+    float: right;
+    height: 270px;
+    margin: 4px 0 12px 24px;
+    overflow: hidden;
+    width: 220px;
+  }
+
+  .leader-photo img {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    width: 100%;
+  }
+
+  .leader-card strong {
+    color: #d6a84f;
+    display: block;
+    margin: 12px 0 18px;
+  }
+
+  .leader-card p,
+  .advisors p {
+    color: #d0d5dd;
+  }
+
+  .advisors {
+    background:
+      radial-gradient(circle at top right, rgba(214, 168, 79, 0.16), transparent 26%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(214, 168, 79, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+    margin-top: 28px;
+    padding: 26px 28px;
+  }
+
+  .advisors h3 {
+    color: #ffffff;
+    font-family: "Noto Sans TC", Inter, system-ui, sans-serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.15;
+    margin: 0 0 16px;
+  }
+
+  .advisor-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .advisor-list p {
+    color: #d0d5dd;
+    font-family: "Noto Sans TC", Inter, system-ui, sans-serif;
+    font-size: clamp(1.35rem, 2.25vw, 2.05rem);
+    font-weight: 700;
+    line-height: 1.7;
+  }
+
+  .advisor-name {
+    display: inline;
+    font-size: inherit;
+    opacity: 1;
+    margin-right: 4px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .manifesto-card:hover {
+      box-shadow: 0 30px 64px rgba(16, 24, 40, 0.16), 0 0 0 1px currentColor;
+      transform: translateY(-9px);
+    }
+
+    .manifesto-card:hover::before {
+      opacity: 0.46;
+    }
+
+    .manifesto-card:hover::after {
+      opacity: 1;
+      transform: translateX(120%);
+    }
+
+    .manifesto-card:hover .manifesto-number {
+      box-shadow: 0 16px 30px rgba(16, 24, 40, 0.2);
+      transform: scale(1.06) rotate(-3deg);
+    }
+  }
+
+  .manifesto-number {
+    transition: box-shadow 320ms ease, transform 320ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .manifesto-card,
+    .manifesto-card::before,
+    .manifesto-card::after,
+    .manifesto-number {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .manifesto-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .manifesto-card {
+      min-height: auto;
+    }
+
+    .manifesto-card-head {
+      grid-template-columns: 70px minmax(0, 1fr);
+    }
+
+    .manifesto-number {
+      height: 70px;
+      width: 70px;
+    }
+
+    .service-row {
+      grid-template-columns: 1fr;
+    }
+
+    .leader-photo {
+      float: none;
+      height: 253px;
+      margin: 4px 0 16px;
+      width: 172px;
+    }
+  }

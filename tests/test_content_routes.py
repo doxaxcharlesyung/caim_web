@@ -34,28 +34,19 @@ class ContentRouteTests(unittest.TestCase):
         self.assertEqual(self.client.get("/courses/not-a-course/").status_code, 404)
         self.assertEqual(self.client.get("/articles/not-an-article/").status_code, 404)
 
-    def test_homepage_news_carousel_renders_every_database_item(self):
+    def test_homepage_news_accordion_renders_the_latest_five_items(self):
         from app.content import get_news_items
         with self.app.app_context():
-            expected_count = len(get_news_items())
+            expected_count = min(5, len(get_news_items()))
         page = self.client.get("/").get_data(as_text=True)
-        self.assertEqual(page.count("data-news-card"), expected_count)
-        self.assertNotIn("news_items[:6]", page)
-        if expected_count > 3:
-            self.assertIn('data-autoplay="true"', page)
-            self.assertIn("data-news-previous", page)
-            self.assertIn("data-news-next", page)
+        self.assertEqual(page.count('class="news-item reveal"'), expected_count)
         root = Path(__file__).resolve().parents[1]
-        script = (root / "static" / "js" / "site.js").read_text(encoding="utf-8")
-        styles = (root / "static" / "css" / "site.css").read_text(encoding="utf-8")
-        self.assertIn("window.setInterval(advance, 5000)", script)
-        self.assertIn("index >= maximum ? 0 : index + 1", script)
-        self.assertIn("cards[index].offsetLeft - cards[0].offsetLeft", script)
-        self.assertNotIn('carousel.addEventListener("pointerenter", stop)', script)
-        self.assertIn("flex:0 0 calc((100% - 36px)/3)", styles)
-        self.assertIn(".nav-dropdown-menu", styles)
-        self.assertIn("top:100%", styles)
-        self.assertNotIn("top:calc(100% + 8px)", styles)
+        styles = (root / "static" / "css" / "v3" / "pages" / "index.css").read_text(encoding="utf-8")
+        overrides = (root / "static" / "css" / "v3" / "overrides.css").read_text(encoding="utf-8")
+        self.assertIn(".news-list", styles)
+        self.assertIn(".news-item", styles)
+        self.assertIn("animation: marquee 100s linear infinite !important", overrides)
+        self.assertIn("animation-play-state: paused", overrides)
 
 
 class ArticleStudioTests(unittest.TestCase):
@@ -208,7 +199,10 @@ class ArticleStudioTests(unittest.TestCase):
         self.assertNotIn("Content Manager News Test", self.client.get("/").get_data(as_text=True))
         self.approve_as_all_reviewers("news", self.news_slug)
         home = self.client.get("/").get_data(as_text=True)
-        self.assertIn("Content Manager News Test", home)
+        with self.app.app_context():
+            from app.content import get_news_items
+            self.assertIn(self.news_slug, {item["slug"] for item in get_news_items()})
+        self.assertLessEqual(home.count('class="news-item reveal"'), 5)
         dashboard = self.client.get("/content/content-dashboard").get_data(as_text=True)
         self.assertIn("Courses & Workshops", dashboard)
         self.assertIn("News & Events", dashboard)

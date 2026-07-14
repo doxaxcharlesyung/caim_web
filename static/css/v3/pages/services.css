@@ -1,0 +1,56 @@
+.service-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .service-visual {
+    align-items: center;
+  }
+
+  .service-row {
+    align-items: start;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(16, 24, 40, 0.1);
+    border-radius: 8px;
+    display: grid;
+    gap: 22px;
+    grid-template-columns: 56px 56px 1fr;
+    padding: 30px;
+  }
+
+  .index {
+    color: #d6a84f;
+    font-family: Fraunces, serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .service-row h2 {
+    font-family: "Noto Sans TC", Inter, system-ui, sans-serif;
+    font-size: clamp(1.45rem, 3vw, 2.6rem);
+    line-height: 1.2;
+    margin: 0 0 12px;
+  }
+
+  .service-row p {
+    color: #475467;
+    margin: 0;
+  }
+
+  .cta-row {
+    align-items: center;
+    display: flex;
+    gap: 28px;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 760px) {
+    .service-row {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-row {
+      align-items: start;
+      flex-direction: column;
+    }
+  }

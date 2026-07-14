@@ -15,7 +15,7 @@
       {% else %}<a href="{{ url_for(item.endpoint, lang=locale) }}">{{ t(item.label) }}</a>{% endif %}
     {% endfor %}
   </nav>
-  <div class="language-picker"><button type="button" aria-haspopup="true">{{ language_names[locale] }} <span>▾</span></button><div>{% for code in supported_locales %}<a href="{{ language_url(code) }}" lang="{{ code }}" {% if code == locale %}aria-current="true"{% endif %}>{{ language_names[code] }}</a>{% endfor %}</div></div>
+  <div class="language-picker" data-language-picker><button type="button" aria-haspopup="true" aria-expanded="false">{{ language_names[locale] }} <span>▾</span></button><div>{% for code in supported_locales %}<a href="{{ language_url(code) }}" lang="{{ code }}" {% if code == locale %}aria-current="true"{% endif %}>{{ language_names[code] }}</a>{% endfor %}</div></div>
   <a class="header-cta" href="{{ url_for('public.contact', lang=locale) }}">{{ t('預約講座及訓練') }}</a>
   <button class="menu-button" type="button" aria-label="{{ t('開啟選單') }}" aria-expanded="false" data-menu-button><span></span><span></span></button>
   <div class="mobile-nav" data-mobile-nav>

@@ -1,15 +1,3 @@
-{% extends "layouts/base.html" %}{% block content %}
-{% set hero_eyebrow=article.category %}
-{% set hero_title=article.title %}
-{% set hero_subtitle=article.detail.lead or article.excerpt %}
-{% set hero_image=article.image.removeprefix('/assets/') %}
-{% set hero_variant='article-detail-hero' %}{% include 'components/page_hero.html' %}
-<section class="section"><div class="container narrow">
-  <div class="article-meta-row"><span class="article-category">{{ article.category }}</span><span>{{ t('最後更新於：') }}{{ article.detail.updatedAt or article.published_date }}</span></div>
-  <p class="article-author-note">{{ t('作者：') }}{{ article.detail.author }}</p>
-  <article class="prose article-content">
-    {% for paragraph in article.detail.paragraphs or [] %}<p>{{ paragraph }}</p>{% endfor %}
-  </article>
-  <a class="btn btn-secondary" href="{{ url_for('public.articles', lang=locale) }}">{{ t('返回文章列表') }}</a>
-</div></section>
-{% endblock %}
+{% extends "layouts/base.html" %}{% block page_styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/v3/pages/articles-detail.css') }}">{% endblock %}{% block content %}
+{% set hero_title=article.title %}{% set hero_subtitle=article.detail.lead %}{% set hero_image=article.image.removeprefix('/assets/') %}{% set hero_alt=article.alt %}{% set hero_variant='article-detail' %}{% include 'components/page_hero.html' %}
+<section class="section article-detail-shell"><div class="container article-layout"><div class="article-main"><div class="article-meta-row reveal"><span class="article-category">{{ article.category }}</span><span class="article-date">{{ t('最後更新於：') }}{{ article.detail.updatedAt }}</span></div><p class="article-author-note reveal">{{ t('作者：') }}{{ article.detail.author }}</p><article class="article-content">{% for paragraph in article.detail.paragraphs %}<p class="article-paragraph reveal">{{ paragraph }}</p>{% endfor %}</article></div><aside class="article-sidebar"><div class="sidebar-card sacred-card reveal"><h3>{{ t('相關主題') }}</h3><ul>{% for topic in article.detail.relatedTopics %}<li><a href="{{ topic.href }}">{{ t(topic.label) }}</a></li>{% endfor %}</ul></div><div class="sidebar-card sacred-card reveal"><h3>{{ t('返回閱讀') }}</h3><p>{{ t('你可以回到專欄文章總覽，繼續按分類瀏覽其他內容。') }}</p><a class="btn btn-primary" href="{{ url_for('public.articles', lang=locale) }}">{{ t('回到文章總覽') }}</a></div></aside></div></section>{% endblock %}

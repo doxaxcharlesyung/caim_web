@@ -1,41 +1,59 @@
 {% extends "layouts/base.html" %}
+{% from "components/icon.html" import icon %}
+{% block page_styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/v3/pages/index.css') }}">{% endblock %}
 {% block content %}
 <section class="home-hero glow-host" data-glow>
-  <div class="hero-backdrop"><img src="{{ url_for('static', filename='assets/caim-hero-sacred-threshold.png') }}" alt="教會與人工智能時代的交會"></div>
-  <div class="container hero-content reveal">
-    <span class="kicker">CENTRE FOR AI &amp; MINISTRY</span>
-    <h1>{{ t('在人工智能時代，') }}<br>{{ t('以智慧忠心服事') }}</h1>
-    <p>{{ t('結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問，與教會一起辨識科技、塑造實踐、回應使命。') }}</p>
-    <div class="hero-actions"><a class="btn btn-primary" href="{{ url_for('public.about', lang=locale) }}">{{ t('認識 CAIM') }}</a><a class="btn btn-ivory" href="{{ url_for('public.contact', lang=locale) }}">{{ t('與我們同行') }}</a></div>
-  </div>
+  <img class="hero-bg" src="{{ url_for('static', filename='assets/hero-asian-creative-team.jpg') }}" alt="" aria-hidden="true">
+  <div class="container hero-grid"><div class="hero-copy reveal">
+    <h1>{{ t('辨識．轉化．同行') }}<br>{{ t('與教會迎向未來') }}</h1>
+    <p>{{ t('CAIM 與教會、牧者、神學院及宣教群體同行，以扎實的神學根基、清晰的倫理辨識和實際可行的人工智能方案，推動教會 AI 事工。我們提供研究、顧問、政策制定、領袖培訓、AI 轉型規劃及事工工具，支援講道、牧養、門訓、宣教與教會行政，幫助教會在新時代更有智慧和力量地榮耀上主，服事萬民。') }}</p>
+    <div class="hero-actions"><a class="btn btn-primary" href="{{ url_for('public.contact', lang=locale) }}">{{ t('預約講座及訓練') }}</a><a class="btn btn-secondary hero-secondary" href="{{ url_for('public.about', lang=locale) }}">{{ t('了解 CAIM') }}</a></div>
+  </div></div>
+  <div class="hero-ribbon marquee" aria-hidden="true"><div class="marquee-track">{% for _ in range(2) %}{% for label in ['倫理辨識 Ethics','科技創新 Innovation','宣教支持 Mission Care','數據主權 Privacy','神學根基 Theology','牧者同行 Pastoral Care'] %}<span class="ribbon-pill"><strong>✦</strong> {{ t(label) }}</span>{% endfor %}{% endfor %}</div></div>
 </section>
-<section class="section"><div class="container split"><div>{% set section_title=t('人工智能事工中心是甚麼？') %}{% set section_text=t('人工智能事工中心 (Centre for AI & Ministry, CAIM) 是一個結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問的事工平台。我們與教會同行，幫助信仰群體在 AI 時代中，不只是追趕科技，而是以清晰的使命、成熟的辨識與負責任的實踐，塑造科技在教會中的合宜使用。') %}{% include 'components/section_header.html' %}</div><div class="media-frame reveal"><img src="{{ url_for('static', filename='assets/caim-ministry.png') }}" alt="CAIM"></div></div></section>
-<section class="section dark transform-section"><div class="container"><div class="section-header center"><h2 class="section-title reveal">{{ t('三個同行向度') }}</h2><p class="section-copy reveal">{{ t('從信仰反思開始，建立清晰的使用界線，並將 AI 合宜地應用在實際事工之中。') }}</p></div><div class="feature-grid">{% for item in pillars %}<article class="sacred-card info-card reveal"><h3>{{ t(item.title) }}</h3><p>{{ t(item.text) }}</p></article>{% endfor %}</div></div></section>
-<section class="section"><div class="container split"><div class="media-frame reveal"><img src="{{ url_for('static', filename='assets/dx-sermon-spirit.jpg') }}" alt="Bible study"></div><div>{% set section_title=t('DX Sermon：為牧者與信徒而設的人工智能聖經研習平台') %}{% set section_text=t('DX Sermon 幫助牧者、傳道人、神學生及信徒從經文出發，進行多維度研究、釋經分析、講章構思與查經材料預備。它不是取代禱告、默想與釋經功夫，而是成為一個有啟迪、有深度、能促進信仰反思的研經空間。') %}{% include 'components/section_header.html' %}<a class="btn btn-primary" href="{{ url_for('public.dx_sermon', lang=locale) }}">{{ t('了解 DX Sermon') }}</a></div></div></section>
-<section class="section alt"><div class="container"><div class="section-header center"><h2 class="section-title reveal">{{ t('為牧者、領袖與信徒而設的實用 AI 課程') }}</h2><p class="section-copy reveal">{{ t('公開講座、實務工作坊、教會內部培訓及宗派領袖研討會。') }}</p></div><div class="center-action"><a class="btn btn-primary" href="{{ url_for('public.courses', lang=locale) }}">{{ t('瀏覽課程與講座') }}</a></div></div></section>
-{% if news_items %}
-<section class="section news-section" data-news-carousel data-autoplay="{{ 'true' if news_items|length > 3 else 'false' }}">
-  <div class="container">
-    <div class="section-header news-section-header">
-      <div><span class="kicker">NEWS &amp; EVENTS</span><h2 class="section-title">{{ t('最新消息與活動') }}</h2></div>
-      {% if news_items|length > 3 %}
-      <div class="news-carousel-controls" aria-label="News carousel controls">
-        <button type="button" data-news-previous aria-label="Previous news items">&#8592;</button>
-        <button type="button" data-news-next aria-label="Next news items">&#8594;</button>
-      </div>
-      {% endif %}
-    </div>
-    <div class="news-carousel-viewport" data-news-viewport>
-      <div class="news-carousel-track" data-news-track>
-        {% for item in news_items %}
-        <article class="sacred-card info-card news-card reveal" data-news-card>
-          <span class="kicker">{{ item.dateLabel }}</span><h3>{{ item.title }}</h3><p>{{ item.content|truncate(220) }}</p>
-        </article>
-        {% endfor %}
-      </div>
-    </div>
-    {% if news_items|length > 3 %}<p class="sr-only" data-news-status aria-live="polite"></p>{% endif %}
+
+<section class="section intro-band"><div class="container split">
+  <div class="section-header"><h2 class="section-title reveal">{{ t('人工智能事工中心是甚麼？') }}</h2><p class="section-copy reveal">{{ t('人工智能事工中心 (Centre for AI & Ministry, CAIM) 是一個結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問的事工平台。我們與教會同行，幫助信仰群體在 AI 時代中，不只是追趕科技，而是以清晰的使命、成熟的辨識與負責任的實踐，塑造科技在教會中的合宜使用。') }}</p></div>
+  <div class="statement-card reveal"><span>{{ t('新時代的智慧服事') }}</span><p>{{ t('在 AI 時代，教會需要的不只是工具，更是屬靈辨識。') }}</p></div>
+</div></section>
+
+<section class="section news-section"><div class="container">
+  <div class="news-heading reveal"><span></span><h2>{{ t('最新消息') }}</h2><span></span></div>
+  <div class="news-list">{% for item in news_items %}<details class="news-item reveal" {% if item.open %}open{% endif %}><summary><span class="news-marker" aria-hidden="true"></span><span class="news-title">{{ item.title }}</span><time>{{ item.dateLabel }}</time></summary><div class="news-body"><p class="news-copy">{{ item.content }}</p></div></details>{% endfor %}</div>
+</div></section>
+
+<section class="section"><div class="container">
+  <div class="section-header center"><h2 class="section-title reveal">{{ t('三個同行向度') }}</h2><p class="section-copy reveal">{{ t('CAIM 陪伴教會從信仰反思開始，建立清晰的使用界線，並將 AI 合宜地應用在實際事工之中，幫助教會在 AI 時代不盲目追趕，也不被動逃避，而是忠心、智慧、負責任地前行。') }}</p></div>
+  <div class="feature-grid">{% for item in pillars %}<article class="sacred-card info-card reveal">{{ icon(item.icon) }}<h3>{{ t(item.title) }}</h3><p>{{ t(item.text) }}</p></article>{% endfor %}</div>
+</div></section>
+
+<section class="section dark grid-texture transform-section"><div class="container transform-layout">
+  <div class="transform-copy"><div class="section-header dark title-nowrap-desktop"><h2 class="section-title reveal">{{ t('現在就開始教會AI轉型') }}</h2><p class="section-copy reveal">{{ t('從信仰辨識到實際應用，CAIM 陪伴教會和個人一步一步建立合宜、可信、可持續的 AI 使用方式。') }}</p></div>
+    <div class="service-grid">{% for item in services %}<article class="sacred-card info-card reveal">{{ icon(item.icon) }}<h3>{{ t(item.title) }}</h3><p>{{ t(item.text) }}</p></article>{% endfor %}</div>
   </div>
+  <div class="transform-visual reveal"><div class="transform-visual-shell"><div class="transform-visual-glow" aria-hidden="true"></div><div class="transform-visual-orbit orbit-a" aria-hidden="true"></div><div class="transform-visual-orbit orbit-b" aria-hidden="true"></div><div class="transform-visual-frame"><img src="{{ url_for('static', filename='assets/young-people-learning-ai.png') }}" alt="Young people gathered around a laptop learning AI together"></div></div></div>
+</div></section>
+
+<section class="section dx-preview"><div class="container split">
+  <div><div class="section-header"><h2 class="section-title reveal">{{ t('DX Sermon：為牧者與信徒而設的人工智能聖經研習平台') }}</h2><p class="section-copy reveal">{{ t('DX Sermon 幫助牧者、傳道人、神學生及信徒從經文出發，進行多維度研究、釋經分析、講章構思與查經材料預備。它不是要取代使用者的禱告、默想與釋經功夫，而是成為一個有啟迪、有深度、能促進信仰反思的研經空間。') }}</p></div><a class="btn btn-primary" href="{{ url_for('public.dx_sermon', lang=locale) }}">{{ t('了解 DX Sermon') }}</a></div>
+  <div class="study-console reveal"><div class="console-top">{{ t('DX Sermon 六項主要釋經功能') }}</div><div class="passage">{{ t('使研經成為一個與神話語不斷對話的流程') }}</div><div class="tool-orbit">{% for tool in dx_tools %}<button data-tool class="tool-node {% if loop.first %}is-active{% endif %}"><strong>{{ t(tool.title) }}</strong><span>{{ t(tool.text) }}</span></button>{% endfor %}</div></div>
+</div></section>
+
+<section class="section missionary-band"><div class="container split">
+  <div class="media-frame reveal"><img src="{{ url_for('static', filename='assets/praying-cross-book.jpg') }}" alt="Person praying with cross and open Bible"></div>
+  <div><div class="section-header"><h2 class="section-title reveal">{{ t('DX Sermon 免費開放給所有在職宣教士') }}</h2><p class="section-copy reveal">{{ t('CAIM 盼望與前線福音工人同行，減輕宣教士在講章預備、信息整理與教會服事上的負擔，使他們能更專注於牧養、門訓與傳福音的核心使命。') }}</p></div><a class="btn btn-primary" href="{{ url_for('public.missionaries', lang=locale) }}">{{ t('了解宣教士支援') }}</a></div>
+</div></section>
+
+<section class="section"><div class="container">
+  <div class="section-header center"><h2 class="section-title reveal">{{ t('為牧者、領袖與信徒而設的實用 AI 課程') }}</h2><p class="section-copy reveal">{{ t('CAIM 主辦公開講座、實務工作坊與課程、教會內部培訓及宗派領袖研討會，幫助教會在 AI 時代建立清晰理解、實際能力與成熟辨識。') }}</p></div>
+  <div class="quote-grid">{% for item in testimonials %}<blockquote class="sacred-card quote-card reveal"><p>「{{ t(item.quote) }}」</p><cite>{{ item.name }}｜{{ t(item.location) }}</cite></blockquote>{% endfor %}</div>
+</div></section>
+
+<section class="section final-cta dark"><div class="container reveal"><h2>{{ t('讓我們一起推動教會在') }}<br><span>{{ t('AI 時代奮勇前行') }}</span></h2><div><a class="btn btn-primary" href="{{ url_for('public.contact', lang=locale) }}">{{ t('預約講座及訓練') }}</a><a class="btn btn-secondary" href="{{ url_for('public.contact', lang=locale) }}">{{ t('聯絡我們') }}</a></div></div></section>
+
+<section id="prayer" class="prayer-section">
+  <svg class="prayer-wave prayer-wave-top" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0H1440V74C1198 6 1012 38 827 102C597 182 405 -30 0 66V0Z"></path></svg>
+  <svg class="prayer-wave prayer-wave-blush" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true"><path d="M0 138C220 44 430 18 650 78C858 134 1002 96 1168 72C1280 56 1366 72 1440 104V180H0V138Z"></path></svg>
+  <div class="container prayer-grid"><div class="prayer-copy reveal"><h2>{{ t('請為CAIM的事工代禱') }}</h2><p>{{ t('這是一個不容易的事工，需要眾教會一同參與。') }}<br>{{ t('求主帶領我們忠心前行，也讓更多人願意同行守望。') }}</p><button class="btn btn-primary prayer-toggle" type="button" aria-expanded="false" aria-controls="prayer-panel" data-prayer-toggle><span>{{ t('代禱事項') }}</span><span class="prayer-toggle-arrow" aria-hidden="true"></span></button><div id="prayer-panel" class="prayer-panel" aria-hidden="true" data-prayer-panel><div class="panel-orbit" aria-hidden="true"></div><ol><li>{{ t('求主賜CAIM在資源及人手有限下，能盡力推廣事工，祝福眾多教會及弟兄姊妹。') }}</li><li>{{ t('求主感動更多教會、牧者、領袖和弟兄姊妹參與同行，一同為 AI 時代的教會守望代禱。') }}</li><li>{{ t('求主供應所需的同工、伙伴和資源，使 CAIM 能長遠服事教會、家庭、下一代和宣教工場。') }}</li></ol></div></div><div class="prayer-image reveal"><img src="{{ url_for('static', filename='assets/prayer-hands.jpg') }}" alt="Folded praying hands resting on a Bible"></div></div>
 </section>
-{% endif %}
 {% endblock %}

@@ -1,9 +1,14 @@
+import json
+from pathlib import Path
 from urllib.parse import urlencode
 
 from flask import current_app, g, request, session
 
 SUPPORTED_LOCALES = ("zh-Hant", "en", "fr", "es", "zh-Hans")
-ENABLED_LOCALES = ("zh-Hant", "en", "zh-Hans")
+ENABLED_LOCALES = SUPPORTED_LOCALES
+# French and Spanish translations remain available for content workflow and direct links,
+# but are intentionally hidden from the public selector until their presentation is ready.
+PUBLIC_SELECTOR_LOCALES = ("en", "zh-Hant", "zh-Hans")
 LANGUAGE_NAMES = {
     "zh-Hant": "繁體中文",
     "en": "English",
@@ -30,6 +35,7 @@ CATALOG = {
         "CAIM 願與你同行": "CAIM Is Ready to Walk with You", "姓名": "Name", "教會／機構": "Church / Organization",
         "電郵": "Email", "電話": "Phone", "查詢類別": "Inquiry Type", "訊息內容": "Message", "送出查詢": "Send Inquiry",
         "在人工智能時代，": "In the age of artificial intelligence,", "以智慧忠心服事": "serve faithfully with wisdom",
+        "辨識．轉化．同行": "Discern. Transform. Walk Together.", "與教會迎向未來": "Facing the Future with the Church",
         "結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問，與教會一起辨識科技、塑造實踐、回應使命。": "Bringing together theological reflection, ethical governance, AI application, church training, and strategic counsel to discern technology, shape practice, and answer the mission with churches.",
         "與我們同行": "Walk with Us", "人工智能事工中心是甚麼？": "What is the Centre for AI & Ministry?",
         "人工智能事工中心 (Centre for AI & Ministry, CAIM) 是一個結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問的事工平台。我們與教會同行，幫助信仰群體在 AI 時代中，不只是追趕科技，而是以清晰的使命、成熟的辨識與負責任的實踐，塑造科技在教會中的合宜使用。": "The Centre for AI & Ministry (CAIM) brings theological reflection, ethical governance, AI application, church training, and strategic counsel into one ministry platform. We help faith communities move beyond chasing technology to shape its appropriate use through clear mission, mature discernment, and responsible practice.",
@@ -63,6 +69,7 @@ CATALOG = {
         "CAIM 願與你同行": "CAIM vous accompagne", "姓名": "Nom", "教會／機構": "Église / Organisation",
         "電郵": "E-mail", "電話": "Téléphone", "查詢類別": "Type de demande", "訊息內容": "Message", "送出查詢": "Envoyer",
         "在人工智能時代，": "À l’ère de l’intelligence artificielle,", "以智慧忠心服事": "servir fidèlement avec sagesse",
+        "辨識．轉化．同行": "Discerner. Transformer. Cheminer ensemble.", "與教會迎向未來": "Accueillir l’avenir avec l’Église",
         "結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問，與教會一起辨識科技、塑造實踐、回應使命。": "Réunir réflexion théologique, gouvernance éthique, usages de l’IA, formation des Églises et conseil stratégique pour discerner la technologie, façonner les pratiques et répondre à la mission.",
         "與我們同行": "Cheminer avec nous", "人工智能事工中心是甚麼？": "Qu’est-ce que le Centre pour l’IA et le ministère ?",
         "人工智能事工中心 (Centre for AI & Ministry, CAIM) 是一個結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問的事工平台。我們與教會同行，幫助信仰群體在 AI 時代中，不只是追趕科技，而是以清晰的使命、成熟的辨識與負責任的實踐，塑造科技在教會中的合宜使用。": "Le Centre pour l’IA et le ministère réunit réflexion théologique, gouvernance éthique, usages de l’IA, formation et conseil stratégique. Nous aidons les communautés chrétiennes à façonner un usage approprié de la technologie par une mission claire, un discernement mûr et une pratique responsable.",
@@ -96,6 +103,7 @@ CATALOG = {
         "CAIM 願與你同行": "CAIM camina contigo", "姓名": "Nombre", "教會／機構": "Iglesia / Organización",
         "電郵": "Correo electrónico", "電話": "Teléfono", "查詢類別": "Tipo de consulta", "訊息內容": "Mensaje", "送出查詢": "Enviar consulta",
         "在人工智能時代，": "En la era de la inteligencia artificial,", "以智慧忠心服事": "servir fielmente con sabiduría",
+        "辨識．轉化．同行": "Discernir. Transformar. Caminar juntos.", "與教會迎向未來": "Afrontar el futuro con la Iglesia",
         "結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問，與教會一起辨識科技、塑造實踐、回應使命。": "Integramos reflexión teológica, gobierno ético, aplicación de IA, formación para iglesias y asesoría estratégica para discernir la tecnología, formar prácticas y responder a la misión.",
         "與我們同行": "Camina con nosotros", "人工智能事工中心是甚麼？": "¿Qué es el Centro de IA y Ministerio?",
         "人工智能事工中心 (Centre for AI & Ministry, CAIM) 是一個結合神學反思、倫理治理、AI 應用、教會培訓與策略顧問的事工平台。我們與教會同行，幫助信仰群體在 AI 時代中，不只是追趕科技，而是以清晰的使命、成熟的辨識與負責任的實踐，塑造科技在教會中的合宜使用。": "El Centro de IA y Ministerio integra reflexión teológica, gobierno ético, aplicación de IA, formación y asesoría estratégica. Ayudamos a las comunidades de fe a formar un uso adecuado de la tecnología mediante una misión clara, discernimiento maduro y práctica responsable.",
@@ -113,6 +121,16 @@ CATALOG = {
         "邀請 CAIM 講座": "Invitar una charla de CAIM", "教會 AI 顧問服務": "Consultoría de IA para iglesias", "DX Sermon 查詢": "Consulta sobre DX Sermon", "一般查詢": "Consulta general", "請簡介你的教會、機構或服事場景，以及希望 CAIM 如何支援你們。": "Cuéntanos sobre tu iglesia, organización o contexto ministerial y cómo deseas que CAIM te apoye.",
     },
 }
+
+# Generated v3 page copy lives separately so the reviewed core navigation
+# translations remain readable and take precedence over generated entries.
+_static_catalog_path = Path(__file__).with_name("static_translations.json")
+if _static_catalog_path.exists():
+    with _static_catalog_path.open(encoding="utf-8") as catalog_file:
+        _generated_catalog = json.load(catalog_file)
+    for _locale, _translations in _generated_catalog.items():
+        CATALOG.setdefault(_locale, {})
+        CATALOG[_locale] = {**_translations, **CATALOG[_locale]}
 
 PAGE_COPY = {
     "en": {

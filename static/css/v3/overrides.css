@@ -1,0 +1,115 @@
+/* Python-specific public header controls layered over the extracted Astro CSS. */
+.language-picker {
+  position: relative;
+  z-index: 35;
+}
+
+.language-picker > button {
+  align-items: center;
+  background: rgba(22, 53, 45, 0.06);
+  border: 1px solid rgba(22, 53, 45, 0.18);
+  border-radius: 999px;
+  color: #16352d;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  gap: 7px;
+  line-height: 1;
+  padding: 9px 11px;
+  white-space: nowrap;
+}
+
+.language-picker > button:hover,
+.language-picker > button:focus-visible,
+.language-picker.is-open > button {
+  background: rgba(209, 170, 115, 0.18);
+  border-color: rgba(209, 170, 115, 0.74);
+  outline: none;
+}
+
+.language-picker > button span {
+  font-size: 0.68rem;
+  transition: transform 160ms ease;
+}
+
+.language-picker.is-open > button span {
+  transform: rotate(180deg);
+}
+
+.language-picker > div {
+  background: rgba(255, 253, 248, 0.98);
+  border: 1px solid rgba(209, 170, 115, 0.32);
+  border-radius: 10px;
+  box-shadow: 0 16px 34px rgba(22, 53, 45, 0.16);
+  display: grid;
+  gap: 2px;
+  min-width: 142px;
+  opacity: 0;
+  padding: 6px;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 9px);
+  transform: translateY(-5px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.language-picker:hover > div,
+.language-picker:focus-within > div,
+.language-picker.is-open > div {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.language-picker > div a {
+  border-radius: 6px;
+  color: #16352d;
+  font-size: 0.84rem;
+  font-weight: 650;
+  padding: 8px 10px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.language-picker > div a:hover,
+.language-picker > div a:focus-visible,
+.language-picker > div a[aria-current="true"] {
+  background: rgba(209, 170, 115, 0.18);
+  color: #16352d;
+  outline: none;
+}
+
+/* Force an intentionally slow full loop so each bilingual topic is readable. */
+.home-hero .marquee-track {
+  animation: marquee 100s linear infinite !important;
+}
+
+.home-hero .marquee:hover .marquee-track,
+.home-hero .marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (max-width: 1120px) {
+  .language-picker {
+    justify-self: end;
+  }
+}
+
+@media (max-width: 520px) {
+  .site-header {
+    gap: 9px;
+    padding: 14px 16px;
+  }
+
+  .brand small {
+    display: none;
+  }
+
+  .language-picker > button {
+    font-size: 0.74rem;
+    padding: 8px 9px;
+  }
+}

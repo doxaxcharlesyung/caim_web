@@ -1,5 +1,7 @@
 import unittest
 import re
+import json
+from pathlib import Path
 from unittest.mock import patch
 
 from app import create_app
@@ -16,9 +18,11 @@ class PublicLocaleTests(unittest.TestCase):
 
     def test_homepage_renders_all_enabled_locales_as_utf8(self):
         expected = {
-            "zh-Hant": "在人工智能時代",
-            "zh-Hans": "在人工智能时代",
-            "en": "In the age of artificial intelligence",
+            "zh-Hant": "辨識．轉化．同行",
+            "zh-Hans": "辨识．转化．同行",
+            "en": "Discern. Transform.",
+            "fr": "Discerner. Transformer.",
+            "es": "Discernir. Transformar.",
         }
         for locale, heading in expected.items():
             with self.subTest(locale=locale):
@@ -46,23 +50,37 @@ class PublicLocaleTests(unittest.TestCase):
                 self.assertIn(f'class="header-cta"', body)
                 self.assertIn(f">{label}</a>", body)
 
-    def test_public_header_scrolls_with_the_document(self):
+    def test_public_header_matches_v3_fixed_position(self):
         from pathlib import Path
 
-        stylesheet = (Path(__file__).resolve().parents[1] / "static" / "css" / "site.css").read_text(encoding="utf-8")
+        stylesheet = (Path(__file__).resolve().parents[1] / "static" / "css" / "v3" / "components.css").read_text(encoding="utf-8")
         header_rule = stylesheet.split(".site-header {", 1)[1].split("}", 1)[0]
-        self.assertIn("position:relative", header_rule)
-        self.assertIn("margin:14px auto", header_rule)
-        self.assertNotIn("position:fixed", header_rule)
-        self.assertIn('html[lang="fr"] .desktop-nav>a', stylesheet)
+        self.assertIn("position: fixed", header_rule)
 
-    def test_disabled_locales_fall_back_and_are_not_selectable(self):
-        for locale in ("fr", "es"):
+    def test_public_selector_hides_french_and_spanish_in_requested_order(self):
+        body = self.client.get("/?lang=zh-Hant").get_data(as_text=True)
+        selector = re.search(r'<div class="language-picker".*?</div></div>', body, re.S).group(0)
+        self.assertNotIn('lang="fr"', selector)
+        self.assertNotIn('lang="es"', selector)
+        self.assertLess(selector.index('lang="en"'), selector.index('lang="zh-Hant"'))
+        self.assertLess(selector.index('lang="zh-Hant"'), selector.index('lang="zh-Hans"'))
+
+    def test_v3_static_copy_catalog_is_complete_utf8(self):
+        root = Path(__file__).resolve().parents[1]
+        catalog = json.loads((root / "app" / "static_translations.json").read_text(encoding="utf-8"))
+        strings = set()
+        for folder in (root / "templates" / "pages", root / "templates" / "articles"):
+            for template in folder.glob("*.html"):
+                source = template.read_text(encoding="utf-8")
+                strings.update(re.findall(r"t\('([^']+)'\)", source))
+                strings.update(re.findall(r"\('([^']*[\u3400-\u9fff][^']*)'", source))
+        required = {text for text in strings if re.search(r"[\u3400-\u9fff]", text)}
+        for locale in ("en", "fr", "es"):
             with self.subTest(locale=locale):
-                body = self.client.get(f"/?lang={locale}").get_data(as_text=True)
-                self.assertIn('<html lang="zh-Hant">', body)
-                self.assertNotIn('lang="fr">Français</a>', body)
-                self.assertNotIn('lang="es">Español</a>', body)
+                self.assertFalse(required - set(catalog[locale]))
+                self.assertTrue(all("\ufffd" not in value for value in catalog[locale].values()))
+        for path in list((root / "templates").rglob("*.html")) + [root / "app" / "static_translations.json"]:
+            path.read_bytes().decode("utf-8", errors="strict")
 
     def test_opencc_preserves_nested_payload_and_converts_chinese(self):
         translated = translate_payload(
@@ -176,7 +194,7 @@ class TranslateAllWorkflowTests(unittest.TestCase):
                 "SELECT locale,status FROM content_approvals WHERE content_type='articles' AND content_key=%s AND locale<>'zh-Hant' ORDER BY locale",
                 (self.slug,),
             )
-        self.assertEqual({row["locale"] for row in rows}, {"en", "zh-Hans"})
+        self.assertEqual({row["locale"] for row in rows}, {"en", "fr", "es", "zh-Hans"})
         self.assertTrue(all(row["status"] == "review" for row in rows))
         self.assertTrue(all(row["status"] == "pending" for row in approvals))
 

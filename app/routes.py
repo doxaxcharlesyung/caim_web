@@ -50,13 +50,14 @@ def home():
         pillars=get_collection("pillars"),
         services=get_collection("services"),
         testimonials=get_collection("testimonials"),
-        news_items=get_news_items(g.locale),
+        dx_tools=get_collection("dxTools"),
+        news_items=get_news_items(g.locale)[:5],
     )
 
 
 @public.get("/about/")
 def about():
-    return page("pages/about.html", "about", leaders=get_collection("leaders"))
+    return page("pages/about.html", "about", leaders=get_collection("leaders"), services=get_collection("services"))
 
 
 @public.get("/services/")
