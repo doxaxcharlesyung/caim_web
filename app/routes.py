@@ -315,6 +315,7 @@ def article_dashboard_user_update(user_id):
 def contact():
     contact_notice = ""
     contact_error = ""
+    contact_submitted = False
     if request.method == "POST":
         form = request.form
         name_parts = form.get("name", "").strip().split(maxsplit=1)
@@ -337,6 +338,7 @@ def contact():
             submitted, error_message = submit_consultation_request(payload)
             if submitted:
                 contact_notice = "查詢已成功送出，CAIM 團隊將與你聯絡。"
+                contact_submitted = True
             else:
                 contact_error = error_message
     return page(
@@ -344,7 +346,8 @@ def contact():
         "contact",
         contact_notice=contact_notice,
         contact_error=contact_error,
-        contact_values=request.form,
+        contact_values={} if contact_submitted else request.form,
+        contact_submitted=contact_submitted,
     )
 
 
