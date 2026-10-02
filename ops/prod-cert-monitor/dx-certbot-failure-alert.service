@@ -1,0 +1,8 @@
+[Unit]
+Description=Notify when a Certbot renewal run fails
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/dx-monitor/cert_alert_notify.sh renewal-failed

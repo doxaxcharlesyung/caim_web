@@ -234,9 +234,9 @@ the application-owned virtual environment at `/opt/caim_web/.venv` and starts `w
 - `/content/content-manager` is the login entry point and `/content/content-dashboard` is the authenticated landing page.
 - Authenticated `/content` pages include Logout. Sessions expire after 60 minutes without activity and are invalidated whenever the systemd application service restarts.
 - `admin` is the initial administrator. `charles.yung` and `francis.lau` are seeded as active reviewers with the requested initial password. Change all seed passwords after first production login.
-- `admin` is treated as a superuser account and is not offered as a content reviewer. With the two seeded content users, work created by `charles.yung` defaults to `francis.lau` as reviewer, and vice versa.
-- Saving keeps content in `Saved`. Posting changes it to `Review`; it is not public at this stage.
-- Article, course, and news studios let the creator select one or more active users as reviewers. The creator cannot select themselves, and every selected reviewer must approve.
+- `admin` is treated as a superuser account and is not offered as a content reviewer. Work created by `charles.yung` or `francis.lau` defaults to owner approval; either user may optionally add the other reviewer.
+- Saving keeps content in `Saved`. Posting changes it to `Review`; it is not public at this stage. `charles.yung` and `francis.lau` are the only users allowed to select themselves as reviewers and approve their own content; other users must select another reviewer.
+- Article, course, and news studios let the creator select one or more active users as reviewers. Only `charles.yung` and `francis.lau` may select themselves; every selected reviewer must approve.
 - At least one reviewer is required. When the system has only two active users, the sole user other than the creator is selected automatically.
 - If studio validation fails, submitted text, dates, selections, and reviewer choices are rendered back into the form. Browsers intentionally do not restore file-upload controls, so a file must be selected again.
 - Studio saves distinguish New from Select/Edit. New content always uses an SQL insert and never an upsert; duplicate article/news slugs, course slugs, or course codes produce a validation error without changing the existing row. Select/Edit updates only the record identified by its original slug.
@@ -331,3 +331,61 @@ tag locally without changing the current branch:
 git show --stat prod-2026-07-14
 git diff main...prod-2026-07-14
 ```
+
+### Current known PROD rollback point
+
+The latest immutable tag explicitly labeled as a PROD rollback point is:
+
+- Tag: `prod-2026-07-14-header-flush-top`
+- Commit: `7658850e06d56be4cd141a340b50c6cd3370223f`
+- Description: fixed the gap above the fixed header
+
+The last tag explicitly recorded as a **verified PROD deployment** is
+`prod-2026-07-14` at commit `864805716c6898c9cdfaddd980624ac8b84db9f3`.
+The current `main` branch (`219efed`) is newer but is not itself tagged as a PROD
+rollback point. Do not use the moving branch tip or an uncommitted working tree as a
+rollback target. Confirm the actual live deployment separately before describing it as
+the current PROD version.
+
+### PROD rollback procedure
+
+This procedure rolls back the application, Apache configuration, systemd unit, and
+deployment scripts through the existing GitHub Actions workflow. It does not roll back
+the production MySQL database automatically.
+
+1. Confirm the target tag and inspect its contents locally:
+
+   ```powershell
+   git fetch origin --tags
+   git show --stat prod-2026-07-14-header-flush-top
+   git diff prod-2026-07-14-header-flush-top^ prod-2026-07-14-header-flush-top
+   ```
+
+2. Assess and back up the production database before reverting application code. The
+   content database may contain newer articles, courses, news, translations, approvals,
+   or user changes. Preserve those records unless a separate, explicitly approved
+   database rollback is required.
+
+3. Start the tagged deployment through GitHub Actions:
+
+   ```powershell
+   gh workflow run deploy-prod.yml --ref prod-2026-07-14-header-flush-top
+   gh run list --workflow deploy-prod.yml --limit 1
+   gh run watch <run-id>
+   ```
+
+   The workflow connects to the configured PROD host over SSH port `14322`, deploys the
+   tagged application, runs the schema/content preparation steps, restarts the CAIM
+   service, reloads Apache, and performs local and public health checks.
+
+4. Verify the completed workflow and the public site before directing traffic or
+   declaring the rollback complete. Check the CAIM home page, content-manager login,
+   database-backed content, and any CRM form integration affected by the rollback.
+
+5. If the rollback is unsuccessful, stop further deployments and inspect the GitHub
+   Actions logs and service health on PROD. Do not revert the database merely because
+   the application code was reverted; database recovery must be planned separately.
+
+After a successful rollback, create an annotated tag or deployment record identifying
+the exact tag, commit, deployment time, operator, and database decision. This preserves
+the next known rollback point.

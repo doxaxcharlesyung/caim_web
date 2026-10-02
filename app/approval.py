@@ -6,12 +6,38 @@ CONTENT_TABLES = {
     "news": ("news", "slug"),
 }
 
+# These are the only content-manager users allowed to approve their own work.
+# Keep this allowlist username-based so it remains stable if database IDs differ
+# between development and production.
+OWNER_APPROVER_USERNAMES = frozenset({"charles.yung", "francis.lau"})
+
+
+def can_approve_own_content(user_id):
+    user = fetch_one(
+        "SELECT username FROM admin_users WHERE id=%s AND is_active=1",
+        (user_id,),
+    )
+    return bool(user and user["username"] in OWNER_APPROVER_USERNAMES)
+
 
 def available_reviewers(submitter_id):
     return fetch_all(
-        "SELECT id,username FROM admin_users WHERE is_active=1 AND username<>'admin' AND id<>%s ORDER BY username",
-        (submitter_id,),
+        """SELECT id,username FROM admin_users
+        WHERE is_active=1 AND username<>'admin'
+          AND (id<>%s OR username IN (%s,%s))
+        ORDER BY username""",
+        (submitter_id, *sorted(OWNER_APPROVER_USERNAMES)),
     )
+
+
+def default_reviewer_ids(submitter_id, reviewer_options=None):
+    options = reviewer_options if reviewer_options is not None else available_reviewers(submitter_id)
+    # The query only includes the submitter for the two allowlisted owner
+    # approvers, so this check avoids a second database lookup when rendering
+    # reviewer controls.
+    if any(option["id"] == submitter_id for option in options):
+        return [submitter_id]
+    return [options[0]["id"]] if len(options) == 1 else []
 
 
 def reviewer_options(submitter_id, content_type=None, content_key=None, selected_override=None, locale="zh-Hant"):
@@ -28,8 +54,8 @@ def reviewer_options(submitter_id, content_type=None, content_key=None, selected
         selected_ids = {row["reviewer_id"] for row in rows}
     else:
         selected_ids = set()
-    if not selected_ids and len(options) == 1:
-        selected_ids.add(options[0]["id"])
+    if not selected_ids and selected_override is None:
+        selected_ids.update(default_reviewer_ids(submitter_id, options))
     for option in options:
         option["selected"] = option["id"] in selected_ids
     return options
@@ -40,6 +66,8 @@ def validate_reviewers(submitter_id, reviewer_ids):
     available = {reviewer["id"] for reviewer in available_reviewers(submitter_id)}
     selected = sorted(requested & available)
     if not selected:
+        if can_approve_own_content(submitter_id):
+            raise ValueError("Select at least one active reviewer, including yourself or another reviewer.")
         raise ValueError("Select at least one active reviewer other than the content creator.")
     if requested != set(selected):
         raise ValueError("One or more selected reviewers are invalid or inactive.")
