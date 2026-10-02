@@ -385,7 +385,8 @@
     "備註或特別需要": "Notes or special needs",
     "送出報名": "Submit registration",
     "報名編號": "Registration ID",
-    "體驗羅利敘事環的力量：張力、發現與恩典的顯明。": "Experience the power of Raleigh’s Narrative Circle: tension, discovery, and revelations of grace."
+    "體驗羅利敘事環的力量：張力、發現與恩典的顯明。": "Experience the power of Raleigh’s Narrative Circle: tension, discovery, and revelations of grace.",
+    "關閉": "Close"
   },
   "fr": {
     " %}文章已 Posted，排程日期不能修改。{% else %}網站會在此日期時間後顯示文章。{% endif %}</small></label>\n        <label class=\"field span-2\">檔案標題 / Meta Title<input id=\"meta-title\" name=\"meta_title\" value=\"{{ detail.metaTitle or selected.title if selected else ": "%}L'article a été publié et la date programmée ne peut pas être modifiée. {% else %}Le site Web affichera les articles après cette date et cette heure. {% endif %}</small></label>\n        <label class=\"field span-2\">Titre du fichier / Meta Title<input id=\"meta-title\" name=\"meta_title\" value=\"{{ detail.metaTitle ou selected.title si sélectionné autrement",
@@ -773,7 +774,8 @@
     "備註或特別需要": "Remarques ou besoins particuliers",
     "送出報名": "Envoyer l’inscription",
     "報名編號": "Numéro d’inscription",
-    "體驗羅利敘事環的力量：張力、發現與恩典的顯明。": "Découvrez la puissance du cercle narratif de Raleigh : tension, découverte et révélations de grâce."
+    "體驗羅利敘事環的力量：張力、發現與恩典的顯明。": "Découvrez la puissance du cercle narratif de Raleigh : tension, découverte et révélations de grâce.",
+    "關閉": "Fermer"
   },
   "es": {
     " %}文章已 Posted，排程日期不能修改。{% else %}網站會在此日期時間後顯示文章。{% endif %}</small></label>\n        <label class=\"field span-2\">檔案標題 / Meta Title<input id=\"meta-title\" name=\"meta_title\" value=\"{{ detail.metaTitle or selected.title if selected else ": "%}El artículo ha sido publicado y la fecha programada no se puede modificar. {% else %}El sitio web mostrará artículos después de esta fecha y hora. {% endif %}</small></label>\n        <label class=\"field span-2\">Título del archivo/Metatítulo<input id=\"meta-title\" name=\"meta_title\" value=\"{{ detalle.metaTitle o selected.title si se selecciona de otra manera",
@@ -1161,6 +1163,7 @@
     "備註或特別需要": "Notas o necesidades especiales",
     "送出報名": "Enviar inscripción",
     "報名編號": "Número de inscripción",
-    "體驗羅利敘事環的力量：張力、發現與恩典的顯明。": "Experimente el poder del Círculo Narrativo de Raleigh: tensión, descubrimiento y revelaciones de gracia."
+    "體驗羅利敘事環的力量：張力、發現與恩典的顯明。": "Experimente el poder del Círculo Narrativo de Raleigh: tensión, descubrimiento y revelaciones de gracia.",
+    "關閉": "Cerrar"
   }
 }

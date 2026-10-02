@@ -7,7 +7,7 @@ import httpx
 from flask import Blueprint, abort, current_app, g, redirect, render_template, request, session, url_for
 
 from .admin import admin_required, authenticate, create_admin_user, get_admin_users, login_csrf_token, update_admin_user
-from .approval import approve, attach_approval_states, available_reviewers, reviewer_options, submit_for_review, validate_reviewers
+from .approval import approve, attach_approval_states, available_reviewers, default_reviewer_ids, reviewer_options, submit_for_review, validate_reviewers
 from .content import (
     attach_translation_statuses, content_payload, get_content_counts, get_content_translation,
     get_dashboard_articles, get_dashboard_courses, get_dashboard_news,
@@ -299,7 +299,9 @@ def translate_content(kind, slug):
             code: translate_payload(content_payload(kind, item), source_locale, code)
             for code in targets
         }
-        reviewer_ids = [str(reviewer["id"]) for reviewer in available_reviewers(g.admin_user["id"])]
+        reviewer_ids = [str(reviewer_id) for reviewer_id in default_reviewer_ids(g.admin_user["id"])]
+        if not reviewer_ids:
+            reviewer_ids = [str(reviewer["id"]) for reviewer in available_reviewers(g.admin_user["id"])]
         validate_reviewers(g.admin_user["id"], reviewer_ids)
         for code, translated in translated_payloads.items():
             save_content_translation(kind, slug, code, source_locale, translated, "review",

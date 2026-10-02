@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the production certificate check each morning
+
+[Timer]
+OnCalendar=*-*-* 08:15:00
+Persistent=true
+Unit=dx-cert-monitor.service
+
+[Install]
+WantedBy=timers.target

@@ -477,7 +477,7 @@ class ContentSessionTests(unittest.TestCase):
         self.assertIn('value="2026-08-15T14:30"', body)
         self.assertRegex(body, r'<option value="event"[^>]*selected')
 
-    def test_admin_is_excluded_and_francis_defaults_for_charles(self):
+    def test_admin_is_excluded_and_charles_defaults_to_owner_approval(self):
         client = self.app.test_client()
         login = client.get("/content/content-manager").get_data(as_text=True)
         token = re.search(r'name="csrf_token" value="([^"]+)"', login).group(1)
@@ -487,7 +487,7 @@ class ContentSessionTests(unittest.TestCase):
         page = client.get("/content/article-studio").get_data(as_text=True)
         reviewer_section = re.search(r'<fieldset class="reviewer-picker.*?</fieldset>', page, re.S).group(0)
         self.assertNotIn(">admin<", reviewer_section)
-        self.assertRegex(reviewer_section, r'name="reviewer_ids"[^>]*checked[^>]*>francis\.lau')
+        self.assertRegex(reviewer_section, r'name="reviewer_ids"[^>]*checked[^>]*>charles\.yung')
 
 
 if __name__ == "__main__":
