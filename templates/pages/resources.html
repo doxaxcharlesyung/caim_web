@@ -1,0 +1,17 @@
+{% extends "layouts/base.html" %}
+{% block page_styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/v3/pages/ai-policy.css') }}">
+{% endblock %}
+{% block content %}
+  {% set hero_title = t('資源') %}
+  {% set hero_subtitle = t('供教會領袖及事工團隊使用的 CAIM 資源。') %}
+  {% set hero_variant = 'compact-page-hero resources-hero' %}
+  {% include 'components/page_hero.html' %}
+  <section class="section-tight">
+    <div class="container">
+      <h2>{{ t(policy_title) }}</h2>
+      <p>{{ description }}</p>
+      <a class="btn btn-primary" href="{{ url_for('public.ai_policy', lang=locale) }}">{{ t('查看 AI 使用守則') }}</a>
+    </div>
+  </section>
+{% endblock %}

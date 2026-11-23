@@ -45,8 +45,37 @@ def submit_consultation_request(payload: dict[str, str]) -> tuple[bool, str]:
     )
 
 
-def submit_activity_registration(payload: dict) -> tuple[bool, str, dict | None]:
-    url = _setting("CRM_ACTIVITY_REGISTRATION_URL")
+def submit_policy_registration(email: str, language: str) -> bool:
+    # Keep local policy previews on DEV even when the existing course form points to PROD.
+    default_url = (
+        _setting("CRM_ACTIVITY_REGISTRATION_URL")
+        if _setting("APP_ENV") == "production"
+        else "http://127.0.0.1:8000/api/v1/public/activity-registration"
+    )
+    payload = {
+        "activity_name": "AI Use Policy for Churches",
+        "activity_type": "resource_download",
+        "activity_key": "caim-church-ai-policy-download",
+        "source_name": "caim.doxaxsolutions.com",
+        "source_url": "https://caim.doxaxsolutions.com/resources/ai-policy/",
+        "email": email,
+        "questionnaire": {"document_language": language},
+    }
+    submitted, _, result = submit_activity_registration(
+        payload, url=_setting("CRM_POLICY_REGISTRATION_URL", default_url)
+    )
+    if not submitted or result is None:
+        return False
+    contact_id = result.get("contact_id")
+    if type(contact_id) is not int or contact_id < 1:
+        logger.warning("DX CRM policy registration did not confirm a contact ID")
+        return False
+    return True
+
+
+def submit_activity_registration(payload: dict, *, url: str | None = None) -> tuple[bool, str, dict | None]:
+    if url is None:
+        url = _setting("CRM_ACTIVITY_REGISTRATION_URL")
     if not url:
         logger.error("DX CRM activity registration URL is not configured")
         return False, "The registration service is not configured. Please try again later.", None
@@ -72,7 +101,7 @@ def submit_activity_registration(payload: dict) -> tuple[bool, str, dict | None]
         except ValueError:
             logger.error("DX CRM activity registration returned invalid JSON")
             return False, "The registration service returned an invalid response. Please try again later.", None
-        if result.get("registration_id") is None:
+        if not isinstance(result, dict) or result.get("registration_id") is None:
             logger.error("DX CRM activity registration response omitted registration_id")
             return False, "The registration service returned an incomplete response. Please try again later.", None
         return True, "", result

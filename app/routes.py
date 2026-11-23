@@ -1,9 +1,15 @@
 import math
+import re
+from pathlib import Path
+from secrets import compare_digest, token_urlsafe
 
 import pymysql
-from flask import Blueprint, abort, current_app, g, redirect, render_template, request, session, url_for
+from flask import (
+    Blueprint, abort, current_app, g, make_response, redirect, render_template, request,
+    send_from_directory, session, url_for,
+)
 
-from .crm import submit_activity_registration, submit_consultation_request
+from .crm import submit_activity_registration, submit_consultation_request, submit_policy_registration
 from .content import (
     get_article,
     get_articles,
@@ -29,6 +35,18 @@ PAGE_CONTENT_KEYS = {
     "dx_sermon": "dx",
     "church_ai_transformation": "churchAiTransformation",
 }
+
+POLICY_TITLE = "教會人工智能使用守則"
+POLICY_DESCRIPTION = "CAIM 為教會編寫的政策範本，協助領袖訂立合乎信仰、負責任及透明的人工智能使用指引。"
+POLICY_DIRECTORY = Path(__file__).resolve().parents[1] / "docs"
+POLICY_DOCUMENTS = {
+    "en": "caim-church-ai-policy-english.docx",
+    "zh-Hant": "caim-church-ai-policy-traditional-chinese.docx",
+    "zh-Hans": "caim-church-ai-policy-simplified-chinese.docx",
+}
+POLICY_CSRF_KEY = "ai_policy_csrf"
+POLICY_DOWNLOAD_KEY = "ai_policy_download_language"
+POLICY_EMAIL_PATTERN = re.compile(r"[^\s@<>(),;:\[\]\\]+@[^\s@.]+(?:\.[^\s@.]+)+")
 
 
 def page(template: str, key: str, **context):
@@ -169,6 +187,78 @@ def articles():
 @public.get("/articles/published/")
 def published_articles():
     return page("articles/published.html", "articles")
+
+
+@public.get("/resources/")
+def resources():
+    return render_template(
+        "pages/resources.html",
+        page_title=f"{translate('資源')} | CAIM",
+        policy_title=POLICY_TITLE,
+        description=translate(POLICY_DESCRIPTION),
+    )
+
+
+@public.route("/resources/ai-policy/", methods=["GET", "POST"])
+def ai_policy():
+    email = ""
+    status = 200
+    error = ""
+    unlocked_language = session.get(POLICY_DOWNLOAD_KEY)
+    default_language = g.locale if g.locale in POLICY_DOCUMENTS else "en"
+    language = unlocked_language or default_language
+    csrf_value = session.get(POLICY_CSRF_KEY)
+    if request.method == "POST":
+        email = request.form.get("email", "").strip()
+        language = request.form.get("language", "")
+        submitted_csrf = request.form.get("csrf_token", "")
+        if not csrf_value or not compare_digest(submitted_csrf.encode(), csrf_value.encode()):
+            error, status = "表單已失效，請再試一次。", 400
+        elif language not in POLICY_DOCUMENTS:
+            error, status = "請選擇可下載的文件語言。", 400
+        elif len(email) > 150 or not POLICY_EMAIL_PATTERN.fullmatch(email):
+            error, status = "請輸入有效的電郵地址。", 400
+        elif not (POLICY_DIRECTORY / POLICY_DOCUMENTS[language]).is_file():
+            error, status = "暫時無法提供下載，請稍後再試。", 503
+        elif submit_policy_registration(email, language):
+            session[POLICY_DOWNLOAD_KEY] = language
+            return redirect(url_for("public.ai_policy", lang=g.locale, _anchor="policy-download"), code=303)
+        else:
+            error, status = "暫時無法提供下載，請稍後再試。", 503
+
+    if not csrf_value:
+        csrf_value = session[POLICY_CSRF_KEY] = token_urlsafe(24)
+    response = make_response(render_template(
+        "pages/ai_policy.html",
+        page_title=f"{translate(POLICY_TITLE)} | CAIM",
+        description=translate(POLICY_DESCRIPTION),
+        policy_title=POLICY_TITLE,
+        email=email,
+        document_languages=POLICY_DOCUMENTS,
+        selected_language=language if language in POLICY_DOCUMENTS else default_language,
+        unlocked_language=unlocked_language,
+        csrf_token=csrf_value,
+        error=error,
+    ), status)
+    response.cache_control.no_store = True
+    return response
+
+
+@public.get("/resources/ai-policy/download/<language>/")
+def download_ai_policy(language: str):
+    if language not in POLICY_DOCUMENTS:
+        abort(404)
+    if session.get(POLICY_DOWNLOAD_KEY) != language:
+        return redirect(url_for("public.ai_policy", lang=g.locale, _anchor="policy-download"))
+    response = send_from_directory(
+        POLICY_DIRECTORY,
+        POLICY_DOCUMENTS[language],
+        as_attachment=True,
+        conditional=False,
+        etag=False,
+    )
+    response.cache_control.no_store = True
+    return response
 
 
 @public.get("/articles/<slug>/")
