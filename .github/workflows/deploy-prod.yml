@@ -87,11 +87,20 @@ jobs:
           PROD_CRM_CONSULTATION_TOKEN: ${{ secrets.PROD_CRM_CONSULTATION_TOKEN }}
           PROD_CRM_ACTIVITY_TOKEN: ${{ secrets.PROD_CRM_ACTIVITY_TOKEN }}
         run: |
-          ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
-            "sudo sed -i -e '/^CRM_API_URL=/d' -e '/^CRM_CONSULTATION_TOKEN=/d' -e '/^CRM_ACTIVITY_REGISTRATION_URL=/d' -e '/^CRM_ACTIVITY_TOKEN=/d' '$PROD_APP_DIR/.env'"
-          printf 'CRM_API_URL=https://dxcrm.doxaxsolutions.com/api/v1/public/consultation-intake\nCRM_CONSULTATION_TOKEN=%s\nCRM_ACTIVITY_REGISTRATION_URL=https://dxcrm.doxaxsolutions.com/api/v1/public/activity-registration\nCRM_ACTIVITY_TOKEN=%s\n' "$PROD_CRM_CONSULTATION_TOKEN" "$PROD_CRM_ACTIVITY_TOKEN" |
+          printf '%s\n' "$PROD_CRM_CONSULTATION_TOKEN" "$PROD_CRM_ACTIVITY_TOKEN" |
             ssh -p "$PROD_PORT" "$PROD_USER@$PROD_SERVER" \
-              "sudo tee -a '$PROD_APP_DIR/.env' >/dev/null && sudo chown '$PROD_USER':'$PROD_USER' '$PROD_APP_DIR/.env' && sudo chmod 0600 '$PROD_APP_DIR/.env'"
+              "set -eu
+              IFS= read -r consultation_token
+              IFS= read -r activity_token
+              if [ -z \"\$activity_token\" ]; then
+                activity_token=\$(sudo -n cat /opt/dx-crm/.env | /opt/dx-crm/.venv/bin/python -c 'import sys; from dotenv import dotenv_values; print(dotenv_values(stream=sys.stdin).get(\"ACTIVITY_FORM_SECRET\") or \"\")')
+              fi
+              test -n \"\$activity_token\" || { echo 'Missing production DXCRM activity token' >&2; exit 1; }
+              sudo sed -i -e '/^CRM_API_URL=/d' -e '/^CRM_CONSULTATION_TOKEN=/d' -e '/^CRM_ACTIVITY_REGISTRATION_URL=/d' -e '/^CRM_ACTIVITY_TOKEN=/d' '$PROD_APP_DIR/.env'
+              printf 'CRM_API_URL=https://dxcrm.doxaxsolutions.com/api/v1/public/consultation-intake\nCRM_CONSULTATION_TOKEN=%s\nCRM_ACTIVITY_REGISTRATION_URL=https://dxcrm.doxaxsolutions.com/api/v1/public/activity-registration\nCRM_ACTIVITY_TOKEN=%s\n' \"\$consultation_token\" \"\$activity_token\" |
+                sudo tee -a '$PROD_APP_DIR/.env' >/dev/null
+              sudo chown '$PROD_USER':'$PROD_USER' '$PROD_APP_DIR/.env'
+              sudo chmod 0600 '$PROD_APP_DIR/.env'"
 
       - name: Validate MySQL content database configuration
         run: |

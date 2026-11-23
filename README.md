@@ -255,7 +255,7 @@ for deployment access and application integrations:
 - `PROD_SECRET_KEY`: a long, random value used by Flask as the production `SECRET_KEY`
 - `PROD_SSH_PRIVATE_KEY`: the private SSH key authorized for the `cyung` account on the production server
 - `PROD_CRM_CONSULTATION_TOKEN`: the optional token matching dx-crm's `CONSULTATION_FORM_SECRET`
-- `PROD_CRM_ACTIVITY_TOKEN`: the optional token matching dx-crm's `ACTIVITY_FORM_SECRET`
+- `PROD_CRM_ACTIVITY_TOKEN`: the token matching DXCRM's `ACTIVITY_FORM_SECRET`. When this GitHub secret is absent, deployment reads the token from `/opt/dx-crm/.env` on the shared production host and writes it to CAIM's protected `.env` on that host.
 
 `PROD_SECRET_KEY` and `PROD_SSH_PRIVATE_KEY` are different secrets and must not be reused for
 each other. Do not commit any populated `.env` file.
