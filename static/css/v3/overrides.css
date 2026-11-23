@@ -1,4 +1,73 @@
 /* Python-specific public header controls layered over the extracted Astro CSS. */
+@media (min-width: 1121px) {
+  .site-header {
+    column-gap: 12px;
+    padding-inline: 24px;
+  }
+
+  .desktop-nav {
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  html:is([lang="es"], [lang="fr"]) .brand small {
+    display: none;
+  }
+
+  html:is([lang="es"], [lang="fr"]) .desktop-nav {
+    gap: 8px;
+  }
+
+  html:is([lang="es"], [lang="fr"]) .desktop-nav > a,
+  html:is([lang="es"], [lang="fr"]) .nav-parent {
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 1121px) and (max-width: 1248px) {
+  .site-header {
+    column-gap: 10px;
+    padding-inline: 12px;
+  }
+
+  .desktop-nav {
+    gap: 8px;
+  }
+
+  html[lang="en"] .brand small {
+    display: none;
+  }
+
+  html[lang="en"] .desktop-nav > a,
+  html[lang="en"] .nav-parent {
+    font-size: 0.84rem;
+  }
+
+  html:is([lang="es"], [lang="fr"]) .brand-logo {
+    width: 50px;
+  }
+
+  html:is([lang="es"], [lang="fr"]) .header-cta {
+    padding-inline: 10px;
+  }
+}
+
+@media (min-width: 1121px) and (max-width: 1208px) {
+  html:is([lang="es"], [lang="fr"]) .site-header {
+    column-gap: 8px;
+  }
+
+  html:is([lang="es"], [lang="fr"]) .desktop-nav {
+    gap: 6px;
+  }
+
+  html:is([lang="es"], [lang="fr"]) .desktop-nav > a,
+  html:is([lang="es"], [lang="fr"]) .nav-parent {
+    font-size: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+}
+
 .language-picker {
   position: relative;
   z-index: 35;

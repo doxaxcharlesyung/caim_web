@@ -292,6 +292,27 @@ and HTTP `422` reports invalid registration data. The returned `registration_id`
 the registrant; a nullable `activity_id` is accepted. `CRM_ACTIVITY_TOKEN` is added only by the
 CAIM backend as `X-Activity-Token` and must never be exposed in HTML or browser JavaScript.
 
+The AI Policy page at `/resources/ai-policy/` uses the same activity registration API. An
+email and document language are sufficient. DX CRM records the contact and a `resource_download`
+registration with the key `caim-church-ai-policy-download`. The selected Word file in `docs/`
+is served as an attachment only after DX CRM confirms the contact. The download is authorized
+for that language in the visitor's browser session. DX CRM assigns the contact's company from
+the email domain when the form supplies no organization, including for an existing contact.
+
+In local development the policy form uses the DEV activity registration URL in the table above.
+With `APP_ENV=production`, it uses `CRM_ACTIVITY_REGISTRATION_URL`. Set
+`CRM_POLICY_REGISTRATION_URL` to override this behavior, and use `CRM_ACTIVITY_TOKEN` if
+the target API requires it. If DX Sermon Web already occupies port `8000`, start the DX CRM API
+from its checkout on a separate port:
+
+```powershell
+.venv\Scripts\python -m uvicorn src.my_crm.backend.main:app --host 127.0.0.1 --port 8100
+```
+
+Set `CRM_POLICY_REGISTRATION_URL=http://127.0.0.1:8100/api/v1/public/activity-registration`
+in the CAIM `.env` file and restart the CAIM app. The supplied Word files are review drafts
+and require approval before public distribution.
+
 MySQL is required for the migrated content. Production must provide `DB_HOST`, `DB_PORT`,
 `DB_USER`, `DB_PASSWORD`, and `DB_NAME` in `/opt/caim_web/.env`. Keep the production database
 password in a dedicated GitHub Actions secret and never commit it. Run the schema/content import

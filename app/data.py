@@ -21,6 +21,11 @@ NAVIGATION = [
     {"label": "教會AI轉型", "endpoint": "public.church_ai_transformation"},
     {"label": "課程與講座", "endpoint": "public.courses"},
     {"label": "專欄文章", "endpoint": "public.articles"},
+    {
+        "label": "資源",
+        "endpoint": "public.resources",
+        "children": [{"label": "AI 使用守則", "endpoint": "public.ai_policy"}],
+    },
     {"label": "聯絡我們", "endpoint": "public.contact"},
 ]
 

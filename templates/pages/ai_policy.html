@@ -1,0 +1,54 @@
+{% extends "layouts/base.html" %}
+{% block page_styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/v3/pages/ai-policy.css') }}">
+{% endblock %}
+{% block content %}
+  {% set hero_title = t(policy_title) %}
+  {% set hero_subtitle = description %}
+  {% set hero_variant = 'compact-page-hero resources-hero' %}
+  {% include 'components/page_hero.html' %}
+
+  <section class="section-tight">
+    <div class="container policy-grid">
+      <div>
+        <h2>{{ t('守則內容') }}</h2>
+        <p>{{ t('這份草案供教會領袖審閱及按各自的事工處境修改。') }}</p>
+        <ul class="policy-topics">
+          <li>{{ t('在講道、教導和牧養中使用 AI 的神學基礎與原則') }}</li>
+          <li>{{ t('私隱、資料分類、人工覆核及披露') }}</li>
+          <li>{{ t('同工及義工速查卡、披露範句和核准工具登記表') }}</li>
+        </ul>
+      </div>
+
+      <div class="policy-panel" id="policy-download">
+        <h2>{{ t('下載守則') }}</h2>
+        {% if unlocked_language %}
+          <div class="policy-ready">
+            <p role="status">{{ t('你選擇的文件已可下載。') }}</p>
+            <a class="btn btn-primary" href="{{ url_for('public.download_ai_policy', language=unlocked_language) }}">
+              {{ t('下載 Word 文件') }} <span lang="{{ unlocked_language }}">({{ language_names[unlocked_language] }})</span>
+            </a>
+          </div>
+        {% endif %}
+        <p>{{ t('請選擇文件語言並填寫電郵地址。CAIM 會將你的電郵及所選語言記錄在聯絡人管理系統中。') }}</p>
+        <form class="policy-form" method="post" action="{{ url_for('public.ai_policy', lang=locale, _anchor='policy-download') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          {% if error %}<p class="policy-error" role="alert">{{ t(error) }}</p>{% endif %}
+          <label>
+            {{ t('文件語言') }}
+            <select name="language" required>
+              {% for code in document_languages %}
+                <option value="{{ code }}" lang="{{ code }}"{% if code == selected_language %} selected{% endif %}>{{ language_names[code] }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label>
+            {{ t('電郵') }}
+            <input name="email" type="email" value="{{ email }}" autocomplete="email" maxlength="150" required>
+          </label>
+          <button class="btn btn-primary" type="submit">{{ t('提交電郵以取得下載連結') }}</button>
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock %}
